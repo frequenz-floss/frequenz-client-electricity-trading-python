@@ -15,7 +15,6 @@ description = "Electricity Trading API client for Python"
 readme = "README.md"
 license = { text = "MIT" }
 keywords = ["frequenz", "python", "lib", "library", "client-electricity-trading", "client", "api", "python", "trading", "electricity-trading"]
-# TODO(cookiecutter): Remove and add more classifiers if appropriate
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",

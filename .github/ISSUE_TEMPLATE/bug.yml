@@ -11,8 +11,7 @@ labels:
 body:
   - type: markdown
     attributes:
-      value:
-        Thanks for taking the time to fill out this bug report!
+      value: Thanks for taking the time to fill out this bug report!
   - type: textarea
     id: what-happened
     attributes:
@@ -36,7 +35,7 @@ body:
       description:
         Please add a comma-separated list of the versions affected by this
         issue.
-      placeholder: 'Example: v0.11.0, v0.12.0'
+      placeholder: "Example: v0.11.0, v0.12.0"
   - type: dropdown
     id: part
     attributes:
@@ -50,9 +49,6 @@ body:
         - Documentation (part:docs)
         - Unit, integration and performance tests (part:tests)
         - Build script, CI, dependencies, etc. (part:tooling)
-        # TODO(cookiecutter): Add other parts
-        # Please have in mind that that the part:xxx labels need to
-        # be created in the GitHub repository.
     validations:
       required: true
   - type: textarea
