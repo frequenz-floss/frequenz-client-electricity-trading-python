@@ -27,7 +27,12 @@ classifiers = [
 requires-python = ">= 3.11, < 4"
 # TODO(cookiecutter): Remove and add more dependencies if appropriate
 dependencies = [
-  "typing-extensions >= 4.5.0, < 5",
+  "frequenz-api-common >= 0.5.3, < 0.6.0",
+  "googleapis-common-protos >= 1.56.4, < 2",
+  "grpcio >= 1.60.0, < 2",
+  "frequenz-channels >= 0.16.0, < 0.17.0",
+  "frequenz-client-base >= 0.1.0, < 0.2",
+  "frequenz-api-electricity-trading == 0.2.0",
 ]
 dynamic = ["version"]
 
@@ -38,27 +43,28 @@ email = "floss@frequenz.com"
 # TODO(cookiecutter): Remove and add more optional dependencies if appropriate
 [project.optional-dependencies]
 dev-flake8 = [
-  "flake8 == 6.1.0",
+  "flake8 == 7.0.0",
   "flake8-docstrings == 1.7.0",
   "flake8-pyproject == 1.2.3",  # For reading the flake8 config from pyproject.toml
-  "pydoclint == 0.3.2",
+  "pydoclint == 0.3.8",
   "pydocstyle == 6.3.0",
 ]
-dev-formatting = ["black == 23.9.1", "isort == 5.12.0"]
+dev-formatting = ["black == 23.12.1", "isort == 5.13.2"]
 dev-mkdocs = [
-  "black == 23.9.1",
-  "Markdown==3.4.4",
+  "black == 23.12.1",
+  "Markdown==3.5.1",
   "mike == 2.0.0",
   "mkdocs-gen-files == 0.5.0",
   "mkdocs-literate-nav == 0.6.1",
-  "mkdocs-macros-plugin == 1.0.4",
-  "mkdocs-material == 9.3.1",
-  "mkdocstrings[python] == 0.23.0",
+  "mkdocs-macros-plugin == 1.0.5",
+  "mkdocs-material == 9.5.3",
+  "mkdocstrings[python] == 0.24.0",
   "frequenz-repo-config[lib] == 0.9.1",
 ]
 dev-mypy = [
-  "mypy == 1.5.1",
-  "types-Markdown == 3.4.2.10",
+  "mypy == 1.8.0",
+  "grpc-stubs == 1.53.0.5",
+  "types-Markdown == 3.5.0.20240129",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
@@ -67,7 +73,7 @@ dev-noxfile = [
   "frequenz-repo-config[lib] == 0.9.1",
 ]
 dev-pylint = [
-  "pylint == 3.0.2",
+  "pylint == 3.0.3",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
@@ -77,6 +83,7 @@ dev-pytest = [
   "pytest-mock == 3.11.1",
   "pytest-asyncio == 0.21.1",
   "async-solipsism == 0.5",
+  "deepdiff == 6.7.1",
 ]
 dev = [
   "frequenz-client-electricity-trading[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
@@ -158,7 +165,7 @@ packages = ["frequenz.client.electricity_trading"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["mkdocs_macros.*", "sybil", "sybil.*"]
+module = ["mkdocs_macros.*", "sybil", "sybil.*", "deepdiff"]
 ignore_missing_imports = true
 
 [tool.setuptools_scm]
