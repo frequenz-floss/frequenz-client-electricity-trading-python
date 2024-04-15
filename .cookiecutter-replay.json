@@ -1,0 +1,46 @@
+{
+  "cookiecutter": {
+    "Introduction": "",
+    "type": "lib",
+    "name": "client-electricity-trading",
+    "description": "Electricity Trading API client for Python",
+    "title": "Frequenz Electricity Trading API Client",
+    "keywords": "client, api, python, trading, electricity-trading",
+    "github_org": "frequenz-floss",
+    "license": "MIT",
+    "author_name": "Frequenz Energy-as-a-Service GmbH",
+    "author_email": "floss@frequenz.com",
+    "python_package": "frequenz.client.electricity_trading",
+    "pypi_package_name": "frequenz-client-electricity-trading",
+    "github_repo_name": "frequenz-client-electricity-trading-python",
+    "default_codeowners": "@frequenz-floss/api-electricity-trading-team",
+    "_template": "gh:frequenz-floss/frequenz-repo-config-python",
+    "_repo_dir": "/Users/freq/.cookiecutters/frequenz-repo-config-python/cookiecutter",
+    "_checkout": "v0.9.1"
+  },
+  "_cookiecutter": {
+    "Introduction": "{{cookiecutter | introduction}}",
+    "type": [
+      "actor",
+      "api",
+      "app",
+      "lib",
+      "model"
+    ],
+    "name": null,
+    "description": null,
+    "title": "{{cookiecutter | proj_title}}",
+    "keywords": "(comma separated: 'frequenz', <type> and <name> are included automatically)",
+    "github_org": "frequenz-floss",
+    "license": [
+      "MIT",
+      "Proprietary"
+    ],
+    "author_name": "Frequenz Energy-as-a-Service GmbH",
+    "author_email": "floss@frequenz.com",
+    "python_package": "{{cookiecutter | python_package}}",
+    "pypi_package_name": "{{cookiecutter | pypi_package_name}}",
+    "github_repo_name": "{{cookiecutter | github_repo_name}}",
+    "default_codeowners": "(like @some-org/some-team; defaults to a team based on the repo type)"
+  }
+}
