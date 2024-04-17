@@ -27,11 +27,11 @@ classifiers = [
 requires-python = ">= 3.11, < 4"
 # TODO(cookiecutter): Remove and add more dependencies if appropriate
 dependencies = [
-  "frequenz-api-common >= 0.5.3, < 0.6.0",
+  "frequenz-api-common >= 0.5.3, < 0.7.0",
   "googleapis-common-protos >= 1.56.4, < 2",
   "grpcio >= 1.60.0, < 2",
   "frequenz-channels >= 0.16.0, < 0.17.0",
-  "frequenz-client-base >= 0.1.0, < 0.2",
+  "frequenz-client-base >= 0.1.0, < 0.4",
   "frequenz-api-electricity-trading == 0.2.0",
 ]
 dynamic = ["version"]
@@ -46,25 +46,25 @@ dev-flake8 = [
   "flake8 == 7.0.0",
   "flake8-docstrings == 1.7.0",
   "flake8-pyproject == 1.2.3",  # For reading the flake8 config from pyproject.toml
-  "pydoclint == 0.3.8",
+  "pydoclint == 0.4.1",
   "pydocstyle == 6.3.0",
 ]
 dev-formatting = ["black == 23.12.1", "isort == 5.13.2"]
 dev-mkdocs = [
   "black == 23.12.1",
-  "Markdown==3.5.1",
+  "Markdown==3.6",
   "mike == 2.0.0",
   "mkdocs-gen-files == 0.5.0",
   "mkdocs-literate-nav == 0.6.1",
   "mkdocs-macros-plugin == 1.0.5",
-  "mkdocs-material == 9.5.3",
-  "mkdocstrings[python] == 0.24.0",
+  "mkdocs-material == 9.5.18",
+  "mkdocstrings[python] == 0.24.3",
   "frequenz-repo-config[lib] == 0.9.1",
 ]
 dev-mypy = [
-  "mypy == 1.8.0",
+  "mypy == 1.9.0",
   "grpc-stubs == 1.53.0.5",
-  "types-Markdown == 3.5.0.20240129",
+  "types-Markdown == 3.6.0.20240316",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
@@ -73,16 +73,16 @@ dev-noxfile = [
   "frequenz-repo-config[lib] == 0.9.1",
 ]
 dev-pylint = [
-  "pylint == 3.0.3",
+  "pylint == 3.1.0",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
 dev-pytest = [
-  "pytest == 8.0.0",
+  "pytest == 8.1.1",
   "frequenz-repo-config[extra-lint-examples] == 0.9.1",
-  "pytest-mock == 3.11.1",
-  "pytest-asyncio == 0.21.1",
-  "async-solipsism == 0.5",
+  "pytest-mock == 3.14.0",
+  "pytest-asyncio == 0.23.6",
+  "async-solipsism == 0.6",
   "deepdiff == 6.7.1",
 ]
 dev = [
