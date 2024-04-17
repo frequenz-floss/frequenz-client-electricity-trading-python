@@ -30,7 +30,7 @@ dependencies = [
   "frequenz-api-common >= 0.5.3, < 0.7.0",
   "googleapis-common-protos >= 1.56.4, < 2",
   "grpcio >= 1.60.0, < 2",
-  "frequenz-channels >= 0.16.0, < 0.17.0",
+  "frequenz-channels >= 0.16.0, < 1.1.0",
   "frequenz-client-base >= 0.1.0, < 0.4",
   "frequenz-api-electricity-trading == 0.2.0",
 ]
