@@ -971,21 +971,31 @@ class Order:  # pylint: disable=too-many-instance-attributes
             side=MarketSide.from_pb(order.side),
             price=Price.from_pb(order.price),
             quantity=Energy.from_pb(order.quantity),
-            stop_price=Price.from_pb(order.stop_price)
-            if order.HasField("stop_price")
-            else None,
-            peak_price_delta=Price.from_pb(order.peak_price_delta)
-            if order.HasField("peak_price_delta")
-            else None,
-            display_quantity=Energy.from_pb(order.display_quantity)
-            if order.HasField("display_quantity")
-            else None,
-            execution_option=OrderExecutionOption.from_pb(order.execution_option)
-            if order.HasField("execution_option")
-            else None,
-            valid_until=order.valid_until.ToDatetime(tzinfo=timezone.utc)
-            if order.HasField("valid_until")
-            else None,
+            stop_price=(
+                Price.from_pb(order.stop_price)
+                if order.HasField("stop_price")
+                else None
+            ),
+            peak_price_delta=(
+                Price.from_pb(order.peak_price_delta)
+                if order.HasField("peak_price_delta")
+                else None
+            ),
+            display_quantity=(
+                Energy.from_pb(order.display_quantity)
+                if order.HasField("display_quantity")
+                else None
+            ),
+            execution_option=(
+                OrderExecutionOption.from_pb(order.execution_option)
+                if order.HasField("execution_option")
+                else None
+            ),
+            valid_until=(
+                order.valid_until.ToDatetime(tzinfo=timezone.utc)
+                if order.HasField("valid_until")
+                else None
+            ),
             payload=json_format.MessageToDict(order.payload) if order.payload else None,
             tag=order.tag if order.tag else None,
         )
@@ -1010,12 +1020,12 @@ class Order:  # pylint: disable=too-many-instance-attributes
             price=self.price.to_pb(),
             quantity=self.quantity.to_pb(),
             stop_price=self.stop_price.to_pb() if self.stop_price else None,
-            peak_price_delta=self.peak_price_delta.to_pb()
-            if self.peak_price_delta
-            else None,
-            display_quantity=self.display_quantity.to_pb()
-            if self.display_quantity
-            else None,
+            peak_price_delta=(
+                self.peak_price_delta.to_pb() if self.peak_price_delta else None
+            ),
+            display_quantity=(
+                self.display_quantity.to_pb() if self.display_quantity else None
+            ),
             execution_option=(
                 electricity_trading_pb2.OrderExecutionOption.ValueType(
                     self.execution_option.value
@@ -1415,18 +1425,22 @@ class GridpoolOrderFilter:
             Protobuf GridpoolOrderFilter corresponding to the object.
         """
         return electricity_trading_pb2.GridpoolOrderFilter(
-            states=[
-                electricity_trading_pb2.OrderState.ValueType(state.value)
-                for state in self.order_states
-            ]
-            if self.order_states
-            else None,
-            side=electricity_trading_pb2.MarketSide.ValueType(self.side.value)
-            if self.side
-            else None,
-            delivery_period=self.delivery_period.to_pb()
-            if self.delivery_period
-            else None,
+            states=(
+                [
+                    electricity_trading_pb2.OrderState.ValueType(state.value)
+                    for state in self.order_states
+                ]
+                if self.order_states
+                else None
+            ),
+            side=(
+                electricity_trading_pb2.MarketSide.ValueType(self.side.value)
+                if self.side
+                else None
+            ),
+            delivery_period=(
+                self.delivery_period.to_pb() if self.delivery_period else None
+            ),
             delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
             tag=self.tag if self.tag else None,
         )
@@ -1520,14 +1534,16 @@ class GridpoolTradeFilter:
             Protobuf GridpoolTradeFilter corresponding to the object.
         """
         return electricity_trading_pb2.GridpoolTradeFilter(
-            states=[TradeState.to_pb(state) for state in self.trade_states]
-            if self.trade_states
-            else None,
+            states=(
+                [TradeState.to_pb(state) for state in self.trade_states]
+                if self.trade_states
+                else None
+            ),
             trade_ids=self.trade_ids if self.trade_ids else None,
             side=MarketSide.to_pb(self.side) if self.side else None,
-            delivery_period=self.delivery_period.to_pb()
-            if self.delivery_period
-            else None,
+            delivery_period=(
+                self.delivery_period.to_pb() if self.delivery_period else None
+            ),
             delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
         )
 
@@ -1613,21 +1629,23 @@ class PublicTradeFilter:
             Protobuf PublicTradeFilter corresponding to the object.
         """
         return electricity_trading_pb2.PublicTradeFilter(
-            states=[
-                electricity_trading_pb2.TradeState.ValueType(state.value)
-                for state in self.states
-            ]
-            if self.states
-            else None,
-            delivery_period=self.delivery_period.to_pb()
-            if self.delivery_period
-            else None,
-            buy_delivery_area=self.buy_delivery_area.to_pb()
-            if self.buy_delivery_area
-            else None,
-            sell_delivery_area=self.sell_delivery_area.to_pb()
-            if self.sell_delivery_area
-            else None,
+            states=(
+                [
+                    electricity_trading_pb2.TradeState.ValueType(state.value)
+                    for state in self.states
+                ]
+                if self.states
+                else None
+            ),
+            delivery_period=(
+                self.delivery_period.to_pb() if self.delivery_period else None
+            ),
+            buy_delivery_area=(
+                self.buy_delivery_area.to_pb() if self.buy_delivery_area else None
+            ),
+            sell_delivery_area=(
+                self.sell_delivery_area.to_pb() if self.sell_delivery_area else None
+            ),
         )
 
 
@@ -1695,30 +1713,46 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
             UpdateOrder object corresponding to the protobuf message.
         """
         return cls(
-            price=Price.from_pb(update_order.price)
-            if update_order.HasField("price")
-            else None,
-            quantity=Energy.from_pb(update_order.quantity)
-            if update_order.HasField("quantity")
-            else None,
-            stop_price=Price.from_pb(update_order.stop_price)
-            if update_order.HasField("stop_price")
-            else None,
-            peak_price_delta=Price.from_pb(update_order.peak_price_delta)
-            if update_order.HasField("peak_price_delta")
-            else None,
-            display_quantity=Energy.from_pb(update_order.display_quantity)
-            if update_order.HasField("display_quantity")
-            else None,
-            execution_option=OrderExecutionOption.from_pb(update_order.execution_option)
-            if update_order.HasField("execution_option")
-            else None,
-            valid_until=update_order.valid_until.ToDatetime(tzinfo=timezone.utc)
-            if update_order.HasField("valid_until")
-            else None,
-            payload=json_format.MessageToDict(update_order.payload)
-            if update_order.payload
-            else None,
+            price=(
+                Price.from_pb(update_order.price)
+                if update_order.HasField("price")
+                else None
+            ),
+            quantity=(
+                Energy.from_pb(update_order.quantity)
+                if update_order.HasField("quantity")
+                else None
+            ),
+            stop_price=(
+                Price.from_pb(update_order.stop_price)
+                if update_order.HasField("stop_price")
+                else None
+            ),
+            peak_price_delta=(
+                Price.from_pb(update_order.peak_price_delta)
+                if update_order.HasField("peak_price_delta")
+                else None
+            ),
+            display_quantity=(
+                Energy.from_pb(update_order.display_quantity)
+                if update_order.HasField("display_quantity")
+                else None
+            ),
+            execution_option=(
+                OrderExecutionOption.from_pb(update_order.execution_option)
+                if update_order.HasField("execution_option")
+                else None
+            ),
+            valid_until=(
+                update_order.valid_until.ToDatetime(tzinfo=timezone.utc)
+                if update_order.HasField("valid_until")
+                else None
+            ),
+            payload=(
+                json_format.MessageToDict(update_order.payload)
+                if update_order.payload
+                else None
+            ),
             tag=update_order.tag if update_order.HasField("tag") else None,
         )
 
@@ -1737,12 +1771,12 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
             price=self.price.to_pb() if self.price else None,
             quantity=self.quantity.to_pb() if self.quantity else None,
             stop_price=self.stop_price.to_pb() if self.stop_price else None,
-            peak_price_delta=self.peak_price_delta.to_pb()
-            if self.peak_price_delta
-            else None,
-            display_quantity=self.display_quantity.to_pb()
-            if self.display_quantity
-            else None,
+            peak_price_delta=(
+                self.peak_price_delta.to_pb() if self.peak_price_delta else None
+            ),
+            display_quantity=(
+                self.display_quantity.to_pb() if self.display_quantity else None
+            ),
             execution_option=(
                 electricity_trading_pb2.OrderExecutionOption.ValueType(
                     self.execution_option.value

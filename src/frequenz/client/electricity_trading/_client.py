@@ -379,18 +379,18 @@ class Client:
             price=None if price is NO_VALUE else price,  # type: ignore
             quantity=None if quantity is NO_VALUE else quantity,  # type: ignore
             stop_price=None if stop_price is NO_VALUE else stop_price,  # type: ignore
-            peak_price_delta=None
-            if peak_price_delta is NO_VALUE
-            else peak_price_delta,  # type: ignore
-            display_quantity=None
-            if display_quantity is NO_VALUE
-            else display_quantity,  # type: ignore
-            execution_option=None
-            if execution_option is NO_VALUE
-            else execution_option,  # type: ignore
-            valid_until=None
-            if valid_until is NO_VALUE
-            else valid_until,  # type: ignore
+            peak_price_delta=(
+                None if peak_price_delta is NO_VALUE else peak_price_delta  # type: ignore
+            ),
+            display_quantity=(
+                None if display_quantity is NO_VALUE else display_quantity  # type: ignore
+            ),
+            execution_option=(
+                None if execution_option is NO_VALUE else execution_option  # type: ignore
+            ),
+            valid_until=(
+                None if valid_until is NO_VALUE else valid_until  # type: ignore
+            ),
             payload=None if payload is NO_VALUE else payload,  # type: ignore
             tag=None if tag is NO_VALUE else tag,  # type: ignore
         )
