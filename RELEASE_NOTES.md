@@ -2,16 +2,4 @@
 
 ## Summary
 
-<!-- Here goes a general summary of what this release is about -->
-
-## Upgrading
-
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
-
-## New Features
-
-<!-- Here goes the main new features and examples or instructions on how to use them -->
-
-## Bug Fixes
-
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+This is the first release of the Frequenz Electricity Trading API Client for Python on this repo. The code was imported from [frequenz-api-electricity-trading v0.1.3](https://github.com/frequenz-floss/frequenz-api-electricity-trading/releases/tag/v0.1.3), and some minor changes were made to adapt it to the updated dependencies.
