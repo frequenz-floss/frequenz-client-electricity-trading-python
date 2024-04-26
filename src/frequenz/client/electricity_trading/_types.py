@@ -632,14 +632,6 @@ class OrderState(enum.Enum):
     """The order has been canceled. This can occur due to a cancellation request by the market
     participant, system, or market operator."""
 
-    CANCEL_REQUESTED = electricity_trading_pb2.OrderState.ORDER_STATE_CANCEL_REQUESTED
-    """A cancellation request for the order has been submitted but the order is not yet removed
-    from the order book."""
-
-    CANCEL_REJECTED = electricity_trading_pb2.OrderState.ORDER_STATE_CANCEL_REJECTED
-    """The order cancellation request was rejected, likely due to it having already been filled or
-    expired."""
-
     EXPIRED = electricity_trading_pb2.OrderState.ORDER_STATE_EXPIRED
     """The order has not been filled within the defined duration and has expired."""
 
@@ -650,6 +642,12 @@ class OrderState(enum.Enum):
     HIBERNATE = electricity_trading_pb2.OrderState.ORDER_STATE_HIBERNATE
     """The order has been entered into the system but is not currently exposed to the market. This
     could be due to certain conditions not yet being met."""
+
+    PARTIALLY_FILLED_AND_CANCELED = (
+        electricity_trading_pb2.OrderState.ORDER_STATE_PARTIALLY_FILLED_AND_CANCELED
+    )
+    """The order has been partially filled and partially canceled. This can occur when the order
+    is partially filled and then a cancellation request is submitted for the remaining quantity."""
 
     @classmethod
     def from_pb(
