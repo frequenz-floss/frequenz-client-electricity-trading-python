@@ -32,7 +32,7 @@ dependencies = [
   "grpcio >= 1.60.0, < 2",
   "frequenz-channels >= 0.16.0, < 1.1.0",
   "frequenz-client-base >= 0.1.0, < 0.4",
-  "frequenz-api-electricity-trading == 0.2.0",
+  "frequenz-api-electricity-trading == 0.2.1",
 ]
 dynamic = ["version"]
 
