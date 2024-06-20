@@ -15,7 +15,7 @@ from frequenz.api.electricity_trading.v1 import (
     electricity_trading_pb2_grpc,
 )
 from frequenz.channels import Receiver
-from frequenz.client.base.grpc_streaming_helper import GrpcStreamingHelper
+from frequenz.client.base.streaming import GrpcStreamBroadcaster
 from google.protobuf import field_mask_pb2, struct_pb2
 
 from ._types import (
@@ -64,21 +64,21 @@ class Client:
 
         self._gridpool_orders_streams: dict[
             tuple[int, GridpoolOrderFilter],
-            GrpcStreamingHelper[
+            GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceiveGridpoolOrdersStreamResponse, OrderDetail
             ],
         ] = {}
 
         self._gridpool_trades_streams: dict[
             tuple[int, GridpoolTradeFilter],
-            GrpcStreamingHelper[
+            GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceiveGridpoolTradesStreamResponse, Trade
             ],
         ] = {}
 
         self._public_trades_streams: dict[
             PublicTradeFilter,
-            GrpcStreamingHelper[
+            GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceivePublicTradesStreamResponse, PublicTrade
             ],
         ] = {}
@@ -121,7 +121,7 @@ class Client:
 
         if stream_key not in self._gridpool_orders_streams:
             try:
-                self._gridpool_orders_streams[stream_key] = GrpcStreamingHelper(
+                self._gridpool_orders_streams[stream_key] = GrpcStreamBroadcaster(
                     f"electricity-trading-{stream_key}",
                     lambda: self._stub.ReceiveGridpoolOrdersStream(  # type: ignore
                         electricity_trading_pb2.ReceiveGridpoolOrdersStreamRequest(
@@ -176,7 +176,7 @@ class Client:
 
         if stream_key not in self._gridpool_trades_streams:
             try:
-                self._gridpool_trades_streams[stream_key] = GrpcStreamingHelper(
+                self._gridpool_trades_streams[stream_key] = GrpcStreamBroadcaster(
                     f"electricity-trading-{stream_key}",
                     lambda: self._stub.ReceiveGridpoolTradesStream(  # type: ignore
                         electricity_trading_pb2.ReceiveGridpoolTradesStreamRequest(
@@ -224,14 +224,16 @@ class Client:
 
         if public_trade_filter not in self._public_trades_streams:
             try:
-                self._public_trades_streams[public_trade_filter] = GrpcStreamingHelper(
-                    f"electricity-trading-{public_trade_filter}",
-                    lambda: self._stub.ReceivePublicTradesStream(  # type: ignore
-                        electricity_trading_pb2.ReceivePublicTradesStreamRequest(
-                            filter=public_trade_filter.to_pb(),
-                        )
-                    ),
-                    lambda response: PublicTrade.from_pb(response.public_trade),
+                self._public_trades_streams[public_trade_filter] = (
+                    GrpcStreamBroadcaster(
+                        f"electricity-trading-{public_trade_filter}",
+                        lambda: self._stub.ReceivePublicTradesStream(  # type: ignore
+                            electricity_trading_pb2.ReceivePublicTradesStreamRequest(
+                                filter=public_trade_filter.to_pb(),
+                            )
+                        ),
+                        lambda response: PublicTrade.from_pb(response.public_trade),
+                    )
                 )
             except grpc.RpcError as e:
                 _logger.exception("Error occurred while streaming public trades: %s", e)
