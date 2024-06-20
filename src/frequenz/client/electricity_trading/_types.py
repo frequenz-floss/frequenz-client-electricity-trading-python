@@ -643,12 +643,6 @@ class OrderState(enum.Enum):
     """The order has been entered into the system but is not currently exposed to the market. This
     could be due to certain conditions not yet being met."""
 
-    PARTIALLY_FILLED_AND_CANCELED = (
-        electricity_trading_pb2.OrderState.ORDER_STATE_PARTIALLY_FILLED_AND_CANCELED
-    )
-    """The order has been partially filled and partially canceled. This can occur when the order
-    is partially filled and then a cancellation request is submitted for the remaining quantity."""
-
     @classmethod
     def from_pb(
         cls, order_state: electricity_trading_pb2.OrderState.ValueType
