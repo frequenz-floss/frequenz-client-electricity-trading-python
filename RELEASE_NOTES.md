@@ -6,9 +6,12 @@
 
 ## Upgrading
 
-- Refactor order states following `frequenz-api-electricity-trading` update to v0.2.1:
-  - Add new order state PARTIALLY_FILLED_AND_CANCELED
-  - Remove obsolete order states CANCEL_REQUESTED and CANCEL_REJECTED
+- Refactor order states following `frequenz-api-electricity-trading` update to <branch>:
+  * Remove obsolete order states CANCEL_REQUESTED and CANCEL_REJECTED
+
+- The minimum required version of `frequenz-client-base` is now 0.3
+
+- The minimum required version of `frequenz-channels` is now 1.0
 
 ## New Features
 

@@ -27,12 +27,12 @@ classifiers = [
 requires-python = ">= 3.11, < 4"
 # TODO(cookiecutter): Remove and add more dependencies if appropriate
 dependencies = [
-  "frequenz-api-common >= 0.5.3, < 0.7.0",
+  "frequenz-api-common >= 0.5.3, < 0.6.0",
   "googleapis-common-protos >= 1.56.4, < 2",
   "grpcio >= 1.60.0, < 2",
-  "frequenz-channels >= 0.16.0, < 1.1.0",
-  "frequenz-client-base >= 0.1.0, < 0.5",
-  "frequenz-api-electricity-trading == 0.2.1",
+  "frequenz-channels >= 1.0.0, < 2",
+  "frequenz-client-base >= 0.3.0, < 0.4",
+  "frequenz-api-electricity-trading @ git+https://github.com/frequenz-floss/frequenz-api-electricity-trading@8d89155",
 ]
 dynamic = ["version"]
 
@@ -65,6 +65,7 @@ dev-mypy = [
   "mypy == 1.10.0",
   "grpc-stubs == 1.53.0.5",
   "types-Markdown == 3.6.0.20240316",
+  "types-protobuf == 5.26.0.20240422",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
