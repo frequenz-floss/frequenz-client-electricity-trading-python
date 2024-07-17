@@ -33,6 +33,7 @@ from frequenz.client.electricity_trading import (
     OrderType,
     Price,
     PublicTrade,
+    PublicTradeFilter,
     StateDetail,
     StateReason,
     Trade,
@@ -194,6 +195,32 @@ GRIDPOOL_ORDER_FILTER_PB = electricity_trading_pb2.GridpoolOrderFilter(
         code_type=delivery_area_pb2.EnergyMarketCodeType.ENERGY_MARKET_CODE_TYPE_EUROPE_EIC,
     ),
     tag="test",
+)
+
+GRIDPOOL_ORDER_FILTER_EMPTY = GridpoolOrderFilter()
+GRIDPOOL_ORDER_FILTER_EMPTY_PB = electricity_trading_pb2.GridpoolOrderFilter()
+
+PUBLIC_TRADE_FILTER = PublicTradeFilter(
+    states=[TradeState.ACTIVE, TradeState.CANCELED],
+    buy_delivery_area=DeliveryArea(
+        code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC
+    ),
+    sell_delivery_area=None,
+    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+)
+PUBLIC_TRADE_FILTER_PB = electricity_trading_pb2.PublicTradeFilter(
+    states=[
+        electricity_trading_pb2.TradeState.TRADE_STATE_ACTIVE,
+        electricity_trading_pb2.TradeState.TRADE_STATE_CANCELED,
+    ],
+    buy_delivery_area=delivery_area_pb2.DeliveryArea(
+        code="XYZ",
+        code_type=delivery_area_pb2.EnergyMarketCodeType.ENERGY_MARKET_CODE_TYPE_EUROPE_EIC,
+    ),
+    delivery_period=delivery_duration_pb2.DeliveryPeriod(
+        start=START_TIME_PB,
+        duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
+    ),
 )
 
 UPDATE_ORDER = UpdateOrder(price=Price(amount=Decimal("100.00"), currency=Currency.USD))
@@ -487,7 +514,7 @@ def test_order_detail_timezone_converted_to_utc() -> None:
 
 
 def test_gridpool_order_filter_to_pb() -> None:
-    """Test the client gridpool type conversion to protobuf."""
+    """Test the client gridpool order filter type conversion to protobuf."""
     assert_conversion_to_pb(
         original=GRIDPOOL_ORDER_FILTER,
         expected_pb=GRIDPOOL_ORDER_FILTER_PB,
@@ -496,10 +523,46 @@ def test_gridpool_order_filter_to_pb() -> None:
 
 
 def test_gridpool_order_filter_from_pb() -> None:
-    """Test the client gridpool type conversion from protobuf."""
+    """Test the client gridpool order filter type conversion from protobuf."""
     assert_conversion_from_pb(
         original_pb=GRIDPOOL_ORDER_FILTER_PB,
         expected=GRIDPOOL_ORDER_FILTER,
+        assert_func=assert_equal,
+    )
+
+
+def test_gridpool_order_filter_empty_to_pb() -> None:
+    """Test the client empty gridpool order filter type conversion to protobuf."""
+    assert_conversion_to_pb(
+        original=GRIDPOOL_ORDER_FILTER_EMPTY,
+        expected_pb=GRIDPOOL_ORDER_FILTER_EMPTY_PB,
+        assert_func=assert_equal,
+    )
+
+
+def test_gridpool_order_filter_empty_from_pb() -> None:
+    """Test the client empty gridpool order filter type conversion from protobuf."""
+    assert_conversion_from_pb(
+        original_pb=GRIDPOOL_ORDER_FILTER_EMPTY_PB,
+        expected=GRIDPOOL_ORDER_FILTER_EMPTY,
+        assert_func=assert_equal,
+    )
+
+
+def test_public_trade_filter_to_pb() -> None:
+    """Test the client public trade filter type conversion to protobuf."""
+    assert_conversion_to_pb(
+        original=PUBLIC_TRADE_FILTER,
+        expected_pb=PUBLIC_TRADE_FILTER_PB,
+        assert_func=assert_equal,
+    )
+
+
+def test_public_trade_filter_from_pb() -> None:
+    """Test the client public trade filter type conversion from protobuf."""
+    assert_conversion_from_pb(
+        original_pb=PUBLIC_TRADE_FILTER_PB,
+        expected=PUBLIC_TRADE_FILTER,
         assert_func=assert_equal,
     )
 
