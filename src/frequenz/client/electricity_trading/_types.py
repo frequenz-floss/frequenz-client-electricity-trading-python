@@ -1399,15 +1399,31 @@ class GridpoolOrderFilter:
             GridpoolOrderFilter object corresponding to the protobuf message.
         """
         return cls(
-            order_states=[
-                OrderState.from_pb(state) for state in gridpool_order_filter.states
-            ],
-            side=MarketSide.from_pb(gridpool_order_filter.side),
-            delivery_period=DeliveryPeriod.from_pb(
-                gridpool_order_filter.delivery_period
+            order_states=(
+                [OrderState.from_pb(state) for state in gridpool_order_filter.states]
+                if gridpool_order_filter.states
+                else None
             ),
-            delivery_area=DeliveryArea.from_pb(gridpool_order_filter.delivery_area),
-            tag=gridpool_order_filter.tag,
+            side=(
+                MarketSide.from_pb(gridpool_order_filter.side)
+                if gridpool_order_filter.HasField("side")
+                else None
+            ),
+            delivery_period=(
+                DeliveryPeriod.from_pb(gridpool_order_filter.delivery_period)
+                if gridpool_order_filter.HasField("delivery_period")
+                else None
+            ),
+            delivery_area=(
+                DeliveryArea.from_pb(gridpool_order_filter.delivery_area)
+                if gridpool_order_filter.HasField("delivery_area")
+                else None
+            ),
+            tag=(
+                gridpool_order_filter.tag
+                if gridpool_order_filter.HasField("tag")
+                else None
+            ),
         )
 
     def to_pb(self) -> electricity_trading_pb2.GridpoolOrderFilter:
@@ -1507,15 +1523,31 @@ class GridpoolTradeFilter:
             GridpoolTradeFilter object corresponding to the protobuf message.
         """
         return cls(
-            trade_states=[
-                TradeState.from_pb(state) for state in gridpool_trade_filter.states
-            ],
-            trade_ids=list(gridpool_trade_filter.trade_ids),
-            side=MarketSide.from_pb(gridpool_trade_filter.side),
-            delivery_period=DeliveryPeriod.from_pb(
-                gridpool_trade_filter.delivery_period
+            trade_states=(
+                [TradeState.from_pb(state) for state in gridpool_trade_filter.states]
+                if gridpool_trade_filter.states
+                else None
             ),
-            delivery_area=DeliveryArea.from_pb(gridpool_trade_filter.delivery_area),
+            trade_ids=(
+                list(gridpool_trade_filter.trade_ids)
+                if gridpool_trade_filter.trade_ids
+                else None
+            ),
+            side=(
+                MarketSide.from_pb(gridpool_trade_filter.side)
+                if gridpool_trade_filter.HasField("side")
+                else None
+            ),
+            delivery_period=(
+                DeliveryPeriod.from_pb(gridpool_trade_filter.delivery_period)
+                if gridpool_trade_filter.HasField("delivery_period")
+                else None
+            ),
+            delivery_area=(
+                DeliveryArea.from_pb(gridpool_trade_filter.delivery_area)
+                if gridpool_trade_filter.HasField("delivery_area")
+                else None
+            ),
         )
 
     def to_pb(self) -> electricity_trading_pb2.GridpoolTradeFilter:
@@ -1604,13 +1636,25 @@ class PublicTradeFilter:
             PublicTradeFilter object corresponding to the protobuf message.
         """
         return cls(
-            states=[TradeState.from_pb(state) for state in public_trade_filter.states],
-            delivery_period=DeliveryPeriod.from_pb(public_trade_filter.delivery_period),
-            buy_delivery_area=DeliveryArea.from_pb(
-                public_trade_filter.buy_delivery_area
+            states=(
+                [TradeState.from_pb(state) for state in public_trade_filter.states]
+                if public_trade_filter.states
+                else None
             ),
-            sell_delivery_area=DeliveryArea.from_pb(
-                public_trade_filter.sell_delivery_area
+            delivery_period=(
+                DeliveryPeriod.from_pb(public_trade_filter.delivery_period)
+                if public_trade_filter.HasField("delivery_period")
+                else None
+            ),
+            buy_delivery_area=(
+                DeliveryArea.from_pb(public_trade_filter.buy_delivery_area)
+                if public_trade_filter.HasField("buy_delivery_area")
+                else None
+            ),
+            sell_delivery_area=(
+                DeliveryArea.from_pb(public_trade_filter.sell_delivery_area)
+                if public_trade_filter.HasField("sell_delivery_area")
+                else None
             ),
         )
 

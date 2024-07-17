@@ -7,7 +7,8 @@
 ## Upgrading
 
 - Refactor order states following `frequenz-api-electricity-trading` update to <branch>:
-  * Remove obsolete order states CANCEL_REQUESTED and CANCEL_REJECTED
+
+  - Remove obsolete order states CANCEL_REQUESTED and CANCEL_REJECTED
 
 - The minimum required version of `frequenz-client-base` is now 0.3
 
@@ -19,4 +20,4 @@
 
 ## Bug Fixes
 
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+- Handle missing protobuf fields in Filter classes
