@@ -5,6 +5,7 @@
 
 import logging
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from typing import Awaitable, cast
 
 import grpc
@@ -47,6 +48,35 @@ class _Sentinel:
 
 
 NO_VALUE = _Sentinel()
+PRECISION_DECIMAL_PRICE = 2
+PRECISION_DECIMAL_QUANTITY = 1
+
+
+def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> None:
+    """
+    Validate that the decimal places of a given value do not exceed a specified limit.
+
+    Args:
+        value: The value to be checked.
+        decimal_places: The maximum allowed decimal places.
+        name: The name of the value (for error messages).
+
+    Raises:
+        ValueError: If the value has more decimal places than allowed.
+                    or the value is not a valid decimal number.
+    """
+    assert decimal_places >= 0, "The decimal places must be a non-negative integer."
+
+    try:
+        exponent = int(value.as_tuple().exponent)
+        if abs(exponent) > decimal_places:
+            raise ValueError(
+                f"The {name} cannot have more than {decimal_places} decimal places."
+            )
+    except InvalidOperation as exc:
+        raise ValueError(
+            f"The value {value} for {name} is not a valid decimal number."
+        ) from exc
 
 
 class Client:
@@ -282,6 +312,21 @@ class Client:
         Raises:
             grpc.RpcError: An error occurred while creating the order.
         """
+        validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
+        validate_decimal_places(quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity")
+        if stop_price is not None:
+            validate_decimal_places(
+                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
+            )
+        if peak_price_delta is not None:
+            validate_decimal_places(
+                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
+            )
+        if display_quantity is not None:
+            validate_decimal_places(
+                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
+            )
+
         order = Order(
             delivery_area=delivery_area,
             delivery_period=delivery_period,
@@ -356,6 +401,25 @@ class Client:
         Raises:
             ValueError: If no fields to update are provided.
         """
+        if not isinstance(price, _Sentinel) and price is not None:
+            validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
+        if not isinstance(quantity, _Sentinel) and quantity is not None:
+            validate_decimal_places(
+                quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity"
+            )
+        if not isinstance(stop_price, _Sentinel) and stop_price is not None:
+            validate_decimal_places(
+                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
+            )
+        if not isinstance(peak_price_delta, _Sentinel) and peak_price_delta is not None:
+            validate_decimal_places(
+                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
+            )
+        if not isinstance(display_quantity, _Sentinel) and display_quantity is not None:
+            validate_decimal_places(
+                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
+            )
+
         params = {
             "price": price,
             "quantity": quantity,

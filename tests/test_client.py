@@ -57,8 +57,8 @@ def set_up() -> Generator[Any, Any, Any]:
     )
     order_type = OrderType.LIMIT
     side = MarketSide.BUY
-    price = Price(amount=Decimal(50), currency=Currency.EUR)
-    quantity = Energy(mwh=Decimal(0.1))
+    price = Price(amount=Decimal("50"), currency=Currency.EUR)
+    quantity = Energy(mwh=Decimal("0.1"))
     order_execution_option = OrderExecutionOption.AON
     valid_until = datetime.fromisoformat("2023-01-01T00:00:00+00:00")
 
