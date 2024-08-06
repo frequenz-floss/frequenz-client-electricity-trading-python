@@ -16,7 +16,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+- Restrict the decimal points of the quantity and price values
 
 ## Bug Fixes
 
