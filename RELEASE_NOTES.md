@@ -18,6 +18,8 @@
 
 - Restrict the decimal points of the quantity and price values
 
+- Integrate the BaseApiClient v0.5 into the client
+
 ## Bug Fixes
 
 - Handle missing protobuf fields in Filter classes
