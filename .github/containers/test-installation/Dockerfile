@@ -13,5 +13,9 @@ RUN apt-get update -y && \
     python -m pip install --upgrade --no-cache-dir pip
 
 COPY dist dist
-RUN pip install dist/*.whl && \
-    rm -rf dist
+# This git-credentials file is made available by the GitHub ci.yaml workflow
+COPY git-credentials /root/.git-credentials
+
+RUN git config --global credential.helper store && \
+    pip install dist/*.whl && \
+    rm -rf dist /root/.git-credentials
