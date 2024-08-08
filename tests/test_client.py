@@ -5,7 +5,7 @@
 import asyncio
 from datetime import datetime, timedelta
 from decimal import Decimal
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -39,10 +39,9 @@ from frequenz.client.electricity_trading import (
 def set_up() -> Generator[Any, Any, Any]:
     """Set up the test suite."""
     # Create a mock client and stub
-    mock_channel = MagicMock()
-    client = Client(grpc_channel=mock_channel)
+    _ = Client("grpc://unknown.host", connect=False)
     mock_stub = AsyncMock()
-    client._stub = mock_stub  # pylint: disable=protected-access
+    _._stub = mock_stub  # pylint: disable=protected-access
 
     # Create a new event loop for each test
     loop = asyncio.new_event_loop()
@@ -63,7 +62,7 @@ def set_up() -> Generator[Any, Any, Any]:
     valid_until = datetime.fromisoformat("2023-01-01T00:00:00+00:00")
 
     yield {
-        "client": client,
+        "client": _,
         "mock_stub": mock_stub,
         "loop": loop,
         "gridpool_id": gridpool_id,

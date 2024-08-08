@@ -11,11 +11,12 @@ from typing import Awaitable, cast
 import grpc
 
 # pylint: disable=no-member
-from frequenz.api.electricity_trading.v1 import (
-    electricity_trading_pb2,
-    electricity_trading_pb2_grpc,
+from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
+from frequenz.api.electricity_trading.v1.electricity_trading_pb2_grpc import (
+    ElectricityTradingServiceStub,
 )
 from frequenz.channels import Receiver
+from frequenz.client.base.client import BaseApiClient
 from frequenz.client.base.streaming import GrpcStreamBroadcaster
 from google.protobuf import field_mask_pb2, struct_pb2
 
@@ -79,17 +80,18 @@ def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> N
         ) from exc
 
 
-class Client:
+class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
     """Electricity trading client."""
 
-    def __init__(self, grpc_channel: grpc.aio.Channel) -> None:
+    def __init__(self, server_url: str, connect: bool = True) -> None:
         """Initialize the client.
 
         Args:
-            grpc_channel: gRPC channel to use for communication with the API.
+            server_url: The URL of the Electricity Trading service.
+            connect: Whether to connect to the server immediately.
         """
-        self._stub = electricity_trading_pb2_grpc.ElectricityTradingServiceStub(
-            grpc_channel
+        super().__init__(
+            server_url, ElectricityTradingServiceStub, grpc.aio.Channel, connect=connect
         )
 
         self._gridpool_orders_streams: dict[
@@ -153,7 +155,7 @@ class Client:
             try:
                 self._gridpool_orders_streams[stream_key] = GrpcStreamBroadcaster(
                     f"electricity-trading-{stream_key}",
-                    lambda: self._stub.ReceiveGridpoolOrdersStream(  # type: ignore
+                    lambda: self.stub.ReceiveGridpoolOrdersStream(  # type: ignore
                         electricity_trading_pb2.ReceiveGridpoolOrdersStreamRequest(
                             gridpool_id=gridpool_id,
                             filter=gridpool_order_filter.to_pb(),
@@ -208,7 +210,7 @@ class Client:
             try:
                 self._gridpool_trades_streams[stream_key] = GrpcStreamBroadcaster(
                     f"electricity-trading-{stream_key}",
-                    lambda: self._stub.ReceiveGridpoolTradesStream(  # type: ignore
+                    lambda: self.stub.ReceiveGridpoolTradesStream(  # type: ignore
                         electricity_trading_pb2.ReceiveGridpoolTradesStreamRequest(
                             gridpool_id=gridpool_id,
                             filter=gridpool_trade_filter.to_pb(),
@@ -257,7 +259,7 @@ class Client:
                 self._public_trades_streams[public_trade_filter] = (
                     GrpcStreamBroadcaster(
                         f"electricity-trading-{public_trade_filter}",
-                        lambda: self._stub.ReceivePublicTradesStream(  # type: ignore
+                        lambda: self.stub.ReceivePublicTradesStream(  # type: ignore
                             electricity_trading_pb2.ReceivePublicTradesStreamRequest(
                                 filter=public_trade_filter.to_pb(),
                             )
@@ -346,7 +348,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.CreateGridpoolOrderResponse],
-                self._stub.CreateGridpoolOrder(
+                self.stub.CreateGridpoolOrder(
                     electricity_trading_pb2.CreateGridpoolOrderRequest(
                         gridpool_id=gridpool_id,
                         order=order.to_pb(),
@@ -464,7 +466,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.UpdateGridpoolOrderResponse],
-                self._stub.UpdateGridpoolOrder(
+                self.stub.UpdateGridpoolOrder(
                     electricity_trading_pb2.UpdateGridpoolOrderRequest(
                         gridpool_id=gridpool_id,
                         order_id=order_id,
@@ -498,7 +500,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.CancelGridpoolOrderResponse],
-                self._stub.CancelGridpoolOrder(
+                self.stub.CancelGridpoolOrder(
                     electricity_trading_pb2.CancelGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
                     )
@@ -525,7 +527,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.CancelAllGridpoolOrdersResponse],
-                self._stub.CancelAllGridpoolOrders(
+                self.stub.CancelAllGridpoolOrders(
                     electricity_trading_pb2.CancelAllGridpoolOrdersRequest(
                         gridpool_id=gridpool_id
                     )
@@ -556,7 +558,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.GetGridpoolOrderResponse],
-                self._stub.GetGridpoolOrder(
+                self.stub.GetGridpoolOrder(
                     electricity_trading_pb2.GetGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
                     )
@@ -614,7 +616,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.ListGridpoolOrdersResponse],
-                self._stub.ListGridpoolOrders(
+                self.stub.ListGridpoolOrders(
                     electricity_trading_pb2.ListGridpoolOrdersRequest(
                         gridpool_id=gridpool_id,
                         filter=gridpool_order_filer.to_pb(),
@@ -677,7 +679,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.ListGridpoolTradesResponse],
-                self._stub.ListGridpoolTrades(
+                self.stub.ListGridpoolTrades(
                     electricity_trading_pb2.ListGridpoolTradesRequest(
                         gridpool_id=gridpool_id,
                         filter=gridpool_trade_filter.to_pb(),
@@ -732,7 +734,7 @@ class Client:
         try:
             response = await cast(
                 Awaitable[electricity_trading_pb2.ListPublicTradesResponse],
-                self._stub.ListPublicTrades(
+                self.stub.ListPublicTrades(
                     electricity_trading_pb2.ListPublicTradesRequest(
                         filter=public_trade_filter.to_pb(),
                         pagination_params=pagination_params.to_pb(),
