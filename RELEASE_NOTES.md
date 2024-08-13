@@ -20,6 +20,8 @@
 
 - Integrate the BaseApiClient v0.5 into the client
 
+- Add key based authorization to the client
+
 ## Bug Fixes
 
 - Handle missing protobuf fields in Filter classes
