@@ -83,12 +83,15 @@ def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> N
 class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
     """Electricity trading client."""
 
-    def __init__(self, server_url: str, connect: bool = True) -> None:
+    def __init__(
+        self, server_url: str, connect: bool = True, auth_key: str | None = None
+    ) -> None:
         """Initialize the client.
 
         Args:
             server_url: The URL of the Electricity Trading service.
             connect: Whether to connect to the server immediately.
+            auth_key: The API key for the authorization.
         """
         super().__init__(
             server_url, ElectricityTradingServiceStub, grpc.aio.Channel, connect=connect
@@ -114,6 +117,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 electricity_trading_pb2.ReceivePublicTradesStreamResponse, PublicTrade
             ],
         ] = {}
+
+        self._metadata = (("key", auth_key),) if auth_key else ()
 
     async def stream_gridpool_orders(  # pylint: disable=too-many-arguments
         self,
@@ -159,7 +164,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         electricity_trading_pb2.ReceiveGridpoolOrdersStreamRequest(
                             gridpool_id=gridpool_id,
                             filter=gridpool_order_filter.to_pb(),
-                        )
+                        ),
+                        metadata=self._metadata,
                     ),
                     lambda response: OrderDetail.from_pb(response.order_detail),
                 )
@@ -214,7 +220,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         electricity_trading_pb2.ReceiveGridpoolTradesStreamRequest(
                             gridpool_id=gridpool_id,
                             filter=gridpool_trade_filter.to_pb(),
-                        )
+                        ),
+                        metadata=self._metadata,
                     ),
                     lambda response: Trade.from_pb(response.trade),
                 )
@@ -262,7 +269,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         lambda: self.stub.ReceivePublicTradesStream(  # type: ignore
                             electricity_trading_pb2.ReceivePublicTradesStreamRequest(
                                 filter=public_trade_filter.to_pb(),
-                            )
+                            ),
+                            metadata=self._metadata,
                         ),
                         lambda response: PublicTrade.from_pb(response.public_trade),
                     )
@@ -352,7 +360,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                     electricity_trading_pb2.CreateGridpoolOrderRequest(
                         gridpool_id=gridpool_id,
                         order=order.to_pb(),
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
         except grpc.RpcError as e:
@@ -472,7 +481,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         order_id=order_id,
                         update_order_fields=update_order_fields.to_pb(),
                         update_mask=update_mask,
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
             return OrderDetail.from_pb(response.order_detail)
@@ -503,7 +513,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 self.stub.CancelGridpoolOrder(
                     electricity_trading_pb2.CancelGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
             return OrderDetail.from_pb(response.order_detail)
@@ -530,7 +541,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 self.stub.CancelAllGridpoolOrders(
                     electricity_trading_pb2.CancelAllGridpoolOrdersRequest(
                         gridpool_id=gridpool_id
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
 
@@ -561,7 +573,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 self.stub.GetGridpoolOrder(
                     electricity_trading_pb2.GetGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
 
@@ -621,7 +634,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         gridpool_id=gridpool_id,
                         filter=gridpool_order_filer.to_pb(),
                         pagination_params=pagination_params.to_pb(),
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
 
@@ -684,7 +698,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                         gridpool_id=gridpool_id,
                         filter=gridpool_trade_filter.to_pb(),
                         pagination_params=pagination_params.to_pb(),
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
 
@@ -738,7 +753,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                     electricity_trading_pb2.ListPublicTradesRequest(
                         filter=public_trade_filter.to_pb(),
                         pagination_params=pagination_params.to_pb(),
-                    )
+                    ),
+                    metadata=self._metadata,
                 ),
             )
 
