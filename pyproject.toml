@@ -32,7 +32,7 @@ dependencies = [
   "grpcio >= 1.60.0, < 2",
   "frequenz-channels >= 1.0.0, < 2",
   "frequenz-client-base[grpcio] >= 0.5.0, < 0.6.0",
-  "frequenz-api-electricity-trading @ git+https://github.com/frequenz-floss/frequenz-api-electricity-trading@8d89155",
+  "frequenz-api-electricity-trading >= 0.2.2, < 1",
 ]
 dynamic = ["version"]
 

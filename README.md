@@ -30,7 +30,7 @@ You can install the Frequenz Electricity Trading API client via pip. Replace `VE
 
 ```
 # Choose the version you want to install
-VERSION=0.2.0
+VERSION=0.2.2
 pip install frequenz-client-electricity-trading==$VERSION
 ```
 
