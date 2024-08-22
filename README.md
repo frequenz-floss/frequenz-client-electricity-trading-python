@@ -10,6 +10,7 @@ Electricity Trading API client for Python
 The Frequenz Electricity Trading API client for Python is an easy-to-use Python interface built to interact with the Frequenz Electricity Trading API. It allows you to create orders, get market data, and manage your orders.
 
 ## Features
+
 * **Create and manage gridpool orders**: Place new orders, update existing ones, and cancel orders when necessary.
 * **Stream live data**: Get real-time updates on market data, including order books, trades, and market prices.
 * **Retrieve historical data**: Access historical data on market trades.
@@ -18,9 +19,9 @@ The Frequenz Electricity Trading API client for Python is an easy-to-use Python 
 
 The following platforms are officially supported (tested):
 
-- **Python:** 3.11
-- **Operating System:** Ubuntu Linux 20.04
-- **Architectures:** amd64, arm64
+* **Python:** 3.11
+* **Operating System:** Ubuntu Linux 20.04
+* **Architectures:** amd64, arm64
 
 ## Usage
 
@@ -28,7 +29,7 @@ The following platforms are officially supported (tested):
 
 You can install the Frequenz Electricity Trading API client via pip. Replace `VERSION` with the specific version you wish to install.
 
-```
+```sh
 # Choose the version you want to install
 VERSION=0.2.2
 pip install frequenz-client-electricity-trading==$VERSION
@@ -37,6 +38,7 @@ pip install frequenz-client-electricity-trading==$VERSION
 ### Initialization
 
 First, initialize the client with the appropriate server URL and API key.
+
 ```python
 from frequenz.client.electricity_trading import Client
 
@@ -52,6 +54,7 @@ client = Client(
 ### Create an Order
 
 Here's an example of how one can create a limit order to buy energy.
+
 ```python
 from frequenz.client.electricity_trading import (
     Currency,
