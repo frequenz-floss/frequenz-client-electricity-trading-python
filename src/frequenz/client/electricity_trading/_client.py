@@ -639,10 +639,17 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 ),
             )
 
-            return [
-                OrderDetail.from_pb(order_detail)
-                for order_detail in response.order_details
-            ]
+            orders: list[OrderDetail] = []
+            for order_detail in response.order_details:
+                try:
+                    orders.append(OrderDetail.from_pb(order_detail))
+                except InvalidOperation:
+                    _logger.error(
+                        "Failed to convert order details for order: %s",
+                        str(order_detail).replace("\n", ""),
+                    )
+
+            return orders
         except grpc.RpcError as e:
             _logger.exception("Error occurred while listing gridpool orders: %s", e)
             raise e
