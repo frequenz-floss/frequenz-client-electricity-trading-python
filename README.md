@@ -116,7 +116,8 @@ buy_orders = await self._client.list_gridpool_orders(
 To get real-time updates on market trades, one can use the following code snippet.
 
 ```python
-async for public_trade in client.stream_public_trades():
+stream_public_trades = await client.stream_public_trades()
+async for public_trade in stream_public_trades:
     print(f"Received public trade: {public_trade}")
 ```
 
