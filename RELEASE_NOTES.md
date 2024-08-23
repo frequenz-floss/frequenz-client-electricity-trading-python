@@ -6,22 +6,12 @@
 
 ## Upgrading
 
-- Refactor order states following `frequenz-api-electricity-trading` update to <branch>:
-
-  - Remove obsolete order states CANCEL_REQUESTED and CANCEL_REJECTED
-
-- The minimum required version of `frequenz-client-base` is now 0.3
-
-- The minimum required version of `frequenz-channels` is now 1.0
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 ## New Features
 
-- Restrict the decimal points of the quantity and price values
-
-- Integrate the BaseApiClient v0.5 into the client
-
-- Add key based authorization to the client
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-- Handle missing protobuf fields in Filter classes
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
