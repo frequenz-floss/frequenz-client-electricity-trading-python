@@ -76,8 +76,8 @@ delivery_area = DeliveryArea(
     code_type=EnergyMarketCodeType.EUROPE_EIC
 )
 delivery_period = DeliveryPeriod(
-    start=datetime.fromisoformat("2024-05-01T00:00:00"),
-    duration=datetime.timedelta(minutes=15)
+    start=datetime.fromisoformat("2024-05-01T00:00:00+00:00"),
+    duration=timedelta(minutes=15)
 )
 price = Price(amount=Decimal("50.0"), currency=Currency.EUR)
 quantity = Energy(mwh=Decimal("0.1"))
