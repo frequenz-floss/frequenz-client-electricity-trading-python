@@ -10,6 +10,7 @@ Electricity Trading API client for Python
 The Frequenz Electricity Trading API client for Python is an easy-to-use Python interface built to interact with the Frequenz Electricity Trading API. It allows you to create orders, get market data, and manage your orders.
 
 ## Features
+
 * **Create and manage gridpool orders**: Place new orders, update existing ones, and cancel orders when necessary.
 * **Stream live data**: Get real-time updates on market data, including order books, trades, and market prices.
 * **Retrieve historical data**: Access historical data on market trades.
@@ -18,9 +19,9 @@ The Frequenz Electricity Trading API client for Python is an easy-to-use Python 
 
 The following platforms are officially supported (tested):
 
-- **Python:** 3.11
-- **Operating System:** Ubuntu Linux 20.04
-- **Architectures:** amd64, arm64
+* **Python:** 3.11
+* **Operating System:** Ubuntu Linux 20.04
+* **Architectures:** amd64, arm64
 
 ## Usage
 
@@ -28,15 +29,16 @@ The following platforms are officially supported (tested):
 
 You can install the Frequenz Electricity Trading API client via pip. Replace `VERSION` with the specific version you wish to install.
 
-```
+```sh
 # Choose the version you want to install
-VERSION=0.2.2
+VERSION=0.2.3
 pip install frequenz-client-electricity-trading==$VERSION
 ```
 
 ### Initialization
 
 First, initialize the client with the appropriate server URL and API key.
+
 ```python
 from frequenz.client.electricity_trading import Client
 
@@ -52,6 +54,7 @@ client = Client(
 ### Create an Order
 
 Here's an example of how one can create a limit order to buy energy.
+
 ```python
 from frequenz.client.electricity_trading import (
     Currency,
@@ -73,8 +76,8 @@ delivery_area = DeliveryArea(
     code_type=EnergyMarketCodeType.EUROPE_EIC
 )
 delivery_period = DeliveryPeriod(
-    start=datetime.fromisoformat("2024-05-01T00:00:00"),
-    duration=datetime.timedelta(minutes=15)
+    start=datetime.fromisoformat("2024-05-01T00:00:00+00:00"),
+    duration=timedelta(minutes=15)
 )
 price = Price(amount=Decimal("50.0"), currency=Currency.EUR)
 quantity = Energy(mwh=Decimal("0.1"))
@@ -84,7 +87,7 @@ order = await client.create_gridpool_order(
     delivery_period=delivery_period,
     order_type=OrderType.LIMIT,
     side=MarketSide.BUY,
-    price=quantity,
+    price=price,
     quantity=quantity,
 )
 ```
@@ -113,7 +116,8 @@ buy_orders = await self._client.list_gridpool_orders(
 To get real-time updates on market trades, one can use the following code snippet.
 
 ```python
-async for public_trade in client.stream_public_trades():
+stream_public_trades = await client.stream_public_trades()
+async for public_trade in stream_public_trades:
     print(f"Received public trade: {public_trade}")
 ```
 
