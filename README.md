@@ -87,7 +87,7 @@ order = await client.create_gridpool_order(
     delivery_period=delivery_period,
     order_type=OrderType.LIMIT,
     side=MarketSide.BUY,
-    price=quantity,
+    price=price,
     quantity=quantity,
 )
 ```
