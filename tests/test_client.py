@@ -3,7 +3,7 @@
 
 """Tests for the methods in the client."""
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from unittest.mock import AsyncMock
 
@@ -48,10 +48,14 @@ def set_up() -> Generator[Any, Any, Any]:
     asyncio.set_event_loop(loop)
 
     # Set up the parameters for the orders
+    # Setting delivery start to the next day 12:00
+    delivery_start = (datetime.now(timezone.utc) + timedelta(days=1)).replace(
+        hour=12, minute=0, second=0, microsecond=0
+    )
     gridpool_id = 123
     delivery_area = DeliveryArea(code="DE", code_type=EnergyMarketCodeType.EUROPE_EIC)
     delivery_period = DeliveryPeriod(
-        start=datetime.fromisoformat("2023-01-01T00:00:00+00:00"),
+        start=delivery_start,
         duration=timedelta(minutes=15),
     )
     order_type = OrderType.LIMIT
@@ -59,7 +63,7 @@ def set_up() -> Generator[Any, Any, Any]:
     price = Price(amount=Decimal("50"), currency=Currency.EUR)
     quantity = Energy(mwh=Decimal("0.1"))
     order_execution_option = OrderExecutionOption.AON
-    valid_until = datetime.fromisoformat("2023-01-01T00:00:00+00:00")
+    valid_until = delivery_start + timedelta(hours=3)
 
     yield {
         "client": _,
@@ -103,8 +107,8 @@ def set_up_order_detail_response(
         ),
         open_quantity=Energy(mwh=Decimal("5.00")),
         filled_quantity=Energy(mwh=Decimal("0.00")),
-        create_time=datetime.fromisoformat("2024-01-03T12:00:00+00:00"),
-        modification_time=datetime.fromisoformat("2024-01-03T12:00:00+00:00"),
+        create_time=set_up["delivery_period"].start - timedelta(hours=2),
+        modification_time=set_up["delivery_period"].start - timedelta(hours=1),
     ).to_pb()
 
 
