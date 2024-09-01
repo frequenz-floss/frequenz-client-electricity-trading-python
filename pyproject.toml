@@ -85,7 +85,7 @@ dev-pytest = [
   "pytest-mock == 3.14.0",
   "pytest-asyncio == 0.23.8",
   "async-solipsism == 0.6",
-  "deepdiff == 7.0.1",
+  "deepdiff == 8.0.1",
 ]
 dev = [
   "frequenz-client-electricity-trading[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
