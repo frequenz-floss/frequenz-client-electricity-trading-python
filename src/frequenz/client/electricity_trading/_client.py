@@ -4,7 +4,7 @@
 """Module to define the client class."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Awaitable, cast
 
@@ -146,6 +146,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         Raises:
             grpc.RpcError: If an error occurs while streaming the orders.
         """
+        self.validate_params(delivery_period=delivery_period)
+
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
             side=market_side,
@@ -202,6 +204,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         Raises:
             grpc.RpcError: If an error occurs while streaming gridpool trades.
         """
+        self.validate_params(delivery_period=delivery_period)
+
         gridpool_trade_filter = GridpoolTradeFilter(
             trade_states=trade_states,
             trade_ids=trade_ids,
@@ -254,6 +258,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         Raises:
             grpc.RpcError: If an error occurs while streaming public trades.
         """
+        self.validate_params(delivery_period=delivery_period)
+
         public_trade_filter = PublicTradeFilter(
             states=states,
             delivery_period=delivery_period,
@@ -279,6 +285,60 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
                 _logger.exception("Error occurred while streaming public trades: %s", e)
                 raise e
         return self._public_trades_streams[public_trade_filter].new_receiver()
+
+    def validate_params(  # pylint: disable=too-many-arguments
+        self,
+        price: Price | None | _Sentinel = NO_VALUE,
+        quantity: Energy | None | _Sentinel = NO_VALUE,
+        stop_price: Price | None | _Sentinel = NO_VALUE,
+        peak_price_delta: Price | None | _Sentinel = NO_VALUE,
+        display_quantity: Energy | None | _Sentinel = NO_VALUE,
+        delivery_period: DeliveryPeriod | None = None,
+        valid_until: datetime | None | _Sentinel = NO_VALUE,
+    ) -> None:
+        """
+        Validate the parameters of an order.
+
+        This method ensures the following:
+        - Price and quantity values have the correct number of decimal places and are positive.
+        - The delivery_start and valid_until values are in the future.
+
+        Args:
+            price: The price of the order.
+            quantity: The quantity of the order.
+            stop_price: The stop price of the order.
+            peak_price_delta: The peak price delta of the order.
+            display_quantity: The display quantity of the order.
+            delivery_period: The delivery period of the order.
+            valid_until: The valid until of the order.
+
+        Raises:
+            ValueError: If the parameters are invalid.
+        """
+        if not isinstance(price, _Sentinel) and price is not None:
+            validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
+        if not isinstance(quantity, _Sentinel) and quantity is not None:
+            validate_decimal_places(
+                quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity"
+            )
+        if not isinstance(stop_price, _Sentinel) and stop_price is not None:
+            validate_decimal_places(
+                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
+            )
+        if not isinstance(peak_price_delta, _Sentinel) and peak_price_delta is not None:
+            validate_decimal_places(
+                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
+            )
+        if not isinstance(display_quantity, _Sentinel) and display_quantity is not None:
+            validate_decimal_places(
+                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
+            )
+        if delivery_period is not None:
+            if delivery_period.start < datetime.now(timezone.utc):
+                raise ValueError("delivery_period must be in the future")
+        if not isinstance(valid_until, _Sentinel) and valid_until is not None:
+            if valid_until < datetime.now(timezone.utc):
+                raise ValueError("valid_until must be in the future")
 
     async def create_gridpool_order(  # pylint: disable=too-many-arguments, too-many-locals
         self,
@@ -322,21 +382,15 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         Raises:
             grpc.RpcError: An error occurred while creating the order.
         """
-        validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
-        validate_decimal_places(quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity")
-        if stop_price is not None:
-            validate_decimal_places(
-                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
-            )
-        if peak_price_delta is not None:
-            validate_decimal_places(
-                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
-            )
-        if display_quantity is not None:
-            validate_decimal_places(
-                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
-            )
-
+        self.validate_params(
+            price=price,
+            quantity=quantity,
+            stop_price=stop_price,
+            peak_price_delta=peak_price_delta,
+            display_quantity=display_quantity,
+            delivery_period=delivery_period,
+            valid_until=valid_until,
+        )
         order = Order(
             delivery_area=delivery_area,
             delivery_period=delivery_period,
@@ -412,24 +466,14 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         Raises:
             ValueError: If no fields to update are provided.
         """
-        if not isinstance(price, _Sentinel) and price is not None:
-            validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
-        if not isinstance(quantity, _Sentinel) and quantity is not None:
-            validate_decimal_places(
-                quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity"
-            )
-        if not isinstance(stop_price, _Sentinel) and stop_price is not None:
-            validate_decimal_places(
-                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
-            )
-        if not isinstance(peak_price_delta, _Sentinel) and peak_price_delta is not None:
-            validate_decimal_places(
-                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
-            )
-        if not isinstance(display_quantity, _Sentinel) and display_quantity is not None:
-            validate_decimal_places(
-                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
-            )
+        self.validate_params(
+            price=price,
+            quantity=quantity,
+            stop_price=stop_price,
+            peak_price_delta=peak_price_delta,
+            display_quantity=display_quantity,
+            valid_until=valid_until,
+        )
 
         params = {
             "price": price,
