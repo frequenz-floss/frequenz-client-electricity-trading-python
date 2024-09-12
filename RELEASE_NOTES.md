@@ -11,6 +11,7 @@
 ## New Features
 
 - Add input validation checks for `price`, `quantity`, `delivery_period`, `valid_until` and `execution_option`.
+- Updated dependencies to latest versions
 
 ## Bug Fixes
 

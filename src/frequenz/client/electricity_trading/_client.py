@@ -80,7 +80,7 @@ def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> N
         ) from exc
 
 
-class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
+class Client(BaseApiClient[ElectricityTradingServiceStub]):
     """Electricity trading client."""
 
     def __init__(
@@ -93,9 +93,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
             connect: Whether to connect to the server immediately.
             auth_key: The API key for the authorization.
         """
-        super().__init__(
-            server_url, ElectricityTradingServiceStub, grpc.aio.Channel, connect=connect
-        )
+        super().__init__(server_url, ElectricityTradingServiceStub, connect=connect)
 
         self._gridpool_orders_streams: dict[
             tuple[int, GridpoolOrderFilter],
