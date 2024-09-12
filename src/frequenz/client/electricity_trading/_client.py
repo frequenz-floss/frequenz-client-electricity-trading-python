@@ -295,6 +295,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
         display_quantity: Energy | None | _Sentinel = NO_VALUE,
         delivery_period: DeliveryPeriod | None = None,
         valid_until: datetime | None | _Sentinel = NO_VALUE,
+        execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
     ) -> None:
         """
         Validate the parameters of an order.
@@ -311,6 +312,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
             display_quantity: The display quantity of the order.
             delivery_period: The delivery period of the order.
             valid_until: The valid until of the order.
+            execution_option: The execution option of the order.
 
         Raises:
             ValueError: If the parameters are invalid.
@@ -337,6 +339,19 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
             if delivery_period.start < datetime.now(timezone.utc):
                 raise ValueError("delivery_period must be in the future")
         if not isinstance(valid_until, _Sentinel) and valid_until is not None:
+            if (
+                not isinstance(execution_option, _Sentinel)
+                and execution_option is not None
+            ):
+                if execution_option in [
+                    OrderExecutionOption.AON,
+                    OrderExecutionOption.FOK,
+                    OrderExecutionOption.IOC,
+                ]:
+                    raise ValueError(
+                        "valid_until must be None when execution_option is set to AON, FOK, or IOC"
+                    )
+
             if valid_until < datetime.now(timezone.utc):
                 raise ValueError("valid_until must be in the future")
 
@@ -390,6 +405,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
             display_quantity=display_quantity,
             delivery_period=delivery_period,
             valid_until=valid_until,
+            execution_option=execution_option,
         )
         order = Order(
             delivery_area=delivery_area,
@@ -473,6 +489,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub, grpc.aio.Channel]):
             peak_price_delta=peak_price_delta,
             display_quantity=display_quantity,
             valid_until=valid_until,
+            execution_option=execution_option,
         )
 
         params = {
