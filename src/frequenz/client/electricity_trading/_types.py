@@ -18,9 +18,9 @@ from typing import Self
 from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
 from frequenz.api.common.v1.market import energy_pb2, price_pb2
 from frequenz.api.common.v1.pagination import pagination_params_pb2
+from frequenz.api.common.v1.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import json_format, struct_pb2, timestamp_pb2
-from google.type import decimal_pb2
 
 _logger = logging.getLogger(__name__)
 

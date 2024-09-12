@@ -13,9 +13,9 @@ from deepdiff import DeepDiff
 # pylint: disable=no-member
 from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
 from frequenz.api.common.v1.market import energy_pb2, price_pb2
+from frequenz.api.common.v1.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import timestamp_pb2
-from google.type import decimal_pb2
 
 from frequenz.client.electricity_trading import (
     Currency,
