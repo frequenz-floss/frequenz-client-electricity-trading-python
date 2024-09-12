@@ -10,7 +10,7 @@
 
 ## New Features
 
-- Add input validation checks for `price`, `quantity`, `delivery_period`, and `valid_until`.
+- Add input validation checks for `price`, `quantity`, `delivery_period`, `valid_until` and `execution_option`.
 
 ## Bug Fixes
 
