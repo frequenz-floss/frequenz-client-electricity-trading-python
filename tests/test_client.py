@@ -306,3 +306,140 @@ def test_list_gridpool_orders(
         order_state.to_pb() for order_state in order_states
     ]
     assert args[0].filter.side == side.to_pb()
+
+
+@pytest.mark.parametrize(
+    "price, quantity, delivery_period, valid_until, execution_option, expected_exception",
+    [
+        # Invalid price: too many decimal places
+        (
+            Price(amount=Decimal("50.123"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            DeliveryPeriod(
+                start=(datetime.now(timezone.utc) + timedelta(days=1)),
+                duration=timedelta(hours=1),
+            ),
+            None,
+            OrderExecutionOption.AON,  # Using AON here but valid_until is None
+            ValueError,
+        ),
+        # Invalid quantity: too many decimal places
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1234")),
+            DeliveryPeriod(
+                start=(datetime.now(timezone.utc) + timedelta(days=1)),
+                duration=timedelta(hours=1),
+            ),
+            None,
+            OrderExecutionOption.AON,
+            ValueError,
+        ),
+        # Invalid delivery period: start time in the past
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            DeliveryPeriod(
+                start=(datetime.now(timezone.utc) - timedelta(days=1)),
+                duration=timedelta(hours=1),
+            ),
+            None,
+            OrderExecutionOption.AON,
+            ValueError,
+        ),
+        # Invalid valid_until: time in the past
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            DeliveryPeriod(
+                start=(datetime.now(timezone.utc) + timedelta(days=1)),
+                duration=timedelta(hours=1),
+            ),
+            datetime.now(timezone.utc) - timedelta(hours=1),
+            OrderExecutionOption.UNSPECIFIED,  # Using an option that allows valid_until
+            ValueError,
+        ),
+        # AON execution option with valid_until set (not allowed)
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            DeliveryPeriod(
+                start=(datetime.now(timezone.utc) + timedelta(days=1)),
+                duration=timedelta(hours=1),
+            ),
+            datetime.now(timezone.utc) + timedelta(days=1),
+            OrderExecutionOption.AON,  # Invalid case with AON and valid_until set
+            ValueError,
+        ),
+    ],
+)
+def test_create_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
+    set_up: dict[str, Any],
+    price: Price,
+    quantity: Energy,
+    delivery_period: DeliveryPeriod,
+    valid_until: datetime,
+    execution_option: OrderExecutionOption,
+    expected_exception: type[BaseException],
+) -> None:
+    """Test creating an order with invalid input parameters."""
+    with pytest.raises(expected_exception):
+        set_up["loop"].run_until_complete(
+            set_up["client"].create_gridpool_order(
+                gridpool_id=set_up["gridpool_id"],
+                delivery_area=set_up["delivery_area"],
+                delivery_period=delivery_period,
+                order_type=OrderType.LIMIT,
+                side=MarketSide.BUY,
+                price=price,
+                quantity=quantity,
+                execution_option=execution_option,
+                valid_until=valid_until,
+            )
+        )
+
+
+@pytest.mark.parametrize(
+    "price, quantity, valid_until, expected_exception",
+    [
+        # Invalid price: too many decimal places
+        (
+            Price(amount=Decimal("50.123"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            None,
+            ValueError,
+        ),
+        # Invalid quantity: too many decimal places
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1234")),
+            None,
+            ValueError,
+        ),
+        # Invalid valid_until: time in the past
+        (
+            Price(amount=Decimal("50"), currency=Currency.EUR),
+            Energy(mwh=Decimal("0.1")),
+            datetime.now(timezone.utc) - timedelta(hours=1),
+            ValueError,
+        ),
+    ],
+)
+def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
+    set_up: dict[str, Any],
+    price: Price,
+    quantity: Energy,
+    valid_until: datetime,
+    expected_exception: type[BaseException],
+) -> None:
+    """Test updating an order with invalid input parameters."""
+    with pytest.raises(expected_exception):
+        set_up["loop"].run_until_complete(
+            set_up["client"].update_gridpool_order(
+                gridpool_id=set_up["gridpool_id"],
+                order_id=1,
+                price=price,
+                quantity=quantity,
+                valid_until=valid_until,
+            )
+        )
