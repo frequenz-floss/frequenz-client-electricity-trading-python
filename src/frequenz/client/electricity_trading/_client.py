@@ -294,6 +294,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         delivery_period: DeliveryPeriod | None = None,
         valid_until: datetime | None | _Sentinel = NO_VALUE,
         execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
+        order_type: OrderType | None = None,
     ) -> None:
         """
         Validate the parameters of an order.
@@ -311,6 +312,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             delivery_period: The delivery period of the order.
             valid_until: The valid until of the order.
             execution_option: The execution option of the order.
+            order_type: The order type.
 
         Raises:
             ValueError: If the parameters are invalid.
@@ -322,16 +324,16 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity"
             )
         if not isinstance(stop_price, _Sentinel) and stop_price is not None:
-            validate_decimal_places(
-                stop_price.amount, PRECISION_DECIMAL_PRICE, "stop price"
+            raise NotImplementedError(
+                "STOP_LIMIT orders are not supported yet, so stop_price cannot be set."
             )
         if not isinstance(peak_price_delta, _Sentinel) and peak_price_delta is not None:
-            validate_decimal_places(
-                peak_price_delta.amount, PRECISION_DECIMAL_PRICE, "peak price delta"
+            raise NotImplementedError(
+                "ICEBERG orders are not supported yet, so peak_price_delta cannot be set."
             )
         if not isinstance(display_quantity, _Sentinel) and display_quantity is not None:
-            validate_decimal_places(
-                display_quantity.mwh, PRECISION_DECIMAL_QUANTITY, "display quantity"
+            raise NotImplementedError(
+                "ICEBERG orders are not supported yet, so display_quantity cannot be set."
             )
         if delivery_period is not None:
             if delivery_period.start < datetime.now(timezone.utc):
@@ -352,6 +354,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
             if valid_until < datetime.now(timezone.utc):
                 raise ValueError("valid_until must be in the future")
+        if order_type is not None:
+            assert order_type == OrderType.LIMIT, NotImplementedError(
+                "Currently only limit orders are supported"
+            )
 
     async def create_gridpool_order(  # pylint: disable=too-many-arguments, too-many-locals
         self,
@@ -404,6 +410,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             delivery_period=delivery_period,
             valid_until=valid_until,
             execution_option=execution_option,
+            order_type=order_type,
         )
         order = Order(
             delivery_area=delivery_area,
