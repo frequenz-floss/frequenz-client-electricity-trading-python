@@ -728,7 +728,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         market_side: MarketSide | None = None,
         delivery_period: DeliveryPeriod | None = None,
         delivery_area: DeliveryArea | None = None,
-        max_nr_orders: int | None = None,
+        max_nr_trades: int | None = None,
         page_token: str | None = None,
     ) -> list[Trade]:
         """
@@ -741,7 +741,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             market_side: The side of the market to filter by.
             delivery_period: The delivery period to filter by.
             delivery_area: The delivery area to filter by.
-            max_nr_orders: The maximum number of orders to return.
+            max_nr_trades: The maximum number of trades to return.
             page_token: The page token to use for pagination.
 
         Returns:
@@ -759,7 +759,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         )
 
         pagination_params = PaginationParams(
-            page_size=max_nr_orders,
+            page_size=max_nr_trades,
             page_token=page_token,
         )
 
@@ -787,7 +787,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         delivery_period: DeliveryPeriod | None = None,
         buy_delivery_area: DeliveryArea | None = None,
         sell_delivery_area: DeliveryArea | None = None,
-        max_nr_orders: int | None = None,
+        max_nr_trades: int | None = None,
         page_token: str | None = None,
     ) -> list[PublicTrade]:
         """
@@ -798,7 +798,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             delivery_period: The delivery period to filter by.
             buy_delivery_area: The buy delivery area to filter by.
             sell_delivery_area: The sell delivery area to filter by.
-            max_nr_orders: The maximum number of orders to return.
+            max_nr_trades: The maximum number of trades to return.
             page_token: The page token to use for pagination.
 
         Returns:
@@ -815,7 +815,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         )
 
         pagination_params = PaginationParams(
-            page_size=max_nr_orders,
+            page_size=max_nr_trades,
             page_token=page_token,
         )
 
