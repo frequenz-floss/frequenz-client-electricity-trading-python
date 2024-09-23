@@ -118,7 +118,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         self._metadata = (("key", auth_key),) if auth_key else ()
 
-    async def stream_gridpool_orders(  # pylint: disable=too-many-arguments
+    async def stream_gridpool_orders(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         gridpool_id: int,
         order_states: list[OrderState] | None = None,
@@ -173,10 +174,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 _logger.exception(
                     "Error occurred while streaming gridpool orders: %s", e
                 )
-                raise e
+                raise
         return self._gridpool_orders_streams[stream_key].new_receiver()
 
-    async def stream_gridpool_trades(  # pylint: disable=too-many-arguments
+    async def stream_gridpool_trades(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         gridpool_id: int,
         trade_states: list[TradeState] | None = None,
@@ -231,7 +233,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 _logger.exception(
                     "Error occurred while streaming gridpool trades: %s", e
                 )
-                raise e
+                raise
         return self._gridpool_trades_streams[stream_key].new_receiver()
 
     async def stream_public_trades(
@@ -281,10 +283,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 )
             except grpc.RpcError as e:
                 _logger.exception("Error occurred while streaming public trades: %s", e)
-                raise e
+                raise
         return self._public_trades_streams[public_trade_filter].new_receiver()
 
-    def validate_params(  # pylint: disable=too-many-arguments
+    def validate_params(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         price: Price | None | _Sentinel = NO_VALUE,
         quantity: Energy | None | _Sentinel = NO_VALUE,
@@ -316,6 +319,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         Raises:
             ValueError: If the parameters are invalid.
+            NotImplementedError: If the order type is not supported.
         """
         if not isinstance(price, _Sentinel) and price is not None:
             validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
@@ -359,7 +363,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 "Currently only limit orders are supported"
             )
 
-    async def create_gridpool_order(  # pylint: disable=too-many-arguments, too-many-locals
+    async def create_gridpool_order(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         self,
         gridpool_id: int,
         delivery_area: DeliveryArea,
@@ -441,11 +446,12 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             )
         except grpc.RpcError as e:
             _logger.exception("Error occurred while creating gridpool order: %s", e)
-            raise e
+            raise
 
         return OrderDetail.from_pb(response.order_detail)
 
-    async def update_gridpool_order(  # pylint: disable=too-many-arguments, too-many-locals
+    async def update_gridpool_order(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
         self,
         gridpool_id: int,
         order_id: int,
@@ -486,6 +492,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         Raises:
             ValueError: If no fields to update are provided.
+            grpc.RpcError: An error occurred while updating the order.
         """
         self.validate_params(
             price=price,
@@ -555,7 +562,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         except grpc.RpcError as e:
             _logger.exception("Error occurred while updating gridpool order: %s", e)
-            raise e
+            raise
 
     async def cancel_gridpool_order(
         self, gridpool_id: int, order_id: int
@@ -586,7 +593,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             return OrderDetail.from_pb(response.order_detail)
         except grpc.RpcError as e:
             _logger.exception("Error occurred while cancelling gridpool order: %s", e)
-            raise e
+            raise
 
     async def cancel_all_gridpool_orders(self, gridpool_id: int) -> int:
         """
@@ -617,7 +624,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             _logger.exception(
                 "Error occurred while cancelling all gridpool orders: %s", e
             )
-            raise e
+            raise
 
     async def get_gridpool_order(self, gridpool_id: int, order_id: int) -> OrderDetail:
         """
@@ -647,9 +654,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             return OrderDetail.from_pb(response.order_detail)
         except grpc.RpcError as e:
             _logger.exception("Error occurred while getting gridpool order: %s", e)
-            raise e
+            raise
 
-    async def list_gridpool_orders(  # pylint: disable=too-many-arguments
+    async def list_gridpool_orders(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         gridpool_id: int,
         order_states: list[OrderState] | None = None,
@@ -718,9 +726,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             return orders
         except grpc.RpcError as e:
             _logger.exception("Error occurred while listing gridpool orders: %s", e)
-            raise e
+            raise
 
-    async def list_gridpool_trades(  # pylint: disable=too-many-arguments
+    async def list_gridpool_trades(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         gridpool_id: int,
         trade_states: list[TradeState] | None = None,
@@ -779,9 +788,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             return [Trade.from_pb(trade) for trade in response.trades]
         except grpc.RpcError as e:
             _logger.exception("Error occurred while listing gridpool trades: %s", e)
-            raise e
+            raise
 
-    async def list_public_trades(  # pylint: disable=too-many-arguments
+    async def list_public_trades(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         states: list[TradeState] | None = None,
         delivery_period: DeliveryPeriod | None = None,
@@ -837,4 +847,4 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             ]
         except grpc.RpcError as e:
             _logger.exception("Error occurred while listing public trades: %s", e)
-            raise e
+            raise

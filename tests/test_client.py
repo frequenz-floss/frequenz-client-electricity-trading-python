@@ -373,7 +373,8 @@ def test_list_gridpool_orders(
         ),
     ],
 )
-def test_create_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
+def test_create_gridpool_order_with_invalid_params(
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     set_up: dict[str, Any],
     price: Price,
     quantity: Energy,

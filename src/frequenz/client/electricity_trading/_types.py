@@ -321,7 +321,7 @@ class DeliveryPeriod:
 
         Raises:
             ValueError: If the start timestamp does not have a timezone.
-            ValueError: If the duration is not 5, 15, 30, or 60 minutes.
+                        or if the duration is not 5, 15, 30, or 60 minutes.
         """
         if start.tzinfo is None:
             raise ValueError("Start timestamp must have a timezone.")
