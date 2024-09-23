@@ -10,10 +10,8 @@
 
 ## New Features
 
-- Add input validation checks for `price`, `quantity`, `delivery_period`, `valid_until`, `execution_option` and `order_type`.
-- Add unit tests for requests with invalid input parameters.
-- Updated dependencies to latest versions
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-- Fix variable name `max_nr_orders` to `max_nr_trades` for trades requests
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
