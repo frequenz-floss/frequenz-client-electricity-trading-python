@@ -5042,7 +5042,7 @@
 </span><span id="__span-0-728"><a id="__codelineno-0-728" name="__codelineno-0-728"></a>        <span class="n">market_side</span><span class="p">:</span> <span class="n">MarketSide</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-729"><a id="__codelineno-0-729" name="__codelineno-0-729"></a>        <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-730"><a id="__codelineno-0-730" name="__codelineno-0-730"></a>        <span class="n">delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>        <span class="n">max_nr_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>        <span class="n">max_nr_trades</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-732"><a id="__codelineno-0-732" name="__codelineno-0-732"></a>        <span class="n">page_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-733"><a id="__codelineno-0-733" name="__codelineno-0-733"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trade</span><span class="p">]:</span>
 </span><span id="__span-0-734"><a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5055,7 +5055,7 @@
 </span><span id="__span-0-741"><a id="__codelineno-0-741" name="__codelineno-0-741"></a><span class="sd">            market_side: The side of the market to filter by.</span>
 </span><span id="__span-0-742"><a id="__codelineno-0-742" name="__codelineno-0-742"></a><span class="sd">            delivery_period: The delivery period to filter by.</span>
 </span><span id="__span-0-743"><a id="__codelineno-0-743" name="__codelineno-0-743"></a><span class="sd">            delivery_area: The delivery area to filter by.</span>
-</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="sd">            max_nr_orders: The maximum number of orders to return.</span>
+</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="sd">            max_nr_trades: The maximum number of trades to return.</span>
 </span><span id="__span-0-745"><a id="__codelineno-0-745" name="__codelineno-0-745"></a><span class="sd">            page_token: The page token to use for pagination.</span>
 </span><span id="__span-0-746"><a id="__codelineno-0-746" name="__codelineno-0-746"></a>
 </span><span id="__span-0-747"><a id="__codelineno-0-747" name="__codelineno-0-747"></a><span class="sd">        Returns:</span>
@@ -5073,7 +5073,7 @@
 </span><span id="__span-0-759"><a id="__codelineno-0-759" name="__codelineno-0-759"></a>        <span class="p">)</span>
 </span><span id="__span-0-760"><a id="__codelineno-0-760" name="__codelineno-0-760"></a>
 </span><span id="__span-0-761"><a id="__codelineno-0-761" name="__codelineno-0-761"></a>        <span class="n">pagination_params</span> <span class="o">=</span> <span class="n">PaginationParams</span><span class="p">(</span>
-</span><span id="__span-0-762"><a id="__codelineno-0-762" name="__codelineno-0-762"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_orders</span><span class="p">,</span>
+</span><span id="__span-0-762"><a id="__codelineno-0-762" name="__codelineno-0-762"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_trades</span><span class="p">,</span>
 </span><span id="__span-0-763"><a id="__codelineno-0-763" name="__codelineno-0-763"></a>            <span class="n">page_token</span><span class="o">=</span><span class="n">page_token</span><span class="p">,</span>
 </span><span id="__span-0-764"><a id="__codelineno-0-764" name="__codelineno-0-764"></a>        <span class="p">)</span>
 </span><span id="__span-0-765"><a id="__codelineno-0-765" name="__codelineno-0-765"></a>
@@ -5101,7 +5101,7 @@
 </span><span id="__span-0-787"><a id="__codelineno-0-787" name="__codelineno-0-787"></a>        <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-788"><a id="__codelineno-0-788" name="__codelineno-0-788"></a>        <span class="n">buy_delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-789"><a id="__codelineno-0-789" name="__codelineno-0-789"></a>        <span class="n">sell_delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-790"><a id="__codelineno-0-790" name="__codelineno-0-790"></a>        <span class="n">max_nr_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-790"><a id="__codelineno-0-790" name="__codelineno-0-790"></a>        <span class="n">max_nr_trades</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-791"><a id="__codelineno-0-791" name="__codelineno-0-791"></a>        <span class="n">page_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-792"><a id="__codelineno-0-792" name="__codelineno-0-792"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PublicTrade</span><span class="p">]:</span>
 </span><span id="__span-0-793"><a id="__codelineno-0-793" name="__codelineno-0-793"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -5112,7 +5112,7 @@
 </span><span id="__span-0-798"><a id="__codelineno-0-798" name="__codelineno-0-798"></a><span class="sd">            delivery_period: The delivery period to filter by.</span>
 </span><span id="__span-0-799"><a id="__codelineno-0-799" name="__codelineno-0-799"></a><span class="sd">            buy_delivery_area: The buy delivery area to filter by.</span>
 </span><span id="__span-0-800"><a id="__codelineno-0-800" name="__codelineno-0-800"></a><span class="sd">            sell_delivery_area: The sell delivery area to filter by.</span>
-</span><span id="__span-0-801"><a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="sd">            max_nr_orders: The maximum number of orders to return.</span>
+</span><span id="__span-0-801"><a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="sd">            max_nr_trades: The maximum number of trades to return.</span>
 </span><span id="__span-0-802"><a id="__codelineno-0-802" name="__codelineno-0-802"></a><span class="sd">            page_token: The page token to use for pagination.</span>
 </span><span id="__span-0-803"><a id="__codelineno-0-803" name="__codelineno-0-803"></a>
 </span><span id="__span-0-804"><a id="__codelineno-0-804" name="__codelineno-0-804"></a><span class="sd">        Returns:</span>
@@ -5129,7 +5129,7 @@
 </span><span id="__span-0-815"><a id="__codelineno-0-815" name="__codelineno-0-815"></a>        <span class="p">)</span>
 </span><span id="__span-0-816"><a id="__codelineno-0-816" name="__codelineno-0-816"></a>
 </span><span id="__span-0-817"><a id="__codelineno-0-817" name="__codelineno-0-817"></a>        <span class="n">pagination_params</span> <span class="o">=</span> <span class="n">PaginationParams</span><span class="p">(</span>
-</span><span id="__span-0-818"><a id="__codelineno-0-818" name="__codelineno-0-818"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_orders</span><span class="p">,</span>
+</span><span id="__span-0-818"><a id="__codelineno-0-818" name="__codelineno-0-818"></a>            <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_trades</span><span class="p">,</span>
 </span><span id="__span-0-819"><a id="__codelineno-0-819" name="__codelineno-0-819"></a>            <span class="n">page_token</span><span class="o">=</span><span class="n">page_token</span><span class="p">,</span>
 </span><span id="__span-0-820"><a id="__codelineno-0-820" name="__codelineno-0-820"></a>        <span class="p">)</span>
 </span><span id="__span-0-821"><a id="__codelineno-0-821" name="__codelineno-0-821"></a>
@@ -7118,7 +7118,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">market_side</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.MarketSide" href="#frequenz.client.electricity_trading.MarketSide">MarketSide</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.DeliveryPeriod" href="#frequenz.client.electricity_trading.DeliveryPeriod">DeliveryPeriod</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">delivery_area</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.DeliveryArea" href="#frequenz.client.electricity_trading.DeliveryArea">DeliveryArea</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">max_nr_orders</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">max_nr_trades</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">page_token</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.Trade" href="#frequenz.client.electricity_trading.Trade">Trade</a></span><span class="p">]</span>
 </span></code></pre></div>
@@ -7241,10 +7241,10 @@ previously used URL is used.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>max_nr_orders</code></td>
+            <td><code>max_nr_trades</code></td>
             <td class="doc-param-details">
               <div class="doc-md-description">
-                <p>The maximum number of orders to return.</p>
+                <p>The maximum number of trades to return.</p>
               </div>
               <p>
                   <span class="doc-param-annotation">
@@ -7396,7 +7396,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-728"><a id="__codelineno-0-728" name="__codelineno-0-728"></a>    <span class="n">market_side</span><span class="p">:</span> <span class="n">MarketSide</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-729"><a id="__codelineno-0-729" name="__codelineno-0-729"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-730"><a id="__codelineno-0-730" name="__codelineno-0-730"></a>    <span class="n">delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="n">max_nr_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="n">max_nr_trades</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-732"><a id="__codelineno-0-732" name="__codelineno-0-732"></a>    <span class="n">page_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-733"><a id="__codelineno-0-733" name="__codelineno-0-733"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Trade</span><span class="p">]:</span>
 </span><span id="__span-0-734"><a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -7409,7 +7409,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-741"><a id="__codelineno-0-741" name="__codelineno-0-741"></a><span class="sd">        market_side: The side of the market to filter by.</span>
 </span><span id="__span-0-742"><a id="__codelineno-0-742" name="__codelineno-0-742"></a><span class="sd">        delivery_period: The delivery period to filter by.</span>
 </span><span id="__span-0-743"><a id="__codelineno-0-743" name="__codelineno-0-743"></a><span class="sd">        delivery_area: The delivery area to filter by.</span>
-</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="sd">        max_nr_orders: The maximum number of orders to return.</span>
+</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="sd">        max_nr_trades: The maximum number of trades to return.</span>
 </span><span id="__span-0-745"><a id="__codelineno-0-745" name="__codelineno-0-745"></a><span class="sd">        page_token: The page token to use for pagination.</span>
 </span><span id="__span-0-746"><a id="__codelineno-0-746" name="__codelineno-0-746"></a>
 </span><span id="__span-0-747"><a id="__codelineno-0-747" name="__codelineno-0-747"></a><span class="sd">    Returns:</span>
@@ -7427,7 +7427,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-759"><a id="__codelineno-0-759" name="__codelineno-0-759"></a>    <span class="p">)</span>
 </span><span id="__span-0-760"><a id="__codelineno-0-760" name="__codelineno-0-760"></a>
 </span><span id="__span-0-761"><a id="__codelineno-0-761" name="__codelineno-0-761"></a>    <span class="n">pagination_params</span> <span class="o">=</span> <span class="n">PaginationParams</span><span class="p">(</span>
-</span><span id="__span-0-762"><a id="__codelineno-0-762" name="__codelineno-0-762"></a>        <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_orders</span><span class="p">,</span>
+</span><span id="__span-0-762"><a id="__codelineno-0-762" name="__codelineno-0-762"></a>        <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_trades</span><span class="p">,</span>
 </span><span id="__span-0-763"><a id="__codelineno-0-763" name="__codelineno-0-763"></a>        <span class="n">page_token</span><span class="o">=</span><span class="n">page_token</span><span class="p">,</span>
 </span><span id="__span-0-764"><a id="__codelineno-0-764" name="__codelineno-0-764"></a>    <span class="p">)</span>
 </span><span id="__span-0-765"><a id="__codelineno-0-765" name="__codelineno-0-765"></a>
@@ -7471,7 +7471,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.DeliveryPeriod" href="#frequenz.client.electricity_trading.DeliveryPeriod">DeliveryPeriod</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">buy_delivery_area</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.DeliveryArea" href="#frequenz.client.electricity_trading.DeliveryArea">DeliveryArea</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">sell_delivery_area</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.DeliveryArea" href="#frequenz.client.electricity_trading.DeliveryArea">DeliveryArea</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_nr_orders</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_nr_trades</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/functions.html#int">int</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">page_token</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#str">str</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading._types.PublicTrade" href="#frequenz.client.electricity_trading.PublicTrade">PublicTrade</a></span><span class="p">]</span>
 </span></code></pre></div>
@@ -7562,10 +7562,10 @@ previously used URL is used.</p>
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>max_nr_orders</code></td>
+            <td><code>max_nr_trades</code></td>
             <td class="doc-param-details">
               <div class="doc-md-description">
-                <p>The maximum number of orders to return.</p>
+                <p>The maximum number of trades to return.</p>
               </div>
               <p>
                   <span class="doc-param-annotation">
@@ -7712,7 +7712,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-787"><a id="__codelineno-0-787" name="__codelineno-0-787"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-788"><a id="__codelineno-0-788" name="__codelineno-0-788"></a>    <span class="n">buy_delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-789"><a id="__codelineno-0-789" name="__codelineno-0-789"></a>    <span class="n">sell_delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-790"><a id="__codelineno-0-790" name="__codelineno-0-790"></a>    <span class="n">max_nr_orders</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-790"><a id="__codelineno-0-790" name="__codelineno-0-790"></a>    <span class="n">max_nr_trades</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-791"><a id="__codelineno-0-791" name="__codelineno-0-791"></a>    <span class="n">page_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-792"><a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">PublicTrade</span><span class="p">]:</span>
 </span><span id="__span-0-793"><a id="__codelineno-0-793" name="__codelineno-0-793"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -7723,7 +7723,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-798"><a id="__codelineno-0-798" name="__codelineno-0-798"></a><span class="sd">        delivery_period: The delivery period to filter by.</span>
 </span><span id="__span-0-799"><a id="__codelineno-0-799" name="__codelineno-0-799"></a><span class="sd">        buy_delivery_area: The buy delivery area to filter by.</span>
 </span><span id="__span-0-800"><a id="__codelineno-0-800" name="__codelineno-0-800"></a><span class="sd">        sell_delivery_area: The sell delivery area to filter by.</span>
-</span><span id="__span-0-801"><a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="sd">        max_nr_orders: The maximum number of orders to return.</span>
+</span><span id="__span-0-801"><a id="__codelineno-0-801" name="__codelineno-0-801"></a><span class="sd">        max_nr_trades: The maximum number of trades to return.</span>
 </span><span id="__span-0-802"><a id="__codelineno-0-802" name="__codelineno-0-802"></a><span class="sd">        page_token: The page token to use for pagination.</span>
 </span><span id="__span-0-803"><a id="__codelineno-0-803" name="__codelineno-0-803"></a>
 </span><span id="__span-0-804"><a id="__codelineno-0-804" name="__codelineno-0-804"></a><span class="sd">    Returns:</span>
@@ -7740,7 +7740,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-815"><a id="__codelineno-0-815" name="__codelineno-0-815"></a>    <span class="p">)</span>
 </span><span id="__span-0-816"><a id="__codelineno-0-816" name="__codelineno-0-816"></a>
 </span><span id="__span-0-817"><a id="__codelineno-0-817" name="__codelineno-0-817"></a>    <span class="n">pagination_params</span> <span class="o">=</span> <span class="n">PaginationParams</span><span class="p">(</span>
-</span><span id="__span-0-818"><a id="__codelineno-0-818" name="__codelineno-0-818"></a>        <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_orders</span><span class="p">,</span>
+</span><span id="__span-0-818"><a id="__codelineno-0-818" name="__codelineno-0-818"></a>        <span class="n">page_size</span><span class="o">=</span><span class="n">max_nr_trades</span><span class="p">,</span>
 </span><span id="__span-0-819"><a id="__codelineno-0-819" name="__codelineno-0-819"></a>        <span class="n">page_token</span><span class="o">=</span><span class="n">page_token</span><span class="p">,</span>
 </span><span id="__span-0-820"><a id="__codelineno-0-820" name="__codelineno-0-820"></a>    <span class="p">)</span>
 </span><span id="__span-0-821"><a id="__codelineno-0-821" name="__codelineno-0-821"></a>
