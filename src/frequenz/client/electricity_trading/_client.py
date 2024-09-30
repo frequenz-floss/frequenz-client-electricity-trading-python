@@ -66,7 +66,8 @@ def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> N
         ValueError: If the value has more decimal places than allowed.
                     or the value is not a valid decimal number.
     """
-    assert decimal_places >= 0, "The decimal places must be a non-negative integer."
+    if decimal_places < 0:
+        raise ValueError("The decimal places must be a non-negative integer.")
 
     try:
         exponent = int(value.as_tuple().exponent)
@@ -287,7 +288,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return self._public_trades_streams[public_trade_filter].new_receiver()
 
     def validate_params(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-branches
         self,
         price: Price | None | _Sentinel = NO_VALUE,
         quantity: Energy | None | _Sentinel = NO_VALUE,
@@ -359,9 +360,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             if valid_until < datetime.now(timezone.utc):
                 raise ValueError("valid_until must be in the future")
         if order_type is not None:
-            assert order_type == OrderType.LIMIT, NotImplementedError(
-                "Currently only limit orders are supported"
-            )
+            if order_type != OrderType.LIMIT:
+                raise NotImplementedError("Currently only limit orders are supported.")
 
     async def create_gridpool_order(
         # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
