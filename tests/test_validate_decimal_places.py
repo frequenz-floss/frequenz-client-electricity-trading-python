@@ -34,5 +34,5 @@ class TestValidateDecimalPlaces(unittest.TestCase):
             validate_decimal_places(Decimal("NaN"), 2, "Test Value")
         with self.assertRaises(ValueError):
             validate_decimal_places(Decimal("Infinity"), 2, "Test Value")
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             validate_decimal_places(Decimal("123.45"), -1, "Test Value")

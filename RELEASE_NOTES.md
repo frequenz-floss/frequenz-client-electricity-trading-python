@@ -10,7 +10,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* Replace assert statements with proper exception handling
 
 ## Bug Fixes
 
