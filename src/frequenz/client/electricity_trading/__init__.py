@@ -24,7 +24,7 @@ You can install the Frequenz Electricity Trading API client via pip. Replace `VE
 with the specific version you wish to install.
 
 # Choose the version you want to install
-```python
+```bash
 VERSION=0.2.3
 pip install frequenz-client-electricity-trading==$VERSION
 ```
@@ -40,7 +40,8 @@ First, initialize the client with the appropriate server URL and API key.
 
     # Change server address if needed
     SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
-    API_KEY = open('/path/to/api_key.txt').read().strip()
+    with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
+        API_KEY = f.read().strip()
     client = Client(
         server_url=SERVICE_URL,
         auth_key=API_KEY
@@ -58,6 +59,7 @@ Here's an example of how to create a limit order to buy energy.
 
     ```python
     from frequenz.client.electricity_trading import (
+        Client,
         Currency,
         DeliveryArea,
         DeliveryPeriod,
@@ -70,8 +72,17 @@ Here's an example of how to create a limit order to buy energy.
     from datetime import datetime, timedelta
     from decimal import Decimal
 
+    # Change server address if needed
+    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
+        API_KEY = f.read().strip()
+    client = Client(
+        server_url=SERVICE_URL,
+        auth_key=API_KEY
+    )
+
     # Define order parameters
-    gridpool_id = 1
+    GRIDPOOL_ID = 1
     delivery_area = DeliveryArea(
         code="10YDE-EON------1",  # TenneT
         code_type=EnergyMarketCodeType.EUROPE_EIC
@@ -83,7 +94,7 @@ Here's an example of how to create a limit order to buy energy.
     price = Price(amount=Decimal("50.0"), currency=Currency.EUR)
     quantity = Energy(mwh=Decimal("0.1"))
     order = await client.create_gridpool_order(
-        gridpool_id=gridpool_id,
+        gridpool_id=GRIDPOOL_ID,
         delivery_area=delivery_area,
         delivery_period=delivery_period,
         order_type=OrderType.LIMIT,
@@ -99,7 +110,18 @@ Orders for a given gridpool can be listed using various filters.
 ???+ example "List orders for a gridpool"
 
     ```python
-    from frequenz.client.electricity_trading import MarketSide
+    from frequenz.client.electricity_trading import ( Client, MarketSide )
+
+    # Change server address if needed
+    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
+        API_KEY = f.read().strip()
+    client = Client(
+        server_url=SERVICE_URL,
+        auth_key=API_KEY
+    )
+
+    gridpool_id: int = 1
 
     # List all orders for a given gridpool
     orders = await client.list_gridpool_orders(
@@ -120,6 +142,16 @@ To get real-time updates on market trades, use the following code:
 
 ???+ example "Stream public trades"
     ```python
+    from frequenz.client.electricity_trading import Client
+
+    # Change server address if needed
+    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
+        API_KEY = f.read().strip()
+    client = Client(
+        server_url=SERVICE_URL,
+        auth_key=API_KEY
+    )
     stream_public_trades = await client.stream_public_trades()
     async for public_trade in stream_public_trades:
         print(f"Received public trade: {public_trade}")
