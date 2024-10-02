@@ -84,6 +84,32 @@ def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> N
 class Client(BaseApiClient[ElectricityTradingServiceStub]):
     """Electricity trading client."""
 
+    _instances: dict[tuple[str, str | None], "Client"] = {}
+
+    def __new__(
+        cls, server_url: str, connect: bool = True, auth_key: str | None = None
+    ) -> "Client":
+        """
+        Create a new instance of the client or return an existing one if it already exists.
+
+        Args:
+            server_url: The URL of the Electricity Trading service.
+            connect: Whether to connect to the server immediately.
+            auth_key: The API key for the authorization.
+
+        Returns:
+            The client instance.
+        """
+        key = (server_url, auth_key)
+
+        # Check if an instance already exists for this key
+        if key not in cls._instances:
+            # If not, create a new instance and store it in the cache
+            instance = super(Client, cls).__new__(cls)
+            cls._instances[key] = instance
+
+        return cls._instances[key]
+
     def __init__(
         self, server_url: str, connect: bool = True, auth_key: str | None = None
     ) -> None:
@@ -94,7 +120,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             connect: Whether to connect to the server immediately.
             auth_key: The API key for the authorization.
         """
-        super().__init__(server_url, ElectricityTradingServiceStub, connect=connect)
+        if not hasattr(
+            self, "_initialized"
+        ):  # Prevent re-initialization of existing instances
+            super().__init__(server_url, ElectricityTradingServiceStub, connect=connect)
+            self._initialized = True
 
         self._gridpool_orders_streams: dict[
             tuple[int, GridpoolOrderFilter],
