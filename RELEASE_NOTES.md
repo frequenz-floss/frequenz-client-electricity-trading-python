@@ -11,6 +11,7 @@
 ## New Features
 
 * Replace assert statements with proper exception handling
+* Implement client instance reuse to avoid redundant TCP connections
 
 ## Bug Fixes
 
