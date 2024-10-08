@@ -13,6 +13,7 @@
 * Replace assert statements with proper exception handling
 * Implement client instance reuse to avoid redundant TCP connections
 * Move documentation and code examples to the documentation website
+* Replace the local `PaginationParams` type with the `frequenz-client-common` one
 
 ## Bug Fixes
 
