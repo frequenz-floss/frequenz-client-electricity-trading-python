@@ -12,7 +12,7 @@ from deepdiff import DeepDiff
 
 # pylint: disable=no-member
 from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
-from frequenz.api.common.v1.market import energy_pb2, price_pb2
+from frequenz.api.common.v1.market import power_pb2, price_pb2
 from frequenz.api.common.v1.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import timestamp_pb2
@@ -22,7 +22,6 @@ from frequenz.client.electricity_trading import (
     DeliveryArea,
     DeliveryDuration,
     DeliveryPeriod,
-    Energy,
     EnergyMarketCodeType,
     GridpoolOrderFilter,
     MarketActor,
@@ -31,6 +30,7 @@ from frequenz.client.electricity_trading import (
     OrderDetail,
     OrderState,
     OrderType,
+    Power,
     Price,
     PublicTrade,
     PublicTradeFilter,
@@ -58,7 +58,7 @@ ORDER = Order(
     type=OrderType.LIMIT,
     side=MarketSide.BUY,
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
-    quantity=Energy(mwh=Decimal("5.00")),
+    quantity=Power(mw=Decimal("5.00")),
 )
 ORDER_PB = electricity_trading_pb2.Order(
     delivery_area=delivery_area_pb2.DeliveryArea(
@@ -75,7 +75,7 @@ ORDER_PB = electricity_trading_pb2.Order(
         amount=decimal_pb2.Decimal(value="100.00"),
         currency=price_pb2.Price.Currency.CURRENCY_USD,
     ),
-    quantity=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5.00")),
+    quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
 )
 TRADE = Trade(
     id=1,
@@ -85,7 +85,7 @@ TRADE = Trade(
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
     delivery_period=DeliveryPeriod(START_TIME, duration=timedelta(minutes=15)),
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
-    quantity=Energy(mwh=Decimal("5.00")),
+    quantity=Power(mw=Decimal("5.00")),
     state=TradeState.ACTIVE,
 )
 
@@ -106,7 +106,7 @@ TRADE_PB = electricity_trading_pb2.Trade(
         amount=decimal_pb2.Decimal(value="100.00"),
         currency=price_pb2.Price.Currency.CURRENCY_USD,
     ),
-    quantity=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5.00")),
+    quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
     state=electricity_trading_pb2.TradeState.TRADE_STATE_ACTIVE,
 )
 
@@ -118,8 +118,8 @@ ORDER_DETAIL = OrderDetail(
         state_reason=StateReason.ADD,
         market_actor=MarketActor.USER,
     ),
-    open_quantity=Energy(mwh=Decimal("5.00")),
-    filled_quantity=Energy(mwh=Decimal("0.00")),
+    open_quantity=Power(mw=Decimal("5.00")),
+    filled_quantity=Power(mw=Decimal("0.00")),
     create_time=CREATE_TIME,
     modification_time=MODIFICATION_TIME,
 )
@@ -131,8 +131,8 @@ ORDER_DETAIL_PB = electricity_trading_pb2.OrderDetail(
         state_reason=electricity_trading_pb2.OrderDetail.StateDetail.StateReason.STATE_REASON_ADD,
         market_actor=electricity_trading_pb2.OrderDetail.StateDetail.MarketActor.MARKET_ACTOR_USER,
     ),
-    open_quantity=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5.00")),
-    filled_quantity=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="0.00")),
+    open_quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
+    filled_quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="0.00")),
     create_time=CREATE_TIME_PB,
     modification_time=MODIFICATION_TIME_PB,
 )
@@ -147,7 +147,7 @@ PUBLIC_TRADE = PublicTrade(
     delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
     execution_time=EXECUTION_TIME,
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
-    quantity=Energy(mwh=Decimal("5.00")),
+    quantity=Power(mw=Decimal("5.00")),
     state=TradeState.ACTIVE,
 )
 PUBLIC_TRADE_PB = electricity_trading_pb2.PublicTrade(
@@ -169,7 +169,7 @@ PUBLIC_TRADE_PB = electricity_trading_pb2.PublicTrade(
         amount=decimal_pb2.Decimal(value="100.00"),
         currency=price_pb2.Price.Currency.CURRENCY_USD,
     ),
-    quantity=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5.00")),
+    quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
     state=electricity_trading_pb2.TradeState.TRADE_STATE_ACTIVE,
 )
 
@@ -318,8 +318,8 @@ def test_price_from_pb() -> None:
 def test_energy_to_pb() -> None:
     """Test the client energy type conversions to protobuf."""
     assert_conversion_to_pb(
-        original=Energy(mwh=Decimal("5")),
-        expected_pb=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5")),
+        original=Power(mw=Decimal("5")),
+        expected_pb=power_pb2.Power(mw=decimal_pb2.Decimal(value="5")),
         assert_func=assert_equal,
     )
 
@@ -327,8 +327,8 @@ def test_energy_to_pb() -> None:
 def test_energy_from_pb() -> None:
     """Test the client energy type conversions from protobuf."""
     assert_conversion_from_pb(
-        original_pb=energy_pb2.Energy(mwh=decimal_pb2.Decimal(value="5")),
-        expected=Energy(mwh=Decimal("5")),
+        original_pb=power_pb2.Power(mw=decimal_pb2.Decimal(value="5")),
+        expected=Power(mw=Decimal("5")),
         assert_func=assert_equal,
     )
 
@@ -485,8 +485,8 @@ def test_order_detail_no_timezone_error() -> None:
                 state_reason=StateReason.ADD,
                 market_actor=MarketActor.USER,
             ),
-            open_quantity=Energy(mwh=Decimal("5.00")),
-            filled_quantity=Energy(mwh=Decimal("0.00")),
+            open_quantity=Power(mw=Decimal("5.00")),
+            filled_quantity=Power(mw=Decimal("0.00")),
             create_time=datetime.now(),
             modification_time=datetime.now(),
         )
@@ -503,8 +503,8 @@ def test_order_detail_timezone_converted_to_utc() -> None:
             state_reason=StateReason.ADD,
             market_actor=MarketActor.USER,
         ),
-        open_quantity=Energy(mwh=Decimal("5.00")),
-        filled_quantity=Energy(mwh=Decimal("0.00")),
+        open_quantity=Power(mw=Decimal("5.00")),
+        filled_quantity=Power(mw=Decimal("0.00")),
         create_time=start,
         modification_time=start,
     )
