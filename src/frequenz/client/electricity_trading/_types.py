@@ -17,7 +17,6 @@ from typing import Self
 # pylint: disable=no-member
 from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
 from frequenz.api.common.v1.market import energy_pb2, price_pb2
-from frequenz.api.common.v1.pagination import pagination_params_pb2
 from frequenz.api.common.v1.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import json_format, struct_pb2, timestamp_pb2
@@ -408,43 +407,6 @@ class DeliveryPeriod:
         return delivery_duration_pb2.DeliveryPeriod(
             start=start,
             duration=self.duration.to_pb(),
-        )
-
-
-@dataclass(frozen=True)
-class PaginationParams:
-    """Parameters for paginating list requests."""
-
-    page_size: int | None = None
-    """The maximum number of results to be returned per request."""
-
-    page_token: str | None = None
-    """The token identifying a specific page of the list results."""
-
-    @classmethod
-    def from_pb(cls, pagination_params: pagination_params_pb2.PaginationParams) -> Self:
-        """Convert a protobuf PaginationParams to PaginationParams object.
-
-        Args:
-            pagination_params: PaginationParams to convert.
-
-        Returns:
-            PaginationParams object corresponding to the protobuf message.
-        """
-        return cls(
-            page_size=pagination_params.page_size,
-            page_token=pagination_params.page_token,
-        )
-
-    def to_pb(self) -> pagination_params_pb2.PaginationParams:
-        """Convert a PaginationParams object to protobuf PaginationParams.
-
-        Returns:
-            Protobuf message corresponding to the PaginationParams object.
-        """
-        return pagination_params_pb2.PaginationParams(
-            page_size=self.page_size,
-            page_token=self.page_token,
         )
 
 

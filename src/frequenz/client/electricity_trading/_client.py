@@ -18,6 +18,7 @@ from frequenz.api.electricity_trading.v1.electricity_trading_pb2_grpc import (
 from frequenz.channels import Receiver
 from frequenz.client.base.client import BaseApiClient
 from frequenz.client.base.streaming import GrpcStreamBroadcaster
+from frequenz.client.common.pagination import Params
 from google.protobuf import field_mask_pb2, struct_pb2
 
 from ._types import (
@@ -32,7 +33,6 @@ from ._types import (
     OrderExecutionOption,
     OrderState,
     OrderType,
-    PaginationParams,
     Price,
     PublicTrade,
     PublicTradeFilter,
@@ -725,7 +725,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             tag=tag,
         )
 
-        pagination_params = PaginationParams(
+        pagination_params = Params(
             page_size=max_nr_orders,
             page_token=page_token,
         )
@@ -737,7 +737,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.ListGridpoolOrdersRequest(
                         gridpool_id=gridpool_id,
                         filter=gridpool_order_filer.to_pb(),
-                        pagination_params=pagination_params.to_pb(),
+                        pagination_params=pagination_params.to_proto(),
                     ),
                     metadata=self._metadata,
                 ),
@@ -797,7 +797,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             delivery_area=delivery_area,
         )
 
-        pagination_params = PaginationParams(
+        pagination_params = Params(
             page_size=max_nr_trades,
             page_token=page_token,
         )
@@ -809,7 +809,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.ListGridpoolTradesRequest(
                         gridpool_id=gridpool_id,
                         filter=gridpool_trade_filter.to_pb(),
-                        pagination_params=pagination_params.to_pb(),
+                        pagination_params=pagination_params.to_proto(),
                     ),
                     metadata=self._metadata,
                 ),
@@ -854,7 +854,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             sell_delivery_area=sell_delivery_area,
         )
 
-        pagination_params = PaginationParams(
+        pagination_params = Params(
             page_size=max_nr_trades,
             page_token=page_token,
         )
@@ -865,7 +865,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 self.stub.ListPublicTrades(
                     electricity_trading_pb2.ListPublicTradesRequest(
                         filter=public_trade_filter.to_pb(),
-                        pagination_params=pagination_params.to_pb(),
+                        pagination_params=pagination_params.to_proto(),
                     ),
                     metadata=self._metadata,
                 ),
