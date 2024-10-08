@@ -14,6 +14,7 @@
 * Implement client instance reuse to avoid redundant TCP connections
 * Move documentation and code examples to the documentation website
 * Replace the local `PaginationParams` type with the `frequenz-client-common` one
+* Remove dependency to `googleapis-common-protos`
 
 ## Bug Fixes
 
