@@ -16,7 +16,7 @@ from typing import Self
 
 # pylint: disable=no-member
 from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
-from frequenz.api.common.v1.market import energy_pb2, price_pb2
+from frequenz.api.common.v1.market import power_pb2, price_pb2
 from frequenz.api.common.v1.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import json_format, struct_pb2, timestamp_pb2
@@ -117,32 +117,32 @@ class Price:
 
 
 @dataclass(frozen=True)
-class Energy:
-    """Represents energy unit in Megawatthours (MWh)."""
+class Power:
+    """Represents power unit in Megawatthours (MW)."""
 
-    mwh: Decimal
+    mw: Decimal
 
     @classmethod
-    def from_pb(cls, energy: energy_pb2.Energy) -> Self:
-        """Convert a protobuf Energy to Energy object.
+    def from_pb(cls, power: power_pb2.Power) -> Self:
+        """Convert a protobuf Power to Power object.
 
         Args:
-            energy: Energy to convert.
+            power: Power to convert.
 
         Returns:
-            Energy object corresponding to the protobuf message.
+            Power object corresponding to the protobuf message.
         """
-        return cls(mwh=Decimal(energy.mwh.value))
+        return cls(mw=Decimal(power.mw.value))
 
-    def to_pb(self) -> energy_pb2.Energy:
-        """Convert a Energy object to protobuf Energy.
+    def to_pb(self) -> power_pb2.Power:
+        """Convert a Power object to protobuf Power.
 
         Returns:
-            Protobuf message corresponding to the Energy object.
+            Protobuf message corresponding to the Power object.
         """
-        decimal_mwh = decimal_pb2.Decimal()
-        decimal_mwh.value = str(self.mwh)
-        return energy_pb2.Energy(mwh=decimal_mwh)
+        decimal_mw = decimal_pb2.Decimal()
+        decimal_mw.value = str(self.mw)
+        return power_pb2.Power(mw=decimal_mw)
 
 
 class EnergyMarketCodeType(enum.Enum):
@@ -872,7 +872,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
     price: Price
     """The limit price at which the contract is to be traded."""
 
-    quantity: Energy
+    quantity: Power
     """The quantity of the contract being traded."""
 
     stop_price: Price | None = None
@@ -882,7 +882,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
     """Applicable for ICEBERG orders. The price difference between the peak price and
     the limit price."""
 
-    display_quantity: Energy | None = None
+    display_quantity: Power | None = None
     """Applicable for ICEBERG orders. The quantity of the order to be displayed in the order
     book."""
 
@@ -924,7 +924,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
             type=OrderType.from_pb(order.type),
             side=MarketSide.from_pb(order.side),
             price=Price.from_pb(order.price),
-            quantity=Energy.from_pb(order.quantity),
+            quantity=Power.from_pb(order.quantity),
             stop_price=(
                 Price.from_pb(order.stop_price)
                 if order.HasField("stop_price")
@@ -936,7 +936,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
                 else None
             ),
             display_quantity=(
-                Energy.from_pb(order.display_quantity)
+                Power.from_pb(order.display_quantity)
                 if order.HasField("display_quantity")
                 else None
             ),
@@ -1019,7 +1019,7 @@ class Trade:  # pylint: disable=too-many-instance-attributes
     price: Price
     """The price at which the trade was executed."""
 
-    quantity: Energy
+    quantity: Power
     """The executed quantity of the trade."""
 
     state: TradeState
@@ -1051,7 +1051,7 @@ class Trade:  # pylint: disable=too-many-instance-attributes
             delivery_period=DeliveryPeriod.from_pb(trade.delivery_period),
             execution_time=trade.execution_time.ToDatetime(tzinfo=timezone.utc),
             price=Price.from_pb(trade.price),
-            quantity=Energy.from_pb(trade.quantity),
+            quantity=Power.from_pb(trade.quantity),
             state=TradeState.from_pb(trade.state),
         )
 
@@ -1143,8 +1143,8 @@ class OrderDetail:
     order_id: int
     order: Order
     state_detail: StateDetail
-    open_quantity: Energy
-    filled_quantity: Energy
+    open_quantity: Power
+    filled_quantity: Power
     create_time: datetime
     modification_time: datetime
 
@@ -1184,8 +1184,8 @@ class OrderDetail:
             order_id=order_detail.order_id,
             order=Order.from_pb(order_detail.order),
             state_detail=StateDetail.from_pb(order_detail.state_detail),
-            open_quantity=Energy.from_pb(order_detail.open_quantity),
-            filled_quantity=Energy.from_pb(order_detail.filled_quantity),
+            open_quantity=Power.from_pb(order_detail.open_quantity),
+            filled_quantity=Power.from_pb(order_detail.filled_quantity),
             create_time=order_detail.create_time.ToDatetime(tzinfo=timezone.utc),
             modification_time=order_detail.modification_time.ToDatetime(
                 tzinfo=timezone.utc
@@ -1236,7 +1236,7 @@ class PublicTrade:  # pylint: disable=too-many-instance-attributes
     price: Price
     """The limit price at which the contract is to be traded."""
 
-    quantity: Energy
+    quantity: Power
     """The quantity of the contract being traded."""
 
     state: TradeState
@@ -1267,7 +1267,7 @@ class PublicTrade:  # pylint: disable=too-many-instance-attributes
             delivery_period=DeliveryPeriod.from_pb(public_trade.delivery_period),
             execution_time=public_trade.execution_time.ToDatetime(tzinfo=timezone.utc),
             price=Price.from_pb(public_trade.price),
-            quantity=Energy.from_pb(public_trade.quantity),
+            quantity=Power.from_pb(public_trade.quantity),
             state=TradeState.from_pb(public_trade.state),
         )
 
@@ -1659,8 +1659,8 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
     """The updated limit price at which the contract is to be traded.
     This is the maximum price for a BUY order or the minimum price for a SELL order."""
 
-    quantity: Energy | None = None
-    """The updated quantity of the contract being traded, specified in MWh."""
+    quantity: Power | None = None
+    """The updated quantity of the contract being traded, specified in MW."""
 
     stop_price: Price | None = None
     """Applicable for STOP_LIMIT orders. This is the updated stop price that triggers
@@ -1670,7 +1670,7 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
     """Applicable for ICEBERG orders. This is the updated price difference
     between the peak price and the limit price."""
 
-    display_quantity: Energy | None = None
+    display_quantity: Power | None = None
     """Applicable for ICEBERG orders. This is the updated quantity of the order
     to be displayed in the order book."""
 
@@ -1717,7 +1717,7 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
                 else None
             ),
             quantity=(
-                Energy.from_pb(update_order.quantity)
+                Power.from_pb(update_order.quantity)
                 if update_order.HasField("quantity")
                 else None
             ),
@@ -1732,7 +1732,7 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
                 else None
             ),
             display_quantity=(
-                Energy.from_pb(update_order.display_quantity)
+                Power.from_pb(update_order.display_quantity)
                 if update_order.HasField("display_quantity")
                 else None
             ),

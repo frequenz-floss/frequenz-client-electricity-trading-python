@@ -19,7 +19,6 @@ from frequenz.client.electricity_trading import (
     Currency,
     DeliveryArea,
     DeliveryPeriod,
-    Energy,
     EnergyMarketCodeType,
     MarketActor,
     MarketSide,
@@ -28,6 +27,7 @@ from frequenz.client.electricity_trading import (
     OrderExecutionOption,
     OrderState,
     OrderType,
+    Power,
     Price,
     StateDetail,
     StateReason,
@@ -61,7 +61,7 @@ def set_up() -> Generator[Any, Any, Any]:
     order_type = OrderType.LIMIT
     side = MarketSide.BUY
     price = Price(amount=Decimal("50"), currency=Currency.EUR)
-    quantity = Energy(mwh=Decimal("0.1"))
+    quantity = Power(mw=Decimal("0.1"))
     order_execution_option = OrderExecutionOption.AON
     valid_until = delivery_start + timedelta(hours=3)
 
@@ -105,8 +105,8 @@ def set_up_order_detail_response(
             state_reason=StateReason.ADD,
             market_actor=MarketActor.USER,
         ),
-        open_quantity=Energy(mwh=Decimal("5.00")),
-        filled_quantity=Energy(mwh=Decimal("0.00")),
+        open_quantity=Power(mw=Decimal("5.00")),
+        filled_quantity=Power(mw=Decimal("0.00")),
         create_time=set_up["delivery_period"].start - timedelta(hours=2),
         modification_time=set_up["delivery_period"].start - timedelta(hours=1),
     ).to_pb()
@@ -314,7 +314,7 @@ def test_list_gridpool_orders(
         # Invalid price: too many decimal places
         (
             Price(amount=Decimal("50.123"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
                 duration=timedelta(hours=1),
@@ -326,7 +326,7 @@ def test_list_gridpool_orders(
         # Invalid quantity: too many decimal places
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1234")),
+            Power(mw=Decimal("0.1234")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
                 duration=timedelta(hours=1),
@@ -338,7 +338,7 @@ def test_list_gridpool_orders(
         # Invalid delivery period: start time in the past
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) - timedelta(days=1)),
                 duration=timedelta(hours=1),
@@ -350,7 +350,7 @@ def test_list_gridpool_orders(
         # Invalid valid_until: time in the past
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
                 duration=timedelta(hours=1),
@@ -362,7 +362,7 @@ def test_list_gridpool_orders(
         # AON execution option with valid_until set (not allowed)
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
                 duration=timedelta(hours=1),
@@ -377,7 +377,7 @@ def test_create_gridpool_order_with_invalid_params(
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     set_up: dict[str, Any],
     price: Price,
-    quantity: Energy,
+    quantity: Power,
     delivery_period: DeliveryPeriod,
     valid_until: datetime,
     execution_option: OrderExecutionOption,
@@ -406,21 +406,21 @@ def test_create_gridpool_order_with_invalid_params(
         # Invalid price: too many decimal places
         (
             Price(amount=Decimal("50.123"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             None,
             ValueError,
         ),
         # Invalid quantity: too many decimal places
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1234")),
+            Power(mw=Decimal("0.1234")),
             None,
             ValueError,
         ),
         # Invalid valid_until: time in the past
         (
             Price(amount=Decimal("50"), currency=Currency.EUR),
-            Energy(mwh=Decimal("0.1")),
+            Power(mw=Decimal("0.1")),
             datetime.now(timezone.utc) - timedelta(hours=1),
             ValueError,
         ),
@@ -429,7 +429,7 @@ def test_create_gridpool_order_with_invalid_params(
 def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
     set_up: dict[str, Any],
     price: Price,
-    quantity: Energy,
+    quantity: Power,
     valid_until: datetime,
     expected_exception: type[BaseException],
 ) -> None:

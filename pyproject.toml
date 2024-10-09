@@ -27,13 +27,13 @@ classifiers = [
 requires-python = ">= 3.11, < 4"
 # TODO(cookiecutter): Remove and add more dependencies if appropriate
 dependencies = [
-  "frequenz-api-common >= 0.6.2, < 0.7.0",
+  "frequenz-api-common >= 0.6.3, < 0.7.0",
   "grpcio >= 1.66.2, < 2",
   "frequenz-channels >= 1.0.0, < 2",
   "frequenz-client-base >= 0.6.1, < 0.7.0",
   "frequenz-client-common >= 0.1.0, < 0.3.0",
-  "frequenz-api-electricity-trading >= 0.2.3, < 1",
-  "protobuf >= 5.27.2, < 6",
+  "frequenz-api-electricity-trading >= 0.2.4, < 1",
+  "protobuf >= 5.28.0, < 6",
 ]
 dynamic = ["version"]
 

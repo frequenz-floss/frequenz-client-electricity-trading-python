@@ -24,7 +24,6 @@ from google.protobuf import field_mask_pb2, struct_pb2
 from ._types import (
     DeliveryArea,
     DeliveryPeriod,
-    Energy,
     GridpoolOrderFilter,
     GridpoolTradeFilter,
     MarketSide,
@@ -33,6 +32,7 @@ from ._types import (
     OrderExecutionOption,
     OrderState,
     OrderType,
+    Power,
     Price,
     PublicTrade,
     PublicTradeFilter,
@@ -321,10 +321,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-branches
         self,
         price: Price | None | _Sentinel = NO_VALUE,
-        quantity: Energy | None | _Sentinel = NO_VALUE,
+        quantity: Power | None | _Sentinel = NO_VALUE,
         stop_price: Price | None | _Sentinel = NO_VALUE,
         peak_price_delta: Price | None | _Sentinel = NO_VALUE,
-        display_quantity: Energy | None | _Sentinel = NO_VALUE,
+        display_quantity: Power | None | _Sentinel = NO_VALUE,
         delivery_period: DeliveryPeriod | None = None,
         valid_until: datetime | None | _Sentinel = NO_VALUE,
         execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
@@ -355,9 +355,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         if not isinstance(price, _Sentinel) and price is not None:
             validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
         if not isinstance(quantity, _Sentinel) and quantity is not None:
-            validate_decimal_places(
-                quantity.mwh, PRECISION_DECIMAL_QUANTITY, "quantity"
-            )
+            validate_decimal_places(quantity.mw, PRECISION_DECIMAL_QUANTITY, "quantity")
         if not isinstance(stop_price, _Sentinel) and stop_price is not None:
             raise NotImplementedError(
                 "STOP_LIMIT orders are not supported yet, so stop_price cannot be set."
@@ -402,10 +400,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         order_type: OrderType,
         side: MarketSide,
         price: Price,
-        quantity: Energy,
+        quantity: Power,
         stop_price: Price | None = None,
         peak_price_delta: Price | None = None,
-        display_quantity: Energy | None = None,
+        display_quantity: Power | None = None,
         execution_option: OrderExecutionOption | None = None,
         valid_until: datetime | None = None,
         payload: dict[str, struct_pb2.Value] | None = None,
@@ -486,10 +484,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         gridpool_id: int,
         order_id: int,
         price: Price | None | _Sentinel = NO_VALUE,
-        quantity: Energy | None | _Sentinel = NO_VALUE,
+        quantity: Power | None | _Sentinel = NO_VALUE,
         stop_price: Price | None | _Sentinel = NO_VALUE,
         peak_price_delta: Price | None | _Sentinel = NO_VALUE,
-        display_quantity: Energy | None | _Sentinel = NO_VALUE,
+        display_quantity: Power | None | _Sentinel = NO_VALUE,
         execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
         valid_until: datetime | None | _Sentinel = NO_VALUE,
         payload: dict[str, struct_pb2.Value] | None | _Sentinel = NO_VALUE,
@@ -503,7 +501,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             order_id: Order ID.
             price: The updated limit price at which the contract is to be traded.
                 This is the maximum price for a BUY order or the minimum price for a SELL order.
-            quantity: The updated quantity of the contract being traded, specified in MWh.
+            quantity: The updated quantity of the contract being traded, specified in MW.
             stop_price: Applicable for STOP_LIMIT orders. This is the updated stop price that
                 triggers the limit order.
             peak_price_delta: Applicable for ICEBERG orders. This is the updated price difference
