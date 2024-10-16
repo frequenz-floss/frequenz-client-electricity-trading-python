@@ -51,7 +51,7 @@ pip install frequenz-client-electricity-trading==$VERSION
 ## Documentation
 
 For more information, please visit the [documentation
-website](https://frequenz-floss.github.io/frequenz-client-electricity-trading/).
+website](https://frequenz-floss.github.io/frequenz-client-electricity-trading-python/).
 
 
 ## Contributing
