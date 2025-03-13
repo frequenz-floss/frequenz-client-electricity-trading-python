@@ -6,11 +6,13 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+* Unify Public Trades streaming and listing (to align with the proto changes in v0.5.0)
+    * Removed `list_public_trades`
+    * Replaced `public_trades_stream` with `receive_public_trades`
+    * `receive_public_trades` now supports an optional time range (`start_time`, `end_time`)
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
