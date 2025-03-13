@@ -29,6 +29,7 @@ from frequenz.client.base.exception import ClientNotConnected
 from frequenz.client.base.streaming import GrpcStreamBroadcaster
 from frequenz.client.common.pagination import Params
 from google.protobuf import field_mask_pb2, struct_pb2
+from google.protobuf.timestamp_pb2 import Timestamp
 
 from ._types import (
     DeliveryArea,
@@ -344,62 +345,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 )
                 raise
         return self._gridpool_trades_streams[stream_key]
-
-    def public_trades_stream(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self,
-        states: list[TradeState] | None = None,
-        delivery_period: DeliveryPeriod | None = None,
-        buy_delivery_area: DeliveryArea | None = None,
-        sell_delivery_area: DeliveryArea | None = None,
-    ) -> GrpcStreamBroadcaster[
-        electricity_trading_pb2.ReceivePublicTradesStreamResponse, PublicTrade
-    ]:
-        """
-        Stream public trades.
-
-        Args:
-            states: List of order states to filter for.
-            delivery_period: Delivery period to filter for.
-            buy_delivery_area: Buy delivery area to filter for.
-            sell_delivery_area: Sell delivery area to filter for.
-
-        Returns:
-            Async generator of orders.
-
-        Raises:
-            grpc.RpcError: If an error occurs while streaming public trades.
-        """
-        self.validate_params(delivery_period=delivery_period)
-
-        public_trade_filter = PublicTradeFilter(
-            states=states,
-            delivery_period=delivery_period,
-            buy_delivery_area=buy_delivery_area,
-            sell_delivery_area=sell_delivery_area,
-        )
-
-        if (
-            public_trade_filter not in self._public_trades_streams
-            or not self._public_trades_streams[public_trade_filter].is_running
-        ):
-            try:
-                self._public_trades_streams[public_trade_filter] = (
-                    GrpcStreamBroadcaster(
-                        f"electricity-trading-{public_trade_filter}",
-                        lambda: self.stub.ReceivePublicTradesStream(
-                            electricity_trading_pb2.ReceivePublicTradesStreamRequest(
-                                filter=public_trade_filter.to_pb(),
-                            ),
-                            metadata=self._metadata,
-                        ),
-                        lambda response: PublicTrade.from_pb(response.public_trade),
-                    )
-                )
-            except grpc.RpcError as e:
-                _logger.exception("Error occurred while streaming public trades: %s", e)
-                raise
-        return self._public_trades_streams[public_trade_filter]
 
     def validate_params(
         # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-branches
@@ -943,33 +888,43 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 _logger.exception("Error occurred while listing gridpool trades: %s", e)
                 raise
 
-    async def list_public_trades(
+    def receive_public_trades(
         # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         states: list[TradeState] | None = None,
         delivery_period: DeliveryPeriod | None = None,
         buy_delivery_area: DeliveryArea | None = None,
         sell_delivery_area: DeliveryArea | None = None,
-        page_size: int | None = None,
-        timeout: timedelta | None = None,
-    ) -> AsyncIterator[PublicTrade]:
+        start_time: datetime | None = None,
+        end_time: datetime | None = None,
+    ) -> GrpcStreamBroadcaster[
+        electricity_trading_pb2.ReceivePublicTradesStreamResponse, PublicTrade
+    ]:
         """
-        List all executed public orders with optional filters and pagination.
+        Stream public trades with optional filters and time range.
 
         Args:
-            states: List of order states to filter by.
-            delivery_period: The delivery period to filter by.
-            buy_delivery_area: The buy delivery area to filter by.
-            sell_delivery_area: The sell delivery area to filter by.
-            page_size: The number of public trades to return per page.
-            timeout: Timeout duration, defaults to None.
+            states: List of order states to filter for.
+            delivery_period: Delivery period to filter for.
+            buy_delivery_area: Buy delivery area to filter for.
+            sell_delivery_area: Sell delivery area to filter for.
+            start_time: The starting timestamp to stream trades from. If None, streams from now.
+            end_time: The ending timestamp to stop streaming trades. If None, streams indefinitely.
 
-        Yields:
-            The list of public trades for each page.
+        Returns:
+            Async generator of orders.
 
         Raises:
-            grpc.RpcError: If an error occurs while listing public trades.
+            grpc.RpcError: If an error occurs while streaming public trades.
         """
+
+        def dt_to_pb_timestamp(dt: datetime) -> Timestamp:
+            ts = Timestamp()
+            ts.FromDatetime(dt)
+            return ts
+
+        self.validate_params(delivery_period=delivery_period)
+
         public_trade_filter = PublicTradeFilter(
             states=states,
             delivery_period=delivery_period,
@@ -977,37 +932,32 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             sell_delivery_area=sell_delivery_area,
         )
 
-        request = electricity_trading_pb2.ListPublicTradesRequest(
-            filter=public_trade_filter.to_pb(),
-            pagination_params=(
-                Params(page_size=page_size).to_proto() if page_size else None
-            ),
-        )
-
-        while True:
+        if (
+            public_trade_filter not in self._public_trades_streams
+            or not self._public_trades_streams[public_trade_filter].is_running
+        ):
             try:
-                response = await cast(
-                    Awaitable[electricity_trading_pb2.ListPublicTradesResponse],
-                    grpc_call_with_timeout(
-                        self.stub.ListPublicTrades,
-                        request,
-                        metadata=self._metadata,
-                        timeout=timeout,
-                    ),
-                )
-
-                for public_trade in response.public_trades:
-                    yield PublicTrade.from_pb(public_trade)
-
-                if response.pagination_info.next_page_token:
-                    request.pagination_params.CopyFrom(
-                        PaginationParams(
-                            page_token=response.pagination_info.next_page_token
-                        )
+                self._public_trades_streams[public_trade_filter] = (
+                    GrpcStreamBroadcaster(
+                        f"electricity-trading-{public_trade_filter}",
+                        lambda: self.stub.ReceivePublicTradesStream(
+                            electricity_trading_pb2.ReceivePublicTradesStreamRequest(
+                                filter=public_trade_filter.to_pb(),
+                                start_time=(
+                                    dt_to_pb_timestamp(start_time)
+                                    if start_time
+                                    else None
+                                ),
+                                end_time=(
+                                    dt_to_pb_timestamp(end_time) if end_time else None
+                                ),
+                            ),
+                            metadata=self._metadata,
+                        ),
+                        lambda response: PublicTrade.from_pb(response.public_trade),
                     )
-                else:
-                    break
-
+                )
             except grpc.RpcError as e:
-                _logger.exception("Error occurred while listing public trades: %s", e)
+                _logger.exception("Error occurred while streaming public trades: %s", e)
                 raise
+        return self._public_trades_streams[public_trade_filter]

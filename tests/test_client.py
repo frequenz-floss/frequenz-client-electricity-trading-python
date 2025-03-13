@@ -172,14 +172,14 @@ async def test_stream_gridpool_trades(
     assert args[0].filter.side == set_up.side.to_pb()
 
 
-async def test_stream_public_trades(
+async def test_receive_public_trades(
     set_up: SetupParams,
 ) -> None:
-    """Test the method streaming public trades."""
+    """Test the method receiving public trades."""
     # Fields to filter for
     trade_states = [TradeState.ACTIVE]
 
-    set_up.client.public_trades_stream(states=trade_states)
+    set_up.client.receive_public_trades(states=trade_states)
     await asyncio.sleep(0)
 
     set_up.mock_stub.ReceivePublicTradesStream.assert_called_once()
