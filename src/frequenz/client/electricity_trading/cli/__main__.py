@@ -23,7 +23,7 @@ from frequenz.client.electricity_trading.cli.etrading import (
     list_gridpool_trades as run_list_gridpool_trades,
 )
 from frequenz.client.electricity_trading.cli.etrading import (
-    list_public_trades as run_list_public_trades,
+    receive_public_trades as run_receive_public_trades,
 )
 
 TZ = ZoneInfo("Europe/Berlin")
@@ -47,10 +47,18 @@ def cli() -> None:
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--key", required=True, type=str)
+@click.option("--delivery-start", default=None, type=iso)
 @click.option("--start", default=None, type=iso)
-def receive_public_trades(url: str, key: str, *, start: datetime) -> None:
+@click.option("--end", default=None, type=iso)
+def receive_public_trades(
+    url: str, key: str, *, start: datetime, end: datetime, delivery_start: datetime
+) -> None:
     """List and/or stream public trades."""
-    asyncio.run(run_list_public_trades(url=url, key=key, delivery_start=start))
+    asyncio.run(
+        run_receive_public_trades(
+            url=url, key=key, delivery_start=delivery_start, start=start, end=end
+        )
+    )
 
 
 @cli.command()

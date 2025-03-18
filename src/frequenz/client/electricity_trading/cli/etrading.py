@@ -41,17 +41,22 @@ def check_delivery_start(
         raise ValueError("Delivery period must be a multiple of `duration`.")
 
 
-async def list_public_trades(url: str, key: str, *, delivery_start: datetime) -> None:
+async def receive_public_trades(
+    url: str,
+    key: str,
+    *,
+    delivery_start: datetime | None = None,
+    start: datetime | None = None,
+    end: datetime | None = None,
+) -> None:
     """List trades and stream new public trades.
-
-    If delivery_start is provided, list historical trades and stream new trades
-    for the 15 minute delivery period starting at delivery_start.
-    If no delivery_start is provided, stream new trades for any delivery period.
 
     Args:
         url: URL of the trading API.
         key: API key.
         delivery_start: Start of the delivery period or None.
+        start: First execution time to list trades from.
+        end: Last execution time to list trades until.
     """
     client = Client(server_url=url, auth_key=key)
 
@@ -65,16 +70,12 @@ async def list_public_trades(url: str, key: str, *, delivery_start: datetime) ->
             start=delivery_start,
             duration=timedelta(minutes=15),
         )
-        lst = client.list_public_trades(delivery_period=delivery_period)
-
-        async for trade in lst:
-            print_public_trade(trade)
-
-        if delivery_start <= datetime.now(timezone.utc):
-            return
-
-    stream = client.public_trades_stream(delivery_period=delivery_period).new_receiver()
-    async for trade in stream:
+    stream = client.receive_public_trades(
+        delivery_period=delivery_period,
+        start_time=start,
+        end_time=end,
+    )
+    async for trade in stream.new_receiver():
         print_public_trade(trade)
 
 
