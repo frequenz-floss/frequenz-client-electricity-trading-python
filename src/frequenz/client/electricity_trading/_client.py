@@ -837,7 +837,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             gridpool_id=gridpool_id,
             filter=gridpool_order_filter.to_pb(),
             pagination_params=(
-                Params(page_size=page_size).to_proto() if page_size else None
+                Params(page_size=page_size, page_token="").to_proto()
+                if page_size
+                else None
             ),
         )
         while True:
@@ -911,7 +913,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             gridpool_id=gridpool_id,
             filter=gridpool_trade_filter.to_pb(),
             pagination_params=(
-                Params(page_size=page_size).to_proto() if page_size else None
+                Params(page_size=page_size, page_token="").to_proto()
+                if page_size
+                else None
             ),
         )
 
@@ -980,7 +984,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         request = electricity_trading_pb2.ListPublicTradesRequest(
             filter=public_trade_filter.to_pb(),
             pagination_params=(
-                Params(page_size=page_size).to_proto() if page_size else None
+                Params(page_size=page_size, page_token="").to_proto()
+                if page_size
+                else None
             ),
         )
 
