@@ -6,7 +6,8 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+* Updated frequenz-client-common version range to >=0.1.0, <0.4.0
+* Upgraded grpcio to >=1.68.1, <2 and protobuf to >=5.29.2, <6 to resolve compatibility issues 
 
 ## New Features
 
