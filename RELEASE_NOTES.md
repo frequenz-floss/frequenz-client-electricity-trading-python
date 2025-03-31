@@ -10,6 +10,7 @@
     * Removed `list_public_trades`
     * Replaced `public_trades_stream` with `receive_public_trades`
     * `receive_public_trades` now supports an optional time range (`start_time`, `end_time`)
+* Update repo-config from v0.11.0 to v0.13.0
 
 ## New Features
 
