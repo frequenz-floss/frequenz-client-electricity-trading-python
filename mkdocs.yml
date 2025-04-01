@@ -118,10 +118,9 @@ plugins:
             - https://frequenz-floss.github.io/frequenz-api-common/v0.3/objects.inv
             - https://grpc.github.io/grpc/python/objects.inv
   # Note this plugin must be loaded after mkdocstrings to be able to use macros
-  # inside docstrings. See the comment in `docs/_scripts/macros.py` for more
-  # details
+  # inside docstrings.
   - macros:
-      module_name: docs/_scripts/macros
+      modules: ["frequenz.repo.config.mkdocs.mkdocstrings_macros"]
       on_undefined: strict
       on_error_fail: true
   - search
