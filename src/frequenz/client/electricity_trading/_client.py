@@ -44,6 +44,8 @@ from ._types import (
     OrderType,
     Power,
     Price,
+    PublicOrder,
+    PublicOrderBookFilter,
     PublicTrade,
     PublicTradeFilter,
     Trade,
@@ -194,6 +196,14 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             PublicTradeFilter,
             GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceivePublicTradesStreamResponse, PublicTrade
+            ],
+        ] = {}
+
+        self._public_orders_streams: dict[
+            PublicOrderBookFilter,
+            GrpcStreamBroadcaster[
+                electricity_trading_pb2.ReceivePublicOrderBookStreamResponse,
+                PublicOrder,
             ],
         ] = {}
 
@@ -963,3 +973,74 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 _logger.exception("Error occurred while streaming public trades: %s", e)
                 raise
         return self._public_trades_streams[public_trade_filter]
+
+    def receive_public_order_book(
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        self,
+        delivery_period: DeliveryPeriod | None = None,
+        delivery_area: DeliveryArea | None = None,
+        side: MarketSide | None = None,
+        start_time: datetime | None = None,
+        end_time: datetime | None = None,
+    ) -> GrpcStreamBroadcaster[
+        electricity_trading_pb2.ReceivePublicOrderBookStreamResponse, PublicOrder
+    ]:
+        """
+        Stream public orders with optional filters and time range.
+
+        Args:
+            delivery_period: Delivery period to filter for.
+            delivery_area: Delivery area to filter for.
+            side: Side of the market to filter for.
+            start_time: The starting timestamp to stream orders from. If None, streams from now.
+            end_time: The ending timestamp to stop streaming orders. If None, streams indefinitely.
+
+        Returns:
+            Async generator of orders.
+
+        Raises:
+            grpc.RpcError: If an error occurs while streaming public orders.
+        """
+
+        def dt_to_pb_timestamp(dt: datetime) -> Timestamp:
+            ts = Timestamp()
+            ts.FromDatetime(dt)
+            return ts
+
+        public_order_filter = PublicOrderBookFilter(
+            delivery_period=delivery_period,
+            delivery_area=delivery_area,
+            side=side,
+        )
+
+        if (
+            public_order_filter not in self._public_orders_streams
+            or not self._public_orders_streams[public_order_filter].is_running
+        ):
+            try:
+                self._public_orders_streams[public_order_filter] = (
+                    GrpcStreamBroadcaster(
+                        f"electricity-trading-{public_order_filter}",
+                        lambda: self.stub.ReceivePublicOrderBookStream(
+                            electricity_trading_pb2.ReceivePublicOrderBookStreamRequest(
+                                filter=public_order_filter.to_pb(),
+                                start_time=(
+                                    dt_to_pb_timestamp(start_time)
+                                    if start_time
+                                    else None
+                                ),
+                                end_time=(
+                                    dt_to_pb_timestamp(end_time) if end_time else None
+                                ),
+                            ),
+                            metadata=self._metadata,
+                        ),
+                        lambda response: PublicOrder.from_pb(
+                            response.public_order_book_record
+                        ),
+                    )
+                )
+            except grpc.RpcError as e:
+                _logger.exception("Error occurred while streaming public orders: %s", e)
+                raise
+        return self._public_orders_streams[public_order_filter]

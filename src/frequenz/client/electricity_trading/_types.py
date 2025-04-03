@@ -1944,3 +1944,195 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
             payload=struct_pb2.Struct(fields=self.payload) if self.payload else None,
             tag=self.tag if self.tag else None,
         )
+
+
+@dataclass()
+class PublicOrder:  # pylint: disable=too-many-instance-attributes
+    """Represents a public order in the market."""
+
+    public_order_id: int
+    """ID of the order from the public order book."""
+
+    delivery_area: DeliveryArea
+    """Delivery area of the order."""
+
+    delivery_period: DeliveryPeriod
+    """The delivery period for the contract."""
+
+    side: MarketSide
+    """Indicates if the order is on the Buy or Sell side of the market."""
+
+    price: Price
+    """The limit price at which the contract is to be traded."""
+
+    quantity: Power
+    """The quantity of the contract being traded."""
+
+    execution_option: OrderExecutionOption
+    """Order execution options such as All or None, Fill or Kill, etc."""
+
+    create_time: datetime
+    """UTC Timestamp when the order was created."""
+
+    update_time: datetime
+    """UTC Timestamp of the last update to the order."""
+
+    def __post_init__(self) -> None:
+        """Post initialization checks to ensure that all datetimes are UTC."""
+        if self.delivery_period.start.tzinfo is None:
+            raise ValueError("Delivery period start must have timezone information")
+        if self.delivery_period.start.tzinfo != timezone.utc:
+            _logger.warning(
+                "Delivery period start is not in UTC timezone. Converting to UTC."
+            )
+            self.delivery_period.start = self.delivery_period.start.astimezone(
+                timezone.utc
+            )
+
+    @classmethod
+    @from_pb
+    def from_pb(
+        cls, public_order: electricity_trading_pb2.PublicOrderBookRecord
+    ) -> Self:
+        """Convert a protobuf PublicOrder to PublicOrder object.
+
+        Args:
+            public_order: PublicOrder to convert.
+
+        Returns:
+            PublicOrder object corresponding to the protobuf message.
+        """
+        return cls(
+            public_order_id=public_order.id,
+            delivery_area=DeliveryArea.from_pb(public_order.delivery_area),
+            delivery_period=DeliveryPeriod.from_pb(public_order.delivery_period),
+            side=MarketSide.from_pb(public_order.side),
+            price=Price.from_pb(public_order.price),
+            quantity=Power.from_pb(public_order.quantity),
+            execution_option=OrderExecutionOption.from_pb(
+                public_order.execution_option
+            ),
+            create_time=public_order.create_time.ToDatetime(tzinfo=timezone.utc),
+            update_time=public_order.update_time.ToDatetime(tzinfo=timezone.utc),
+        )
+
+    def to_pb(self) -> electricity_trading_pb2.PublicOrderBookRecord:
+        """Convert a PublicOrder object to protobuf PublicOrder.
+
+        Returns:
+            Protobuf PublicOrder corresponding to the object.
+        """
+        create_time = timestamp_pb2.Timestamp()
+        create_time.FromDatetime(self.create_time)
+        update_time = timestamp_pb2.Timestamp()
+        update_time.FromDatetime(self.update_time)
+
+        return electricity_trading_pb2.PublicOrderBookRecord(
+            id=self.public_order_id,
+            delivery_area=self.delivery_area.to_pb(),
+            delivery_period=self.delivery_period.to_pb(),
+            side=electricity_trading_pb2.MarketSide.ValueType(self.side.value),
+            price=self.price.to_pb(),
+            quantity=self.quantity.to_pb(),
+            execution_option=electricity_trading_pb2.OrderExecutionOption.ValueType(
+                self.execution_option.value
+            ),
+            create_time=create_time,
+            update_time=update_time,
+        )
+
+
+@dataclass()
+class PublicOrderBookFilter:
+    """Parameters for filtering the public orders in the market."""
+
+    delivery_period: DeliveryPeriod | None = None
+    """Delivery period to filter for."""
+
+    delivery_area: DeliveryArea | None = None
+    """Delivery area to filter for."""
+
+    side: MarketSide | None = None
+    """Market side to filter for."""
+
+    def __eq__(self, other: object) -> bool:
+        """
+        Check if two PublicOrderBookFilter objects are equal.
+
+        Args:
+            other: PublicOrderBookFilter object to compare with.
+
+        Returns:
+            True if the two PublicOrderBookFilter objects are equal, False otherwise.
+        """
+        if not isinstance(other, PublicOrderBookFilter):
+            return NotImplemented
+        return (
+            self.delivery_period == other.delivery_period
+            and self.delivery_area == other.delivery_area
+            and self.side == other.side
+        )
+
+    def __hash__(self) -> int:
+        """
+        Create hash of the PublicOrderBookFilter object.
+
+        Returns:
+            Hash of the PublicOrderBookFilter object.
+        """
+        return hash(
+            (
+                self.delivery_period,
+                self.delivery_area,
+                self.side,
+            )
+        )
+
+    @classmethod
+    @from_pb
+    def from_pb(
+        cls, public_order_filter: electricity_trading_pb2.PublicOrderBookFilter
+    ) -> Self:
+        """Convert a protobuf PublicOrderBookFilter to PublicOrderBookFilter object.
+
+        Args:
+            public_order_filter: PublicOrderBookFilter to convert.
+
+        Returns:
+            PublicOrderBookFilter object corresponding to the protobuf message.
+        """
+        return cls(
+            delivery_period=(
+                DeliveryPeriod.from_pb(public_order_filter.delivery_period)
+                if public_order_filter.HasField("delivery_period")
+                else None
+            ),
+            delivery_area=(
+                DeliveryArea.from_pb(public_order_filter.delivery_area)
+                if public_order_filter.HasField("delivery_area")
+                else None
+            ),
+            side=(
+                MarketSide.from_pb(public_order_filter.side)
+                if public_order_filter.HasField("side")
+                else None
+            ),
+        )
+
+    def to_pb(self) -> electricity_trading_pb2.PublicOrderBookFilter:
+        """Convert a PublicOrderBookFilter object to protobuf PublicOrderBookFilter.
+
+        Returns:
+            Protobuf PublicOrderBookFilter corresponding to the object.
+        """
+        return electricity_trading_pb2.PublicOrderBookFilter(
+            delivery_period=(
+                self.delivery_period.to_pb() if self.delivery_period else None
+            ),
+            delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
+            side=(
+                electricity_trading_pb2.MarketSide.ValueType(self.side.value)
+                if self.side
+                else None
+            ),
+        )
