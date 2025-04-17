@@ -34,6 +34,11 @@ updates:
           - "minor"
         exclude-patterns:
           - "async-solipsism"
+          - "entsoe-py"
+          - "frequenz-api-common"
+          - "frequenz-api-electricity-trading"
+          - "frequenz-client-base"
+          - "frequenz-client-common"
           - "frequenz-repo-config*"
           - "markdown-callouts"
           - "mkdocs-gen-files"
