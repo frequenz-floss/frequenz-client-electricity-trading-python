@@ -173,6 +173,7 @@ disable = [
 [tool.pytest.ini_options]
 addopts = "-W=all -Werror -Wdefault::DeprecationWarning -Wdefault::PendingDeprecationWarning -vv"
 testpaths = ["tests", "src"]
+asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "auto"
 required_plugins = ["pytest-asyncio", "pytest-mock"]
 
