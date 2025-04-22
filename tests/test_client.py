@@ -6,7 +6,7 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 
@@ -36,13 +36,22 @@ from frequenz.client.electricity_trading import (
 )
 
 
+class _FakeAsyncIterable:
+    def __aiter__(self) -> Any:
+        """Iterate over the fake async iterable."""
+        return self
+
+    async def __anext__(self) -> Any:
+        """Return the next item in the async iterable."""
+        raise StopAsyncIteration
+
+
 @dataclass
 class SetupParams:  # pylint: disable=too-many-instance-attributes
     """Parameters for the setup of the test suite."""
 
     client: Client
     mock_stub: AsyncMock
-    loop: asyncio.AbstractEventLoop
     gridpool_id: int
     delivery_area: DeliveryArea
     delivery_period: DeliveryPeriod
@@ -61,10 +70,6 @@ def set_up() -> Generator[Any, Any, Any]:
     client = Client("grpc://unknown.host", connect=False)
     mock_stub = AsyncMock()
     client._stub = mock_stub  # pylint: disable=protected-access
-
-    # Create a new event loop for each test
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
 
     # Set up the parameters for the orders
     # Setting delivery start to the next day 12:00
@@ -87,7 +92,6 @@ def set_up() -> Generator[Any, Any, Any]:
     yield SetupParams(
         client=client,
         mock_stub=mock_stub,
-        loop=loop,
         gridpool_id=gridpool_id,
         delivery_area=delivery_area,
         delivery_period=delivery_period,
@@ -98,8 +102,6 @@ def set_up() -> Generator[Any, Any, Any]:
         order_execution_option=order_execution_option,
         valid_until=valid_until,
     )
-
-    loop.close()
 
 
 # pylint: disable=redefined-outer-name
@@ -133,6 +135,10 @@ def set_up_order_detail_response(
 
 async def test_stream_gridpool_orders(set_up: SetupParams) -> None:
     """Test the method streaming gridpool orders."""
+    set_up.mock_stub.ReceiveGridpoolOrdersStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     set_up.client.gridpool_orders_stream(set_up.gridpool_id)
     await asyncio.sleep(0)
 
@@ -143,6 +149,10 @@ async def test_stream_gridpool_orders(set_up: SetupParams) -> None:
 
 async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) -> None:
     """Test the method streaming gridpool orders with some fields to filter for."""
+    set_up.mock_stub.ReceiveGridpoolOrdersStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     # Fields to filter for
     order_states = [OrderState.ACTIVE]
 
@@ -161,6 +171,10 @@ async def test_stream_gridpool_trades(
     set_up: SetupParams,
 ) -> None:
     """Test the method streaming gridpool trades."""
+    set_up.mock_stub.ReceiveGridpoolTradesStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     set_up.client.gridpool_trades_stream(
         gridpool_id=set_up.gridpool_id, market_side=set_up.side
     )
@@ -176,6 +190,8 @@ async def test_receive_public_trades(
     set_up: SetupParams,
 ) -> None:
     """Test the method receiving public trades."""
+    set_up.mock_stub.ReceivePublicTradesStream = Mock(return_value=_FakeAsyncIterable())
+
     # Fields to filter for
     trade_states = [TradeState.ACTIVE]
 
@@ -189,7 +205,7 @@ async def test_receive_public_trades(
     ]
 
 
-def test_create_gridpool_order(
+async def test_create_gridpool_order(
     set_up: SetupParams,
 ) -> None:
     """
@@ -205,17 +221,15 @@ def test_create_gridpool_order(
     )
     set_up.mock_stub.CreateGridpoolOrder.return_value = mock_response
 
-    set_up.loop.run_until_complete(
-        set_up.client.create_gridpool_order(
-            gridpool_id=set_up.gridpool_id,
-            delivery_area=set_up.delivery_area,
-            delivery_period=set_up.delivery_period,
-            order_type=set_up.order_type,
-            side=set_up.side,
-            price=set_up.price,
-            quantity=set_up.quantity,
-            execution_option=set_up.order_execution_option,  # optional field
-        )
+    await set_up.client.create_gridpool_order(
+        gridpool_id=set_up.gridpool_id,
+        delivery_area=set_up.delivery_area,
+        delivery_period=set_up.delivery_period,
+        order_type=set_up.order_type,
+        side=set_up.side,
+        price=set_up.price,
+        quantity=set_up.quantity,
+        execution_option=set_up.order_execution_option,  # optional field
     )
 
     set_up.mock_stub.CreateGridpoolOrder.assert_called_once()
@@ -229,7 +243,7 @@ def test_create_gridpool_order(
     assert args[0].order.execution_option == set_up.order_execution_option.to_pb()
 
 
-def test_update_gridpool_order(
+async def test_update_gridpool_order(
     set_up: SetupParams,
 ) -> None:
     """Test the method updating a gridpool order."""
@@ -241,13 +255,11 @@ def test_update_gridpool_order(
     )
     set_up.mock_stub.UpdateGridpoolOrder.return_value = mock_response
 
-    set_up.loop.run_until_complete(
-        set_up.client.update_gridpool_order(
-            gridpool_id=set_up.gridpool_id,
-            order_id=1,
-            quantity=set_up.quantity,
-            valid_until=set_up.valid_until,
-        )
+    await set_up.client.update_gridpool_order(
+        gridpool_id=set_up.gridpool_id,
+        order_id=1,
+        quantity=set_up.quantity,
+        valid_until=set_up.valid_until,
     )
 
     valid_until_pb = timestamp_pb2.Timestamp()
@@ -263,7 +275,7 @@ def test_update_gridpool_order(
     ), "Price field should not be set."
 
 
-def test_cancel_gridpool_order(
+async def test_cancel_gridpool_order(
     set_up: SetupParams,
 ) -> None:
     """Test the method cancelling gridpool orders."""
@@ -279,10 +291,8 @@ def test_cancel_gridpool_order(
 
     set_up.mock_stub.CancelGridpoolOrder.return_value = mock_response
 
-    set_up.loop.run_until_complete(
-        set_up.client.cancel_gridpool_order(
-            gridpool_id=set_up.gridpool_id, order_id=order_id
-        )
+    await set_up.client.cancel_gridpool_order(
+        gridpool_id=set_up.gridpool_id, order_id=order_id
     )
 
     set_up.mock_stub.CancelGridpoolOrder.assert_called_once()
@@ -291,7 +301,6 @@ def test_cancel_gridpool_order(
     assert args[0].order_id == order_id
 
 
-@pytest.mark.asyncio
 async def test_list_gridpool_orders(
     set_up: SetupParams,
 ) -> None:
@@ -389,7 +398,7 @@ async def test_list_gridpool_orders(
         ),
     ],
 )
-def test_create_gridpool_order_with_invalid_params(
+async def test_create_gridpool_order_with_invalid_params(
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     set_up: SetupParams,
     price: Price,
@@ -401,18 +410,16 @@ def test_create_gridpool_order_with_invalid_params(
 ) -> None:
     """Test creating an order with invalid input parameters."""
     with pytest.raises(expected_exception):
-        set_up.loop.run_until_complete(
-            set_up.client.create_gridpool_order(
-                gridpool_id=set_up.gridpool_id,
-                delivery_area=set_up.delivery_area,
-                delivery_period=delivery_period,
-                order_type=OrderType.LIMIT,
-                side=MarketSide.BUY,
-                price=price,
-                quantity=quantity,
-                execution_option=execution_option,
-                valid_until=valid_until,
-            )
+        await set_up.client.create_gridpool_order(
+            gridpool_id=set_up.gridpool_id,
+            delivery_area=set_up.delivery_area,
+            delivery_period=delivery_period,
+            order_type=OrderType.LIMIT,
+            side=MarketSide.BUY,
+            price=price,
+            quantity=quantity,
+            execution_option=execution_option,
+            valid_until=valid_until,
         )
 
 
@@ -442,7 +449,7 @@ def test_create_gridpool_order_with_invalid_params(
         ),
     ],
 )
-def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
+async def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too-many-arguments
     set_up: SetupParams,
     price: Price,
     quantity: Power,
@@ -451,12 +458,10 @@ def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too-many-
 ) -> None:
     """Test updating an order with invalid input parameters."""
     with pytest.raises(expected_exception):
-        set_up.loop.run_until_complete(
-            set_up.client.update_gridpool_order(
-                gridpool_id=set_up.gridpool_id,
-                order_id=1,
-                price=price,
-                quantity=quantity,
-                valid_until=valid_until,
-            )
+        await set_up.client.update_gridpool_order(
+            gridpool_id=set_up.gridpool_id,
+            order_id=1,
+            price=price,
+            quantity=quantity,
+            valid_until=valid_until,
         )
