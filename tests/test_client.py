@@ -465,3 +465,21 @@ async def test_update_gridpool_order_with_invalid_params(  # pylint: disable=too
             quantity=quantity,
             valid_until=valid_until,
         )
+
+
+async def test_receive_public_order_book(
+    set_up: SetupParams,
+) -> None:
+    """Test the method receiving public order book."""
+    set_up.client.receive_public_order_book(
+        delivery_period=set_up.delivery_period,
+        delivery_area=set_up.delivery_area,
+        side=set_up.side,
+    )
+    await asyncio.sleep(0)
+
+    set_up.mock_stub.ReceivePublicOrderBookStream.assert_called_once()
+    args, _ = set_up.mock_stub.ReceivePublicOrderBookStream.call_args
+    assert args[0].filter.delivery_period == set_up.delivery_period.to_pb()
+    assert args[0].filter.delivery_area == set_up.delivery_area.to_pb()
+    assert args[0].filter.side == set_up.side.to_pb()

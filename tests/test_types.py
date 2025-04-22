@@ -28,10 +28,13 @@ from frequenz.client.electricity_trading import (
     MarketSide,
     Order,
     OrderDetail,
+    OrderExecutionOption,
     OrderState,
     OrderType,
     Power,
     Price,
+    PublicOrder,
+    PublicOrderBookFilter,
     PublicTrade,
     PublicTradeFilter,
     StateDetail,
@@ -172,7 +175,53 @@ PUBLIC_TRADE_PB = electricity_trading_pb2.PublicTrade(
     quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
     state=electricity_trading_pb2.TradeState.TRADE_STATE_ACTIVE,
 )
-
+PUBLIC_ORDER = PublicOrder(
+    public_order_id=42,
+    delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
+    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    side=MarketSide.BUY,
+    price=Price(amount=Decimal("100.00"), currency=Currency.EUR),
+    quantity=Power(mw=Decimal("5.00")),
+    execution_option=OrderExecutionOption.AON,
+    create_time=CREATE_TIME,
+    update_time=MODIFICATION_TIME,
+)
+PUBLIC_ORDER_PB = electricity_trading_pb2.PublicOrderBookRecord(
+    id=42,
+    delivery_area=delivery_area_pb2.DeliveryArea(
+        code="XYZ",
+        code_type=delivery_area_pb2.EnergyMarketCodeType.ENERGY_MARKET_CODE_TYPE_EUROPE_EIC,
+    ),
+    delivery_period=delivery_duration_pb2.DeliveryPeriod(
+        start=START_TIME_PB,
+        duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
+    ),
+    side=electricity_trading_pb2.MarketSide.MARKET_SIDE_BUY,
+    price=price_pb2.Price(
+        amount=decimal_pb2.Decimal(value="100.00"),
+        currency=price_pb2.Price.Currency.CURRENCY_EUR,
+    ),
+    quantity=power_pb2.Power(mw=decimal_pb2.Decimal(value="5.00")),
+    execution_option=electricity_trading_pb2.OrderExecutionOption.ORDER_EXECUTION_OPTION_AON,
+    create_time=CREATE_TIME_PB,
+    update_time=MODIFICATION_TIME_PB,
+)
+PUBLIC_ORDER_BOOK_FILTER = PublicOrderBookFilter(
+    delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
+    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    side=MarketSide.SELL,
+)
+PUBLIC_ORDER_BOOK_FILTER_PB = electricity_trading_pb2.PublicOrderBookFilter(
+    delivery_area=delivery_area_pb2.DeliveryArea(
+        code="XYZ",
+        code_type=delivery_area_pb2.EnergyMarketCodeType.ENERGY_MARKET_CODE_TYPE_EUROPE_EIC,
+    ),
+    delivery_period=delivery_duration_pb2.DeliveryPeriod(
+        start=START_TIME_PB,
+        duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
+    ),
+    side=electricity_trading_pb2.MarketSide.MARKET_SIDE_SELL,
+)
 GRIDPOOL_ORDER_FILTER = GridpoolOrderFilter(
     order_states=[OrderState.ACTIVE, OrderState.CANCELED],
     side=MarketSide.BUY,
@@ -653,3 +702,39 @@ def test_update_order_to_pb_with_empty_values() -> None:
     # Make sure all attributes are None
     non_none_attrs = converted_update_order.ListFields()
     assert len(non_none_attrs) == 0
+
+
+def test_public_order_to_pb() -> None:
+    """Test the client public order type conversion to protobuf."""
+    assert_conversion_to_pb(
+        original=PUBLIC_ORDER,
+        expected_pb=PUBLIC_ORDER_PB,
+        assert_func=assert_equal,
+    )
+
+
+def test_public_order_from_pb() -> None:
+    """Test the client public order type conversion from protobuf."""
+    assert_conversion_from_pb(
+        original_pb=PUBLIC_ORDER_PB,
+        expected=PUBLIC_ORDER,
+        assert_func=assert_equal,
+    )
+
+
+def test_public_order_book_filter_to_pb() -> None:
+    """Test the client public order book filter type conversion to protobuf."""
+    assert_conversion_to_pb(
+        original=PUBLIC_ORDER_BOOK_FILTER,
+        expected_pb=PUBLIC_ORDER_BOOK_FILTER_PB,
+        assert_func=assert_equal,
+    )
+
+
+def test_public_order_book_filter_from_pb() -> None:
+    """Test the client public order book filter type conversion from protobuf."""
+    assert_conversion_from_pb(
+        original_pb=PUBLIC_ORDER_BOOK_FILTER_PB,
+        expected=PUBLIC_ORDER_BOOK_FILTER,
+        assert_func=assert_equal,
+    )
