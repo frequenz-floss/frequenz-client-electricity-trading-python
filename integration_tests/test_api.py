@@ -142,7 +142,6 @@ async def create_test_trade(
     return buy_order, sell_order
 
 
-@pytest.mark.asyncio
 async def test_create_and_get_order(set_up: dict[str, Any]) -> None:
     """Test creating a gridpool order and ensure it exists in the system."""
     # Create an order first
@@ -157,7 +156,6 @@ async def test_create_and_get_order(set_up: dict[str, Any]) -> None:
     assert fetched_order.order == order.order, "Order mismatch"
 
 
-@pytest.mark.asyncio
 async def test_create_order_invalid_delivery_start_one_day_ago(
     set_up: dict[str, Any]
 ) -> None:
@@ -174,7 +172,6 @@ async def test_create_order_invalid_delivery_start_one_day_ago(
         await create_test_order(set_up, delivery_period=delivery_period)
 
 
-@pytest.mark.asyncio
 async def test_create_order_invalid_delivery_start_one_hour_ago(
     set_up: dict[str, Any]
 ) -> None:
@@ -191,7 +188,6 @@ async def test_create_order_invalid_delivery_start_one_hour_ago(
         await create_test_order(set_up, delivery_period=delivery_period)
 
 
-@pytest.mark.asyncio
 async def test_create_order_invalid_delivery_start_15_minutes_ago(
     set_up: dict[str, Any]
 ) -> None:
@@ -208,7 +204,6 @@ async def test_create_order_invalid_delivery_start_15_minutes_ago(
         await create_test_order(set_up, delivery_period=delivery_period)
 
 
-@pytest.mark.asyncio
 async def test_create_order_invalid_valid_until_one_hour_ago(
     set_up: dict[str, Any]
 ) -> None:
@@ -220,7 +215,6 @@ async def test_create_order_invalid_valid_until_one_hour_ago(
         await create_test_order(set_up, valid_until=valid_until)
 
 
-@pytest.mark.asyncio
 async def test_list_gridpool_orders(set_up: dict[str, Any]) -> None:
     """Test listing gridpool orders and ensure they exist in the system."""
     # Create several orders
@@ -239,7 +233,6 @@ async def test_list_gridpool_orders(set_up: dict[str, Any]) -> None:
         assert order_id in listed_orders_id, f"Order ID {order_id} not found"
 
 
-@pytest.mark.asyncio
 async def test_update_order_price(set_up: dict[str, Any]) -> None:
     """Test updating the price of an order."""
     # Create an order first
@@ -263,7 +256,6 @@ async def test_update_order_price(set_up: dict[str, Any]) -> None:
     ), "Original price should not be the same as the updated price"
 
 
-@pytest.mark.asyncio
 async def test_update_order_quantity_failure(set_up: dict[str, Any]) -> None:
     """Test updating the quantity of an order and ensure it fails."""
     # Create an order first
@@ -283,7 +275,6 @@ async def test_update_order_quantity_failure(set_up: dict[str, Any]) -> None:
     ), "Expected INVALID_ARGUMENT error"
 
 
-@pytest.mark.asyncio
 async def test_cancel_order(set_up: dict[str, Any]) -> None:
     """Test cancelling an order."""
     # Create the order to be cancelled
@@ -303,7 +294,6 @@ async def test_cancel_order(set_up: dict[str, Any]) -> None:
     ), "Order state should be CANCELED"
 
 
-@pytest.mark.asyncio
 async def test_update_cancelled_order_failure(set_up: dict[str, Any]) -> None:
     """Test updating a cancelled order and ensure it fails."""
     # Create an order first
@@ -322,7 +312,6 @@ async def test_update_cancelled_order_failure(set_up: dict[str, Any]) -> None:
     ), "Expected INVALID_ARGUMENT error"
 
 
-@pytest.mark.asyncio
 async def test_cancel_all_orders(set_up: dict[str, Any]) -> None:
     """Test cancelling all orders."""
     # Create multiple orders
@@ -345,7 +334,6 @@ async def test_cancel_all_orders(set_up: dict[str, Any]) -> None:
         ), f"Order {order.order_id} not canceled"
 
 
-@pytest.mark.asyncio
 async def test_list_gridpool_trades(set_up: dict[str, Any]) -> None:
     """Test listing gridpool trades."""
     buy_order, sell_order = await create_test_trade(set_up)
@@ -359,7 +347,6 @@ async def test_list_gridpool_trades(set_up: dict[str, Any]) -> None:
     assert len(trades) >= 1
 
 
-@pytest.mark.asyncio
 async def test_list_public_trades(set_up: dict[str, Any]) -> None:
     """Test listing public trades."""
     delivery_period = DeliveryPeriod(
@@ -380,7 +367,6 @@ async def test_list_public_trades(set_up: dict[str, Any]) -> None:
     assert len(public_trades) == 10, "Failed to retrieve 10 public trades"
 
 
-@pytest.mark.asyncio
 async def test_stream_gridpool_orders(set_up: dict[str, Any]) -> None:
     """Test streaming gridpool orders."""
     stream = await set_up["client"].stream_gridpool_orders(GRIDPOOL_ID)
@@ -397,7 +383,6 @@ async def test_stream_gridpool_orders(set_up: dict[str, Any]) -> None:
         pytest.fail("Streaming timed out, no order received in 15 seconds")
 
 
-@pytest.mark.asyncio
 async def test_stream_public_trades(set_up: dict[str, Any]) -> None:
     """Test stream public trades."""
     stream = await set_up["client"].stream_public_trades()
@@ -410,7 +395,6 @@ async def test_stream_public_trades(set_up: dict[str, Any]) -> None:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
 
 
-@pytest.mark.asyncio
 async def test_stream_gridpool_trades(set_up: dict[str, Any]) -> None:
     """Test stream gridpool trades."""
     stream = await set_up["client"].stream_gridpool_trades(GRIDPOOL_ID)
@@ -426,7 +410,6 @@ async def test_stream_gridpool_trades(set_up: dict[str, Any]) -> None:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
 
 
-@pytest.mark.asyncio
 async def test_create_order_zero_quantity(set_up: dict[str, Any]) -> None:
     """Test creating an order with zero quantity."""
     zero_quantity = Power(mw=Decimal("0"))
@@ -434,7 +417,6 @@ async def test_create_order_zero_quantity(set_up: dict[str, Any]) -> None:
         await create_test_order(set_up, quantity=zero_quantity)
 
 
-@pytest.mark.asyncio
 async def test_create_order_negative_quantity(set_up: dict[str, Any]) -> None:
     """Test creating an order with a negative quantity."""
     negative_quantity = Power(mw=Decimal("-0.1"))
@@ -442,7 +424,6 @@ async def test_create_order_negative_quantity(set_up: dict[str, Any]) -> None:
         await create_test_order(set_up, quantity=negative_quantity)
 
 
-@pytest.mark.asyncio
 async def test_create_order_maximum_price_precision_exceeded(
     set_up: dict[str, Any]
 ) -> None:
@@ -452,7 +433,6 @@ async def test_create_order_maximum_price_precision_exceeded(
         await create_test_order(set_up, price=excessive_precision_price)
 
 
-@pytest.mark.asyncio
 async def test_create_order_maximum_quantity_precision_exceeded(
     set_up: dict[str, Any]
 ) -> None:
@@ -464,7 +444,6 @@ async def test_create_order_maximum_quantity_precision_exceeded(
         await create_test_order(set_up, quantity=excessive_precision_quantity)
 
 
-@pytest.mark.asyncio
 async def test_cancel_non_existent_order(set_up: dict[str, Any]) -> None:
     """Test canceling a non-existent order and expecting an error."""
     non_existent_order_id = 999999
@@ -475,7 +454,6 @@ async def test_cancel_non_existent_order(set_up: dict[str, Any]) -> None:
     ), "Cancelling non-existent order should return an error"
 
 
-@pytest.mark.asyncio
 async def test_cancel_already_cancelled_order(set_up: dict[str, Any]) -> None:
     """Test cancelling an order twice to ensure idempotent behavior."""
     order = await create_test_order(set_up)
@@ -489,7 +467,6 @@ async def test_cancel_already_cancelled_order(set_up: dict[str, Any]) -> None:
     ), "Order is already cancelled"
 
 
-@pytest.mark.asyncio
 async def test_create_order_with_invalid_delivery_area(set_up: dict[str, Any]) -> None:
     """Test creating an order with an invalid delivery area code."""
     invalid_delivery_area = DeliveryArea(
@@ -511,7 +488,6 @@ async def test_create_order_with_invalid_delivery_area(set_up: dict[str, Any]) -
     ), "Delivery area not found"
 
 
-@pytest.mark.asyncio
 async def test_create_order_below_minimum_quantity(set_up: dict[str, Any]) -> None:
     """Test creating an order with a quantity below the minimum allowed."""
     below_min_quantity = Power(mw=MIN_QUANTITY_MW - Decimal("0.01"))
@@ -521,7 +497,6 @@ async def test_create_order_below_minimum_quantity(set_up: dict[str, Any]) -> No
         await create_test_order(set_up, quantity=below_min_quantity)
 
 
-@pytest.mark.asyncio
 async def test_create_order_above_maximum_price(set_up: dict[str, Any]) -> None:
     """Test creating an order with a price above the maximum allowed."""
     above_max_price = Price(amount=MAX_PRICE + Decimal("0.01"), currency=Currency.EUR)
@@ -531,7 +506,6 @@ async def test_create_order_above_maximum_price(set_up: dict[str, Any]) -> None:
         await create_test_order(set_up, price=above_max_price)
 
 
-@pytest.mark.asyncio
 async def test_create_order_at_maximum_price(set_up: dict[str, Any]) -> None:
     """Test creating an order with the exact maximum allowed price."""
     max_price = Price(amount=MAX_PRICE, currency=Currency.EUR)
@@ -541,7 +515,6 @@ async def test_create_order_at_maximum_price(set_up: dict[str, Any]) -> None:
     ), "Order with maximum price was not created correctly"
 
 
-@pytest.mark.asyncio
 async def test_create_order_at_minimum_quantity_and_price(
     set_up: dict[str, Any]
 ) -> None:
@@ -557,7 +530,6 @@ async def test_create_order_at_minimum_quantity_and_price(
     ), "Order with minimum price was not created correctly"
 
 
-@pytest.mark.asyncio
 async def test_update_order_to_invalid_price(set_up: dict[str, Any]) -> None:
     """Test updating an order to have a price outside the valid range."""
     order = await create_test_order(set_up)
@@ -570,7 +542,6 @@ async def test_update_order_to_invalid_price(set_up: dict[str, Any]) -> None:
         )
 
 
-@pytest.mark.asyncio
 async def test_concurrent_cancel_and_update_order(set_up: dict[str, Any]) -> None:
     """Test concurrent cancellation and update of the same order."""
     order = await create_test_order(set_up)
@@ -589,7 +560,6 @@ async def test_concurrent_cancel_and_update_order(set_up: dict[str, Any]) -> Non
         ), "Order is already cancelled"
 
 
-@pytest.mark.asyncio
 async def test_multiple_streams_different_filters(set_up: dict[str, Any]) -> None:
     """Test creating multiple streams with different filters and ensure independent operation."""
     area_1 = DeliveryArea(

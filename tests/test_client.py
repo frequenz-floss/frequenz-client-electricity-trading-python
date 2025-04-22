@@ -277,7 +277,6 @@ async def test_cancel_gridpool_order(
     assert args[0].order_id == order_id
 
 
-@pytest.mark.asyncio
 async def test_list_gridpool_orders(
     set_up: SetupParams,
 ) -> None:
