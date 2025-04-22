@@ -12,6 +12,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, AsyncIterator, Awaitable, Callable, cast
+from zoneinfo import ZoneInfo
 
 import grpc
 from frequenz.api.common.v1.pagination.pagination_params_pb2 import PaginationParams
@@ -127,6 +128,34 @@ async def grpc_call_with_timeout(
     except asyncio.TimeoutError:
         _logger.exception("Timeout while calling %s", call)
         raise
+
+
+def dt_to_pb_timestamp_utc(dt: datetime) -> Timestamp:
+    """
+    Convert a Python datetime object to a UTC Protobuf Timestamp.
+
+    The input datetime 'dt' MUST be timezone-aware.
+
+    Args:
+        dt: The Python datetime object to convert.
+
+    Returns:
+        A Protobuf Timestamp object representing the time in UTC.
+
+    Raises:
+        TypeError: If dt is not a datetime.datetime object.
+        ValueError: If the input datetime object is naive (lacks timezone info).
+    """
+    if not isinstance(dt, datetime):
+        raise TypeError("Input must be a datetime.datetime object")
+
+    if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
+        raise ValueError("Input datetime object must be timezone-aware.")
+
+    timestamp = Timestamp()
+    timestamp.FromDatetime(dt.astimezone(ZoneInfo("UTC")))
+
+    return timestamp
 
 
 class Client(BaseApiClient[ElectricityTradingServiceStub]):
@@ -1001,12 +1030,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         Raises:
             grpc.RpcError: If an error occurs while streaming public orders.
         """
-
-        def dt_to_pb_timestamp(dt: datetime) -> Timestamp:
-            ts = Timestamp()
-            ts.FromDatetime(dt)
-            return ts
-
         public_order_filter = PublicOrderBookFilter(
             delivery_period=delivery_period,
             delivery_area=delivery_area,
@@ -1025,12 +1048,14 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                             electricity_trading_pb2.ReceivePublicOrderBookStreamRequest(
                                 filter=public_order_filter.to_pb(),
                                 start_time=(
-                                    dt_to_pb_timestamp(start_time)
+                                    dt_to_pb_timestamp_utc(start_time)
                                     if start_time
                                     else None
                                 ),
                                 end_time=(
-                                    dt_to_pb_timestamp(end_time) if end_time else None
+                                    dt_to_pb_timestamp_utc(end_time)
+                                    if end_time
+                                    else None
                                 ),
                             ),
                             metadata=self._metadata,
