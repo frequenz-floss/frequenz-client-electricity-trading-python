@@ -6,7 +6,7 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, Mock
 
 import pytest
 
@@ -34,6 +34,16 @@ from frequenz.client.electricity_trading import (
     StateReason,
     TradeState,
 )
+
+
+class _FakeAsyncIterable:
+    def __aiter__(self) -> Any:
+        """Iterate over the fake async iterable."""
+        return self
+
+    async def __anext__(self) -> Any:
+        """Return the next item in the async iterable."""
+        raise StopAsyncIteration
 
 
 @dataclass
@@ -125,6 +135,10 @@ def set_up_order_detail_response(
 
 async def test_stream_gridpool_orders(set_up: SetupParams) -> None:
     """Test the method streaming gridpool orders."""
+    set_up.mock_stub.ReceiveGridpoolOrdersStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     set_up.client.gridpool_orders_stream(set_up.gridpool_id)
     await asyncio.sleep(0)
 
@@ -135,6 +149,10 @@ async def test_stream_gridpool_orders(set_up: SetupParams) -> None:
 
 async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) -> None:
     """Test the method streaming gridpool orders with some fields to filter for."""
+    set_up.mock_stub.ReceiveGridpoolOrdersStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     # Fields to filter for
     order_states = [OrderState.ACTIVE]
 
@@ -153,6 +171,10 @@ async def test_stream_gridpool_trades(
     set_up: SetupParams,
 ) -> None:
     """Test the method streaming gridpool trades."""
+    set_up.mock_stub.ReceiveGridpoolTradesStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
     set_up.client.gridpool_trades_stream(
         gridpool_id=set_up.gridpool_id, market_side=set_up.side
     )
@@ -168,6 +190,8 @@ async def test_receive_public_trades(
     set_up: SetupParams,
 ) -> None:
     """Test the method receiving public trades."""
+    set_up.mock_stub.ReceivePublicTradesStream = Mock(return_value=_FakeAsyncIterable())
+
     # Fields to filter for
     trade_states = [TradeState.ACTIVE]
 
