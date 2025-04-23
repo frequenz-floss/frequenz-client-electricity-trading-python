@@ -1036,6 +1036,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             side=side,
         )
 
+        start_time_utc = dt_to_pb_timestamp_utc(start_time) if start_time else None
+        end_time_utc = dt_to_pb_timestamp_utc(end_time) if end_time else None
+
         if (
             public_order_filter not in self._public_orders_streams
             or not self._public_orders_streams[public_order_filter].is_running
@@ -1047,16 +1050,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                         lambda: self.stub.ReceivePublicOrderBookStream(
                             electricity_trading_pb2.ReceivePublicOrderBookStreamRequest(
                                 filter=public_order_filter.to_pb(),
-                                start_time=(
-                                    dt_to_pb_timestamp_utc(start_time)
-                                    if start_time
-                                    else None
-                                ),
-                                end_time=(
-                                    dt_to_pb_timestamp_utc(end_time)
-                                    if end_time
-                                    else None
-                                ),
+                                start_time=start_time_utc,
+                                end_time=end_time_utc,
                             ),
                             metadata=self._metadata,
                         ),
