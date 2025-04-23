@@ -46,7 +46,7 @@ dependencies = [
   "frequenz-client-base >= 0.9.0, < 0.10.0",
   "frequenz-client-common >= 0.1.0, < 0.4.0",
   "frequenz-api-electricity-trading >= 0.6.1, < 0.7.0",
-  "protobuf >= 5.29.2, < 6",
+  "protobuf >= 5.29.2, < 7",
 ]
 dynamic = ["version"]
 
