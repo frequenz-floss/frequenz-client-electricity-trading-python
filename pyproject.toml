@@ -4,8 +4,8 @@
 [build-system]
 requires = [
   "setuptools == 79.0.0",
-  "setuptools_scm[toml] == 8.3.0",
-  "frequenz-repo-config[lib] == 0.13.2",
+  "setuptools_scm[toml] == 8.3.1",
+  "frequenz-repo-config[lib] == 0.13.3",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -77,7 +77,7 @@ dev-mkdocs = [
   "mkdocs-material == 9.6.12",
   "mkdocstrings[python] == 0.29.1",
   "mkdocstrings-python == 1.16.10",
-  "frequenz-repo-config[lib] == 0.13.2",
+  "frequenz-repo-config[lib] == 0.13.3",
 ]
 dev-mypy = [
   "mypy == 1.15.0",
@@ -88,7 +88,7 @@ dev-mypy = [
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
-dev-noxfile = ["nox == 2025.2.9", "frequenz-repo-config[lib] == 0.13.2"]
+dev-noxfile = ["nox == 2025.2.9", "frequenz-repo-config[lib] == 0.13.3"]
 dev-pylint = [
   "pylint == 3.3.6",
   # For checking the noxfile, docs/ script, and tests
@@ -96,7 +96,7 @@ dev-pylint = [
 ]
 dev-pytest = [
   "pytest == 8.3.5",
-  "frequenz-repo-config[extra-lint-examples] == 0.13.2",
+  "frequenz-repo-config[extra-lint-examples] == 0.13.3",
   "pytest-mock == 3.14.0",
   "pytest-asyncio == 0.26.0",
   "async-solipsism == 0.7",
