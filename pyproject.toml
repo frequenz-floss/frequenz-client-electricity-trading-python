@@ -88,7 +88,7 @@ dev-mypy = [
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
-dev-noxfile = ["nox == 2025.2.9", "frequenz-repo-config[lib] == 0.13.2"]
+dev-noxfile = ["nox == 2025.5.1", "frequenz-repo-config[lib] == 0.13.2"]
 dev-pylint = [
   "pylint == 3.3.6",
   # For checking the noxfile, docs/ script, and tests
