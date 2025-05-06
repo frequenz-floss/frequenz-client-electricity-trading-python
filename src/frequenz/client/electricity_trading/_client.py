@@ -11,7 +11,7 @@ import asyncio
 import logging
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
-from typing import Any, AsyncIterator, Awaitable, Callable, List, cast
+from typing import Any, AsyncIterator, Awaitable, Callable, cast
 from zoneinfo import ZoneInfo
 
 import grpc
@@ -232,7 +232,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             PublicOrderBookFilter,
             GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceivePublicOrderBookStreamResponse,
-                List[PublicOrder],
+                list[PublicOrder],
             ],
         ] = {}
 
@@ -1012,7 +1012,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         start_time: datetime | None = None,
         end_time: datetime | None = None,
     ) -> GrpcStreamBroadcaster[
-        electricity_trading_pb2.ReceivePublicOrderBookStreamResponse, List[PublicOrder]
+        electricity_trading_pb2.ReceivePublicOrderBookStreamResponse, list[PublicOrder]
     ]:
         """
         Stream public orders with optional filters and time range.
