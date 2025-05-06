@@ -30,7 +30,7 @@ P = ParamSpec("P")
 
 
 def from_pb(
-    func: Callable[Concatenate[type[T], P], T]
+    func: Callable[Concatenate[type[T], P], T],
 ) -> Callable[Concatenate[type[T], P], T]:
     """Standardize from_pb methods like error handling with this decorator.
 
@@ -1968,7 +1968,7 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
     quantity: Power
     """The quantity of the contract being traded."""
 
-    execution_option: OrderExecutionOption
+    execution_option: OrderExecutionOption | None
     """Order execution options such as All or None, Fill or Kill, etc."""
 
     create_time: datetime
@@ -2034,8 +2034,12 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
             side=electricity_trading_pb2.MarketSide.ValueType(self.side.value),
             price=self.price.to_pb(),
             quantity=self.quantity.to_pb(),
-            execution_option=electricity_trading_pb2.OrderExecutionOption.ValueType(
-                self.execution_option.value
+            execution_option=(
+                electricity_trading_pb2.OrderExecutionOption.ValueType(
+                    self.execution_option.value
+                )
+                if self.execution_option
+                else None
             ),
             create_time=create_time,
             update_time=update_time,
