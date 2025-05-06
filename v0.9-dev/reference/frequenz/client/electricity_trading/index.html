@@ -5277,7 +5277,8 @@ with the specific version you wish to install.</p>
 <span class="normal"><a href="#__codelineno-0-1063">1063</a></span>
 <span class="normal"><a href="#__codelineno-0-1064">1064</a></span>
 <span class="normal"><a href="#__codelineno-0-1065">1065</a></span>
-<span class="normal"><a href="#__codelineno-0-1066">1066</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">BaseApiClient</span><span class="p">[</span><span class="n">ElectricityTradingServiceStub</span><span class="p">]):</span>
+<span class="normal"><a href="#__codelineno-0-1066">1066</a></span>
+<span class="normal"><a href="#__codelineno-0-1067">1067</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">BaseApiClient</span><span class="p">[</span><span class="n">ElectricityTradingServiceStub</span><span class="p">]):</span>
 </span><span id="__span-0-162"><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Electricity trading client.&quot;&quot;&quot;</span>
 </span><span id="__span-0-163"><a id="__codelineno-0-163" name="__codelineno-0-163"></a>
 </span><span id="__span-0-164"><a id="__codelineno-0-164" name="__codelineno-0-164"></a>    <span class="n">_instances</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="s2">&quot;Client&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
@@ -5351,7 +5352,7 @@ with the specific version you wish to install.</p>
 </span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>            <span class="n">PublicOrderBookFilter</span><span class="p">,</span>
 </span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>            <span class="n">GrpcStreamBroadcaster</span><span class="p">[</span>
 </span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>                <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span>
-</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>                <span class="n">PublicOrder</span><span class="p">,</span>
+</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>                <span class="nb">list</span><span class="p">[</span><span class="n">PublicOrder</span><span class="p">],</span>
 </span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a>            <span class="p">],</span>
 </span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a>        <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a>
@@ -6131,7 +6132,7 @@ with the specific version you wish to install.</p>
 </span><span id="__span-0-1012"><a id="__codelineno-0-1012" name="__codelineno-0-1012"></a>        <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-1013"><a id="__codelineno-0-1013" name="__codelineno-0-1013"></a>        <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-1014"><a id="__codelineno-0-1014" name="__codelineno-0-1014"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GrpcStreamBroadcaster</span><span class="p">[</span>
-</span><span id="__span-0-1015"><a id="__codelineno-0-1015" name="__codelineno-0-1015"></a>        <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span> <span class="n">PublicOrder</span>
+</span><span id="__span-0-1015"><a id="__codelineno-0-1015" name="__codelineno-0-1015"></a>        <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">PublicOrder</span><span class="p">]</span>
 </span><span id="__span-0-1016"><a id="__codelineno-0-1016" name="__codelineno-0-1016"></a>    <span class="p">]:</span>
 </span><span id="__span-0-1017"><a id="__codelineno-0-1017" name="__codelineno-0-1017"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="__span-0-1018"><a id="__codelineno-0-1018" name="__codelineno-0-1018"></a><span class="sd">        Stream public orders with optional filters and time range.</span>
@@ -6174,15 +6175,16 @@ with the specific version you wish to install.</p>
 </span><span id="__span-0-1055"><a id="__codelineno-0-1055" name="__codelineno-0-1055"></a>                            <span class="p">),</span>
 </span><span id="__span-0-1056"><a id="__codelineno-0-1056" name="__codelineno-0-1056"></a>                            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">,</span>
 </span><span id="__span-0-1057"><a id="__codelineno-0-1057" name="__codelineno-0-1057"></a>                        <span class="p">),</span>
-</span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>                        <span class="k">lambda</span> <span class="n">response</span><span class="p">:</span> <span class="n">PublicOrder</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span>
-</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>                            <span class="n">response</span><span class="o">.</span><span class="n">public_order_book_record</span>
-</span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a>                        <span class="p">),</span>
-</span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>                    <span class="p">)</span>
-</span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a>                <span class="p">)</span>
-</span><span id="__span-0-1063"><a id="__codelineno-0-1063" name="__codelineno-0-1063"></a>            <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-0-1064"><a id="__codelineno-0-1064" name="__codelineno-0-1064"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error occurred while streaming public orders: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-</span><span id="__span-0-1065"><a id="__codelineno-0-1065" name="__codelineno-0-1065"></a>                <span class="k">raise</span>
-</span><span id="__span-0-1066"><a id="__codelineno-0-1066" name="__codelineno-0-1066"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_public_orders_streams</span><span class="p">[</span><span class="n">public_order_filter</span><span class="p">]</span>
+</span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>                        <span class="k">lambda</span> <span class="n">response</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>                            <span class="n">PublicOrder</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order</span><span class="p">)</span>
+</span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a>                            <span class="k">for</span> <span class="n">public_order</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">public_order_book_records</span>
+</span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>                        <span class="p">],</span>
+</span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a>                    <span class="p">)</span>
+</span><span id="__span-0-1063"><a id="__codelineno-0-1063" name="__codelineno-0-1063"></a>                <span class="p">)</span>
+</span><span id="__span-0-1064"><a id="__codelineno-0-1064" name="__codelineno-0-1064"></a>            <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-0-1065"><a id="__codelineno-0-1065" name="__codelineno-0-1065"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error occurred while streaming public orders: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</span><span id="__span-0-1066"><a id="__codelineno-0-1066" name="__codelineno-0-1066"></a>                <span class="k">raise</span>
+</span><span id="__span-0-1067"><a id="__codelineno-0-1067" name="__codelineno-0-1067"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_public_orders_streams</span><span class="p">[</span><span class="n">public_order_filter</span><span class="p">]</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -6673,7 +6675,7 @@ doing and you don't care about being tied to a specific gRPC library.</p>
 </span><span id="__span-0-232"><a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="n">PublicOrderBookFilter</span><span class="p">,</span>
 </span><span id="__span-0-233"><a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="n">GrpcStreamBroadcaster</span><span class="p">[</span>
 </span><span id="__span-0-234"><a id="__codelineno-0-234" name="__codelineno-0-234"></a>            <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span>
-</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>            <span class="n">PublicOrder</span><span class="p">,</span>
+</span><span id="__span-0-235"><a id="__codelineno-0-235" name="__codelineno-0-235"></a>            <span class="nb">list</span><span class="p">[</span><span class="n">PublicOrder</span><span class="p">],</span>
 </span><span id="__span-0-236"><a id="__codelineno-0-236" name="__codelineno-0-236"></a>        <span class="p">],</span>
 </span><span id="__span-0-237"><a id="__codelineno-0-237" name="__codelineno-0-237"></a>    <span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="__span-0-238"><a id="__codelineno-0-238" name="__codelineno-0-238"></a>
@@ -9819,12 +9821,12 @@ previously used URL is used.</p>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">start_time</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.datetime" href="https://docs.python.org/3/library/datetime.html#datetime.datetime">datetime</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">end_time</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-external" title="datetime.datetime" href="https://docs.python.org/3/library/datetime.html#datetime.datetime">datetime</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="frequenz.client.base.streaming.GrpcStreamBroadcaster">GrpcStreamBroadcaster</span></span><span class="p">[</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n"><span title="frequenz.api.electricity_trading.v1.electricity_trading_pb2.ReceivePublicOrderBookStreamResponse">ReceivePublicOrderBookStreamResponse</span></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.PublicOrder
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n"><span title="frequenz.api.electricity_trading.v1.electricity_trading_pb2.ReceivePublicOrderBookStreamResponse">ReceivePublicOrderBookStreamResponse</span></span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.PublicOrder
 
 
   
       dataclass
-   (frequenz.client.electricity_trading._types.PublicOrder)" href="#frequenz.client.electricity_trading.PublicOrder">PublicOrder</a></span>
+   (frequenz.client.electricity_trading._types.PublicOrder)" href="#frequenz.client.electricity_trading.PublicOrder">PublicOrder</a></span><span class="p">]</span>
 </span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">]</span>
 </span></code></pre></div>
 
@@ -9961,12 +9963,12 @@ previously used URL is used.</p>
           <tr class="doc-section-item">
             <td>
                 <span class="doc-returns-annotation">
-                    <code><span title="frequenz.client.base.streaming.GrpcStreamBroadcaster">GrpcStreamBroadcaster</span>[<span title="frequenz.api.electricity_trading.v1.electricity_trading_pb2.ReceivePublicOrderBookStreamResponse">ReceivePublicOrderBookStreamResponse</span>, <a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.PublicOrder
+                    <code><span title="frequenz.client.base.streaming.GrpcStreamBroadcaster">GrpcStreamBroadcaster</span>[<span title="frequenz.api.electricity_trading.v1.electricity_trading_pb2.ReceivePublicOrderBookStreamResponse">ReceivePublicOrderBookStreamResponse</span>, <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/stdtypes.html#list">list</a>[<a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.PublicOrder
 
 
   
       dataclass
-   (frequenz.client.electricity_trading._types.PublicOrder)" href="#frequenz.client.electricity_trading.PublicOrder">PublicOrder</a>]</code>
+   (frequenz.client.electricity_trading._types.PublicOrder)" href="#frequenz.client.electricity_trading.PublicOrder">PublicOrder</a>]]</code>
                 </span>
             </td>
             <td class="doc-returns-details">
@@ -10065,7 +10067,8 @@ previously used URL is used.</p>
 <span class="normal"><a href="#__codelineno-0-1063">1063</a></span>
 <span class="normal"><a href="#__codelineno-0-1064">1064</a></span>
 <span class="normal"><a href="#__codelineno-0-1065">1065</a></span>
-<span class="normal"><a href="#__codelineno-0-1066">1066</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1006"><a id="__codelineno-0-1006" name="__codelineno-0-1006"></a><span class="k">def</span><span class="w"> </span><span class="nf">receive_public_order_book</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-1066">1066</a></span>
+<span class="normal"><a href="#__codelineno-0-1067">1067</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1006"><a id="__codelineno-0-1006" name="__codelineno-0-1006"></a><span class="k">def</span><span class="w"> </span><span class="nf">receive_public_order_book</span><span class="p">(</span>
 </span><span id="__span-0-1007"><a id="__codelineno-0-1007" name="__codelineno-0-1007"></a>    <span class="c1"># pylint: disable=too-many-arguments, too-many-positional-arguments</span>
 </span><span id="__span-0-1008"><a id="__codelineno-0-1008" name="__codelineno-0-1008"></a>    <span class="bp">self</span><span class="p">,</span>
 </span><span id="__span-0-1009"><a id="__codelineno-0-1009" name="__codelineno-0-1009"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -10074,7 +10077,7 @@ previously used URL is used.</p>
 </span><span id="__span-0-1012"><a id="__codelineno-0-1012" name="__codelineno-0-1012"></a>    <span class="n">start_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-1013"><a id="__codelineno-0-1013" name="__codelineno-0-1013"></a>    <span class="n">end_time</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 </span><span id="__span-0-1014"><a id="__codelineno-0-1014" name="__codelineno-0-1014"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GrpcStreamBroadcaster</span><span class="p">[</span>
-</span><span id="__span-0-1015"><a id="__codelineno-0-1015" name="__codelineno-0-1015"></a>    <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span> <span class="n">PublicOrder</span>
+</span><span id="__span-0-1015"><a id="__codelineno-0-1015" name="__codelineno-0-1015"></a>    <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">ReceivePublicOrderBookStreamResponse</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">PublicOrder</span><span class="p">]</span>
 </span><span id="__span-0-1016"><a id="__codelineno-0-1016" name="__codelineno-0-1016"></a><span class="p">]:</span>
 </span><span id="__span-0-1017"><a id="__codelineno-0-1017" name="__codelineno-0-1017"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="__span-0-1018"><a id="__codelineno-0-1018" name="__codelineno-0-1018"></a><span class="sd">    Stream public orders with optional filters and time range.</span>
@@ -10117,15 +10120,16 @@ previously used URL is used.</p>
 </span><span id="__span-0-1055"><a id="__codelineno-0-1055" name="__codelineno-0-1055"></a>                        <span class="p">),</span>
 </span><span id="__span-0-1056"><a id="__codelineno-0-1056" name="__codelineno-0-1056"></a>                        <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span><span class="p">,</span>
 </span><span id="__span-0-1057"><a id="__codelineno-0-1057" name="__codelineno-0-1057"></a>                    <span class="p">),</span>
-</span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>                    <span class="k">lambda</span> <span class="n">response</span><span class="p">:</span> <span class="n">PublicOrder</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span>
-</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>                        <span class="n">response</span><span class="o">.</span><span class="n">public_order_book_record</span>
-</span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a>                    <span class="p">),</span>
-</span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>                <span class="p">)</span>
-</span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a>            <span class="p">)</span>
-</span><span id="__span-0-1063"><a id="__codelineno-0-1063" name="__codelineno-0-1063"></a>        <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-0-1064"><a id="__codelineno-0-1064" name="__codelineno-0-1064"></a>            <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error occurred while streaming public orders: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-</span><span id="__span-0-1065"><a id="__codelineno-0-1065" name="__codelineno-0-1065"></a>            <span class="k">raise</span>
-</span><span id="__span-0-1066"><a id="__codelineno-0-1066" name="__codelineno-0-1066"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_public_orders_streams</span><span class="p">[</span><span class="n">public_order_filter</span><span class="p">]</span>
+</span><span id="__span-0-1058"><a id="__codelineno-0-1058" name="__codelineno-0-1058"></a>                    <span class="k">lambda</span> <span class="n">response</span><span class="p">:</span> <span class="p">[</span>
+</span><span id="__span-0-1059"><a id="__codelineno-0-1059" name="__codelineno-0-1059"></a>                        <span class="n">PublicOrder</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order</span><span class="p">)</span>
+</span><span id="__span-0-1060"><a id="__codelineno-0-1060" name="__codelineno-0-1060"></a>                        <span class="k">for</span> <span class="n">public_order</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">public_order_book_records</span>
+</span><span id="__span-0-1061"><a id="__codelineno-0-1061" name="__codelineno-0-1061"></a>                    <span class="p">],</span>
+</span><span id="__span-0-1062"><a id="__codelineno-0-1062" name="__codelineno-0-1062"></a>                <span class="p">)</span>
+</span><span id="__span-0-1063"><a id="__codelineno-0-1063" name="__codelineno-0-1063"></a>            <span class="p">)</span>
+</span><span id="__span-0-1064"><a id="__codelineno-0-1064" name="__codelineno-0-1064"></a>        <span class="k">except</span> <span class="n">grpc</span><span class="o">.</span><span class="n">RpcError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-0-1065"><a id="__codelineno-0-1065" name="__codelineno-0-1065"></a>            <span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error occurred while streaming public orders: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</span><span id="__span-0-1066"><a id="__codelineno-0-1066" name="__codelineno-0-1066"></a>            <span class="k">raise</span>
+</span><span id="__span-0-1067"><a id="__codelineno-0-1067" name="__codelineno-0-1067"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_public_orders_streams</span><span class="p">[</span><span class="n">public_order_filter</span><span class="p">]</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -21282,7 +21286,11 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2039">2039</a></span>
 <span class="normal"><a href="#__codelineno-0-2040">2040</a></span>
 <span class="normal"><a href="#__codelineno-0-2041">2041</a></span>
-<span class="normal"><a href="#__codelineno-0-2042">2042</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1949"><a id="__codelineno-0-1949" name="__codelineno-0-1949"></a><span class="nd">@dataclass</span><span class="p">()</span>
+<span class="normal"><a href="#__codelineno-0-2042">2042</a></span>
+<span class="normal"><a href="#__codelineno-0-2043">2043</a></span>
+<span class="normal"><a href="#__codelineno-0-2044">2044</a></span>
+<span class="normal"><a href="#__codelineno-0-2045">2045</a></span>
+<span class="normal"><a href="#__codelineno-0-2046">2046</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1949"><a id="__codelineno-0-1949" name="__codelineno-0-1949"></a><span class="nd">@dataclass</span><span class="p">()</span>
 </span><span id="__span-0-1950"><a id="__codelineno-0-1950" name="__codelineno-0-1950"></a><span class="k">class</span><span class="w"> </span><span class="nc">PublicOrder</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
 </span><span id="__span-0-1951"><a id="__codelineno-0-1951" name="__codelineno-0-1951"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a public order in the market.&quot;&quot;&quot;</span>
 </span><span id="__span-0-1952"><a id="__codelineno-0-1952" name="__codelineno-0-1952"></a>
@@ -21304,7 +21312,7 @@ or better, after a given stop price has been reached.</p>
 </span><span id="__span-0-1968"><a id="__codelineno-0-1968" name="__codelineno-0-1968"></a>    <span class="n">quantity</span><span class="p">:</span> <span class="n">Power</span>
 </span><span id="__span-0-1969"><a id="__codelineno-0-1969" name="__codelineno-0-1969"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;The quantity of the contract being traded.&quot;&quot;&quot;</span>
 </span><span id="__span-0-1970"><a id="__codelineno-0-1970" name="__codelineno-0-1970"></a>
-</span><span id="__span-0-1971"><a id="__codelineno-0-1971" name="__codelineno-0-1971"></a>    <span class="n">execution_option</span><span class="p">:</span> <span class="n">OrderExecutionOption</span>
+</span><span id="__span-0-1971"><a id="__codelineno-0-1971" name="__codelineno-0-1971"></a>    <span class="n">execution_option</span><span class="p">:</span> <span class="n">OrderExecutionOption</span> <span class="o">|</span> <span class="kc">None</span>
 </span><span id="__span-0-1972"><a id="__codelineno-0-1972" name="__codelineno-0-1972"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Order execution options such as All or None, Fill or Kill, etc.&quot;&quot;&quot;</span>
 </span><span id="__span-0-1973"><a id="__codelineno-0-1973" name="__codelineno-0-1973"></a>
 </span><span id="__span-0-1974"><a id="__codelineno-0-1974" name="__codelineno-0-1974"></a>    <span class="n">create_time</span><span class="p">:</span> <span class="n">datetime</span>
@@ -21370,12 +21378,16 @@ or better, after a given stop price has been reached.</p>
 </span><span id="__span-0-2034"><a id="__codelineno-0-2034" name="__codelineno-0-2034"></a>            <span class="n">side</span><span class="o">=</span><span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
 </span><span id="__span-0-2035"><a id="__codelineno-0-2035" name="__codelineno-0-2035"></a>            <span class="n">price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_pb</span><span class="p">(),</span>
 </span><span id="__span-0-2036"><a id="__codelineno-0-2036" name="__codelineno-0-2036"></a>            <span class="n">quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quantity</span><span class="o">.</span><span class="n">to_pb</span><span class="p">(),</span>
-</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a>            <span class="n">execution_option</span><span class="o">=</span><span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">OrderExecutionOption</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span>
-</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span><span class="o">.</span><span class="n">value</span>
-</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a>            <span class="p">),</span>
-</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a>            <span class="n">create_time</span><span class="o">=</span><span class="n">create_time</span><span class="p">,</span>
-</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a>            <span class="n">update_time</span><span class="o">=</span><span class="n">update_time</span><span class="p">,</span>
-</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a>        <span class="p">)</span>
+</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a>            <span class="n">execution_option</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a>                <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">OrderExecutionOption</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span>
+</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span><span class="o">.</span><span class="n">value</span>
+</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a>                <span class="p">)</span>
+</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span>
+</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a>                <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2043"><a id="__codelineno-0-2043" name="__codelineno-0-2043"></a>            <span class="p">),</span>
+</span><span id="__span-0-2044"><a id="__codelineno-0-2044" name="__codelineno-0-2044"></a>            <span class="n">create_time</span><span class="o">=</span><span class="n">create_time</span><span class="p">,</span>
+</span><span id="__span-0-2045"><a id="__codelineno-0-2045" name="__codelineno-0-2045"></a>            <span class="n">update_time</span><span class="o">=</span><span class="n">update_time</span><span class="p">,</span>
+</span><span id="__span-0-2046"><a id="__codelineno-0-2046" name="__codelineno-0-2046"></a>        <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -21479,7 +21491,7 @@ or better, after a given stop price has been reached.</p>
   </span>
 
 <a href="#frequenz.client.electricity_trading.PublicOrder.execution_option" class="headerlink" title="Permanent link">¤</a></h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">execution_option</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.OrderExecutionOption (frequenz.client.electricity_trading._types.OrderExecutionOption)" href="#frequenz.client.electricity_trading.OrderExecutionOption">OrderExecutionOption</a></span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">execution_option</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="frequenz.client.electricity_trading.OrderExecutionOption (frequenz.client.electricity_trading._types.OrderExecutionOption)" href="#frequenz.client.electricity_trading.OrderExecutionOption">OrderExecutionOption</a></span> <span class="o">|</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -21863,7 +21875,11 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2039">2039</a></span>
 <span class="normal"><a href="#__codelineno-0-2040">2040</a></span>
 <span class="normal"><a href="#__codelineno-0-2041">2041</a></span>
-<span class="normal"><a href="#__codelineno-0-2042">2042</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2019"><a id="__codelineno-0-2019" name="__codelineno-0-2019"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookRecord</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-2042">2042</a></span>
+<span class="normal"><a href="#__codelineno-0-2043">2043</a></span>
+<span class="normal"><a href="#__codelineno-0-2044">2044</a></span>
+<span class="normal"><a href="#__codelineno-0-2045">2045</a></span>
+<span class="normal"><a href="#__codelineno-0-2046">2046</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2019"><a id="__codelineno-0-2019" name="__codelineno-0-2019"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookRecord</span><span class="p">:</span>
 </span><span id="__span-0-2020"><a id="__codelineno-0-2020" name="__codelineno-0-2020"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a PublicOrder object to protobuf PublicOrder.</span>
 </span><span id="__span-0-2021"><a id="__codelineno-0-2021" name="__codelineno-0-2021"></a>
 </span><span id="__span-0-2022"><a id="__codelineno-0-2022" name="__codelineno-0-2022"></a><span class="sd">    Returns:</span>
@@ -21881,12 +21897,16 @@ or better, after a given stop price has been reached.</p>
 </span><span id="__span-0-2034"><a id="__codelineno-0-2034" name="__codelineno-0-2034"></a>        <span class="n">side</span><span class="o">=</span><span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>
 </span><span id="__span-0-2035"><a id="__codelineno-0-2035" name="__codelineno-0-2035"></a>        <span class="n">price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">to_pb</span><span class="p">(),</span>
 </span><span id="__span-0-2036"><a id="__codelineno-0-2036" name="__codelineno-0-2036"></a>        <span class="n">quantity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quantity</span><span class="o">.</span><span class="n">to_pb</span><span class="p">(),</span>
-</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a>        <span class="n">execution_option</span><span class="o">=</span><span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">OrderExecutionOption</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span>
-</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span><span class="o">.</span><span class="n">value</span>
-</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a>        <span class="p">),</span>
-</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a>        <span class="n">create_time</span><span class="o">=</span><span class="n">create_time</span><span class="p">,</span>
-</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a>        <span class="n">update_time</span><span class="o">=</span><span class="n">update_time</span><span class="p">,</span>
-</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a>    <span class="p">)</span>
+</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a>        <span class="n">execution_option</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a>            <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">OrderExecutionOption</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span>
+</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span><span class="o">.</span><span class="n">value</span>
+</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a>            <span class="p">)</span>
+</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_option</span>
+</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2043"><a id="__codelineno-0-2043" name="__codelineno-0-2043"></a>        <span class="p">),</span>
+</span><span id="__span-0-2044"><a id="__codelineno-0-2044" name="__codelineno-0-2044"></a>        <span class="n">create_time</span><span class="o">=</span><span class="n">create_time</span><span class="p">,</span>
+</span><span id="__span-0-2045"><a id="__codelineno-0-2045" name="__codelineno-0-2045"></a>        <span class="n">update_time</span><span class="o">=</span><span class="n">update_time</span><span class="p">,</span>
+</span><span id="__span-0-2046"><a id="__codelineno-0-2046" name="__codelineno-0-2046"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -21929,11 +21949,7 @@ or better, after a given stop price has been reached.</p>
 
               <details class="quote">
                 <summary>Source code in <code>frequenz/client/electricity_trading/_types.py</code></summary>
-                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2045">2045</a></span>
-<span class="normal"><a href="#__codelineno-0-2046">2046</a></span>
-<span class="normal"><a href="#__codelineno-0-2047">2047</a></span>
-<span class="normal"><a href="#__codelineno-0-2048">2048</a></span>
-<span class="normal"><a href="#__codelineno-0-2049">2049</a></span>
+                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2049">2049</a></span>
 <span class="normal"><a href="#__codelineno-0-2050">2050</a></span>
 <span class="normal"><a href="#__codelineno-0-2051">2051</a></span>
 <span class="normal"><a href="#__codelineno-0-2052">2052</a></span>
@@ -22022,100 +22038,104 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2135">2135</a></span>
 <span class="normal"><a href="#__codelineno-0-2136">2136</a></span>
 <span class="normal"><a href="#__codelineno-0-2137">2137</a></span>
-<span class="normal"><a href="#__codelineno-0-2138">2138</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2045"><a id="__codelineno-0-2045" name="__codelineno-0-2045"></a><span class="nd">@dataclass</span><span class="p">()</span>
-</span><span id="__span-0-2046"><a id="__codelineno-0-2046" name="__codelineno-0-2046"></a><span class="k">class</span><span class="w"> </span><span class="nc">PublicOrderBookFilter</span><span class="p">:</span>
-</span><span id="__span-0-2047"><a id="__codelineno-0-2047" name="__codelineno-0-2047"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for filtering the public orders in the market.&quot;&quot;&quot;</span>
-</span><span id="__span-0-2048"><a id="__codelineno-0-2048" name="__codelineno-0-2048"></a>
-</span><span id="__span-0-2049"><a id="__codelineno-0-2049" name="__codelineno-0-2049"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-2050"><a id="__codelineno-0-2050" name="__codelineno-0-2050"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delivery period to filter for.&quot;&quot;&quot;</span>
-</span><span id="__span-0-2051"><a id="__codelineno-0-2051" name="__codelineno-0-2051"></a>
-</span><span id="__span-0-2052"><a id="__codelineno-0-2052" name="__codelineno-0-2052"></a>    <span class="n">delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-2053"><a id="__codelineno-0-2053" name="__codelineno-0-2053"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delivery area to filter for.&quot;&quot;&quot;</span>
-</span><span id="__span-0-2054"><a id="__codelineno-0-2054" name="__codelineno-0-2054"></a>
-</span><span id="__span-0-2055"><a id="__codelineno-0-2055" name="__codelineno-0-2055"></a>    <span class="n">side</span><span class="p">:</span> <span class="n">MarketSide</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-2056"><a id="__codelineno-0-2056" name="__codelineno-0-2056"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Market side to filter for.&quot;&quot;&quot;</span>
-</span><span id="__span-0-2057"><a id="__codelineno-0-2057" name="__codelineno-0-2057"></a>
-</span><span id="__span-0-2058"><a id="__codelineno-0-2058" name="__codelineno-0-2058"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="__span-0-2059"><a id="__codelineno-0-2059" name="__codelineno-0-2059"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-2060"><a id="__codelineno-0-2060" name="__codelineno-0-2060"></a><span class="sd">        Check if two PublicOrderBookFilter objects are equal.</span>
+<span class="normal"><a href="#__codelineno-0-2138">2138</a></span>
+<span class="normal"><a href="#__codelineno-0-2139">2139</a></span>
+<span class="normal"><a href="#__codelineno-0-2140">2140</a></span>
+<span class="normal"><a href="#__codelineno-0-2141">2141</a></span>
+<span class="normal"><a href="#__codelineno-0-2142">2142</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2049"><a id="__codelineno-0-2049" name="__codelineno-0-2049"></a><span class="nd">@dataclass</span><span class="p">()</span>
+</span><span id="__span-0-2050"><a id="__codelineno-0-2050" name="__codelineno-0-2050"></a><span class="k">class</span><span class="w"> </span><span class="nc">PublicOrderBookFilter</span><span class="p">:</span>
+</span><span id="__span-0-2051"><a id="__codelineno-0-2051" name="__codelineno-0-2051"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameters for filtering the public orders in the market.&quot;&quot;&quot;</span>
+</span><span id="__span-0-2052"><a id="__codelineno-0-2052" name="__codelineno-0-2052"></a>
+</span><span id="__span-0-2053"><a id="__codelineno-0-2053" name="__codelineno-0-2053"></a>    <span class="n">delivery_period</span><span class="p">:</span> <span class="n">DeliveryPeriod</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-2054"><a id="__codelineno-0-2054" name="__codelineno-0-2054"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delivery period to filter for.&quot;&quot;&quot;</span>
+</span><span id="__span-0-2055"><a id="__codelineno-0-2055" name="__codelineno-0-2055"></a>
+</span><span id="__span-0-2056"><a id="__codelineno-0-2056" name="__codelineno-0-2056"></a>    <span class="n">delivery_area</span><span class="p">:</span> <span class="n">DeliveryArea</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-2057"><a id="__codelineno-0-2057" name="__codelineno-0-2057"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Delivery area to filter for.&quot;&quot;&quot;</span>
+</span><span id="__span-0-2058"><a id="__codelineno-0-2058" name="__codelineno-0-2058"></a>
+</span><span id="__span-0-2059"><a id="__codelineno-0-2059" name="__codelineno-0-2059"></a>    <span class="n">side</span><span class="p">:</span> <span class="n">MarketSide</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-2060"><a id="__codelineno-0-2060" name="__codelineno-0-2060"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Market side to filter for.&quot;&quot;&quot;</span>
 </span><span id="__span-0-2061"><a id="__codelineno-0-2061" name="__codelineno-0-2061"></a>
-</span><span id="__span-0-2062"><a id="__codelineno-0-2062" name="__codelineno-0-2062"></a><span class="sd">        Args:</span>
-</span><span id="__span-0-2063"><a id="__codelineno-0-2063" name="__codelineno-0-2063"></a><span class="sd">            other: PublicOrderBookFilter object to compare with.</span>
-</span><span id="__span-0-2064"><a id="__codelineno-0-2064" name="__codelineno-0-2064"></a>
-</span><span id="__span-0-2065"><a id="__codelineno-0-2065" name="__codelineno-0-2065"></a><span class="sd">        Returns:</span>
-</span><span id="__span-0-2066"><a id="__codelineno-0-2066" name="__codelineno-0-2066"></a><span class="sd">            True if the two PublicOrderBookFilter objects are equal, False otherwise.</span>
-</span><span id="__span-0-2067"><a id="__codelineno-0-2067" name="__codelineno-0-2067"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-2068"><a id="__codelineno-0-2068" name="__codelineno-0-2068"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PublicOrderBookFilter</span><span class="p">):</span>
-</span><span id="__span-0-2069"><a id="__codelineno-0-2069" name="__codelineno-0-2069"></a>            <span class="k">return</span> <span class="bp">NotImplemented</span>
-</span><span id="__span-0-2070"><a id="__codelineno-0-2070" name="__codelineno-0-2070"></a>        <span class="k">return</span> <span class="p">(</span>
-</span><span id="__span-0-2071"><a id="__codelineno-0-2071" name="__codelineno-0-2071"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_period</span>
-</span><span id="__span-0-2072"><a id="__codelineno-0-2072" name="__codelineno-0-2072"></a>            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_area</span>
-</span><span id="__span-0-2073"><a id="__codelineno-0-2073" name="__codelineno-0-2073"></a>            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">side</span>
-</span><span id="__span-0-2074"><a id="__codelineno-0-2074" name="__codelineno-0-2074"></a>        <span class="p">)</span>
-</span><span id="__span-0-2075"><a id="__codelineno-0-2075" name="__codelineno-0-2075"></a>
-</span><span id="__span-0-2076"><a id="__codelineno-0-2076" name="__codelineno-0-2076"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="__span-0-2077"><a id="__codelineno-0-2077" name="__codelineno-0-2077"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-2078"><a id="__codelineno-0-2078" name="__codelineno-0-2078"></a><span class="sd">        Create hash of the PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2062"><a id="__codelineno-0-2062" name="__codelineno-0-2062"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-0-2063"><a id="__codelineno-0-2063" name="__codelineno-0-2063"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-2064"><a id="__codelineno-0-2064" name="__codelineno-0-2064"></a><span class="sd">        Check if two PublicOrderBookFilter objects are equal.</span>
+</span><span id="__span-0-2065"><a id="__codelineno-0-2065" name="__codelineno-0-2065"></a>
+</span><span id="__span-0-2066"><a id="__codelineno-0-2066" name="__codelineno-0-2066"></a><span class="sd">        Args:</span>
+</span><span id="__span-0-2067"><a id="__codelineno-0-2067" name="__codelineno-0-2067"></a><span class="sd">            other: PublicOrderBookFilter object to compare with.</span>
+</span><span id="__span-0-2068"><a id="__codelineno-0-2068" name="__codelineno-0-2068"></a>
+</span><span id="__span-0-2069"><a id="__codelineno-0-2069" name="__codelineno-0-2069"></a><span class="sd">        Returns:</span>
+</span><span id="__span-0-2070"><a id="__codelineno-0-2070" name="__codelineno-0-2070"></a><span class="sd">            True if the two PublicOrderBookFilter objects are equal, False otherwise.</span>
+</span><span id="__span-0-2071"><a id="__codelineno-0-2071" name="__codelineno-0-2071"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-2072"><a id="__codelineno-0-2072" name="__codelineno-0-2072"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PublicOrderBookFilter</span><span class="p">):</span>
+</span><span id="__span-0-2073"><a id="__codelineno-0-2073" name="__codelineno-0-2073"></a>            <span class="k">return</span> <span class="bp">NotImplemented</span>
+</span><span id="__span-0-2074"><a id="__codelineno-0-2074" name="__codelineno-0-2074"></a>        <span class="k">return</span> <span class="p">(</span>
+</span><span id="__span-0-2075"><a id="__codelineno-0-2075" name="__codelineno-0-2075"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_period</span>
+</span><span id="__span-0-2076"><a id="__codelineno-0-2076" name="__codelineno-0-2076"></a>            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_area</span>
+</span><span id="__span-0-2077"><a id="__codelineno-0-2077" name="__codelineno-0-2077"></a>            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">side</span>
+</span><span id="__span-0-2078"><a id="__codelineno-0-2078" name="__codelineno-0-2078"></a>        <span class="p">)</span>
 </span><span id="__span-0-2079"><a id="__codelineno-0-2079" name="__codelineno-0-2079"></a>
-</span><span id="__span-0-2080"><a id="__codelineno-0-2080" name="__codelineno-0-2080"></a><span class="sd">        Returns:</span>
-</span><span id="__span-0-2081"><a id="__codelineno-0-2081" name="__codelineno-0-2081"></a><span class="sd">            Hash of the PublicOrderBookFilter object.</span>
-</span><span id="__span-0-2082"><a id="__codelineno-0-2082" name="__codelineno-0-2082"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-2083"><a id="__codelineno-0-2083" name="__codelineno-0-2083"></a>        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span>
-</span><span id="__span-0-2084"><a id="__codelineno-0-2084" name="__codelineno-0-2084"></a>            <span class="p">(</span>
-</span><span id="__span-0-2085"><a id="__codelineno-0-2085" name="__codelineno-0-2085"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">,</span>
-</span><span id="__span-0-2086"><a id="__codelineno-0-2086" name="__codelineno-0-2086"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">,</span>
-</span><span id="__span-0-2087"><a id="__codelineno-0-2087" name="__codelineno-0-2087"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span>
-</span><span id="__span-0-2088"><a id="__codelineno-0-2088" name="__codelineno-0-2088"></a>            <span class="p">)</span>
-</span><span id="__span-0-2089"><a id="__codelineno-0-2089" name="__codelineno-0-2089"></a>        <span class="p">)</span>
-</span><span id="__span-0-2090"><a id="__codelineno-0-2090" name="__codelineno-0-2090"></a>
-</span><span id="__span-0-2091"><a id="__codelineno-0-2091" name="__codelineno-0-2091"></a>    <span class="nd">@classmethod</span>
-</span><span id="__span-0-2092"><a id="__codelineno-0-2092" name="__codelineno-0-2092"></a>    <span class="nd">@from_pb</span>
-</span><span id="__span-0-2093"><a id="__codelineno-0-2093" name="__codelineno-0-2093"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_pb</span><span class="p">(</span>
-</span><span id="__span-0-2094"><a id="__codelineno-0-2094" name="__codelineno-0-2094"></a>        <span class="bp">cls</span><span class="p">,</span> <span class="n">public_order_filter</span><span class="p">:</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span>
-</span><span id="__span-0-2095"><a id="__codelineno-0-2095" name="__codelineno-0-2095"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-</span><span id="__span-0-2096"><a id="__codelineno-0-2096" name="__codelineno-0-2096"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a protobuf PublicOrderBookFilter to PublicOrderBookFilter object.</span>
-</span><span id="__span-0-2097"><a id="__codelineno-0-2097" name="__codelineno-0-2097"></a>
-</span><span id="__span-0-2098"><a id="__codelineno-0-2098" name="__codelineno-0-2098"></a><span class="sd">        Args:</span>
-</span><span id="__span-0-2099"><a id="__codelineno-0-2099" name="__codelineno-0-2099"></a><span class="sd">            public_order_filter: PublicOrderBookFilter to convert.</span>
-</span><span id="__span-0-2100"><a id="__codelineno-0-2100" name="__codelineno-0-2100"></a>
-</span><span id="__span-0-2101"><a id="__codelineno-0-2101" name="__codelineno-0-2101"></a><span class="sd">        Returns:</span>
-</span><span id="__span-0-2102"><a id="__codelineno-0-2102" name="__codelineno-0-2102"></a><span class="sd">            PublicOrderBookFilter object corresponding to the protobuf message.</span>
-</span><span id="__span-0-2103"><a id="__codelineno-0-2103" name="__codelineno-0-2103"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-2104"><a id="__codelineno-0-2104" name="__codelineno-0-2104"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-</span><span id="__span-0-2105"><a id="__codelineno-0-2105" name="__codelineno-0-2105"></a>            <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2106"><a id="__codelineno-0-2106" name="__codelineno-0-2106"></a>                <span class="n">DeliveryPeriod</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">)</span>
-</span><span id="__span-0-2107"><a id="__codelineno-0-2107" name="__codelineno-0-2107"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_period&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2108"><a id="__codelineno-0-2108" name="__codelineno-0-2108"></a>                <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2109"><a id="__codelineno-0-2109" name="__codelineno-0-2109"></a>            <span class="p">),</span>
-</span><span id="__span-0-2110"><a id="__codelineno-0-2110" name="__codelineno-0-2110"></a>            <span class="n">delivery_area</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2111"><a id="__codelineno-0-2111" name="__codelineno-0-2111"></a>                <span class="n">DeliveryArea</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">)</span>
-</span><span id="__span-0-2112"><a id="__codelineno-0-2112" name="__codelineno-0-2112"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_area&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2113"><a id="__codelineno-0-2113" name="__codelineno-0-2113"></a>                <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2114"><a id="__codelineno-0-2114" name="__codelineno-0-2114"></a>            <span class="p">),</span>
-</span><span id="__span-0-2115"><a id="__codelineno-0-2115" name="__codelineno-0-2115"></a>            <span class="n">side</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2116"><a id="__codelineno-0-2116" name="__codelineno-0-2116"></a>                <span class="n">MarketSide</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
-</span><span id="__span-0-2117"><a id="__codelineno-0-2117" name="__codelineno-0-2117"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;side&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2118"><a id="__codelineno-0-2118" name="__codelineno-0-2118"></a>                <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2119"><a id="__codelineno-0-2119" name="__codelineno-0-2119"></a>            <span class="p">),</span>
-</span><span id="__span-0-2120"><a id="__codelineno-0-2120" name="__codelineno-0-2120"></a>        <span class="p">)</span>
-</span><span id="__span-0-2121"><a id="__codelineno-0-2121" name="__codelineno-0-2121"></a>
-</span><span id="__span-0-2122"><a id="__codelineno-0-2122" name="__codelineno-0-2122"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">:</span>
-</span><span id="__span-0-2123"><a id="__codelineno-0-2123" name="__codelineno-0-2123"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a PublicOrderBookFilter object to protobuf PublicOrderBookFilter.</span>
-</span><span id="__span-0-2124"><a id="__codelineno-0-2124" name="__codelineno-0-2124"></a>
-</span><span id="__span-0-2125"><a id="__codelineno-0-2125" name="__codelineno-0-2125"></a><span class="sd">        Returns:</span>
-</span><span id="__span-0-2126"><a id="__codelineno-0-2126" name="__codelineno-0-2126"></a><span class="sd">            Protobuf PublicOrderBookFilter corresponding to the object.</span>
-</span><span id="__span-0-2127"><a id="__codelineno-0-2127" name="__codelineno-0-2127"></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="__span-0-2128"><a id="__codelineno-0-2128" name="__codelineno-0-2128"></a>        <span class="k">return</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">(</span>
-</span><span id="__span-0-2129"><a id="__codelineno-0-2129" name="__codelineno-0-2129"></a>            <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2130"><a id="__codelineno-0-2130" name="__codelineno-0-2130"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2131"><a id="__codelineno-0-2131" name="__codelineno-0-2131"></a>            <span class="p">),</span>
-</span><span id="__span-0-2132"><a id="__codelineno-0-2132" name="__codelineno-0-2132"></a>            <span class="n">delivery_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-2133"><a id="__codelineno-0-2133" name="__codelineno-0-2133"></a>            <span class="n">side</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2134"><a id="__codelineno-0-2134" name="__codelineno-0-2134"></a>                <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-</span><span id="__span-0-2135"><a id="__codelineno-0-2135" name="__codelineno-0-2135"></a>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span>
-</span><span id="__span-0-2136"><a id="__codelineno-0-2136" name="__codelineno-0-2136"></a>                <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2137"><a id="__codelineno-0-2137" name="__codelineno-0-2137"></a>            <span class="p">),</span>
-</span><span id="__span-0-2138"><a id="__codelineno-0-2138" name="__codelineno-0-2138"></a>        <span class="p">)</span>
+</span><span id="__span-0-2080"><a id="__codelineno-0-2080" name="__codelineno-0-2080"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="__span-0-2081"><a id="__codelineno-0-2081" name="__codelineno-0-2081"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-2082"><a id="__codelineno-0-2082" name="__codelineno-0-2082"></a><span class="sd">        Create hash of the PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2083"><a id="__codelineno-0-2083" name="__codelineno-0-2083"></a>
+</span><span id="__span-0-2084"><a id="__codelineno-0-2084" name="__codelineno-0-2084"></a><span class="sd">        Returns:</span>
+</span><span id="__span-0-2085"><a id="__codelineno-0-2085" name="__codelineno-0-2085"></a><span class="sd">            Hash of the PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2086"><a id="__codelineno-0-2086" name="__codelineno-0-2086"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-2087"><a id="__codelineno-0-2087" name="__codelineno-0-2087"></a>        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span>
+</span><span id="__span-0-2088"><a id="__codelineno-0-2088" name="__codelineno-0-2088"></a>            <span class="p">(</span>
+</span><span id="__span-0-2089"><a id="__codelineno-0-2089" name="__codelineno-0-2089"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">,</span>
+</span><span id="__span-0-2090"><a id="__codelineno-0-2090" name="__codelineno-0-2090"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">,</span>
+</span><span id="__span-0-2091"><a id="__codelineno-0-2091" name="__codelineno-0-2091"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span>
+</span><span id="__span-0-2092"><a id="__codelineno-0-2092" name="__codelineno-0-2092"></a>            <span class="p">)</span>
+</span><span id="__span-0-2093"><a id="__codelineno-0-2093" name="__codelineno-0-2093"></a>        <span class="p">)</span>
+</span><span id="__span-0-2094"><a id="__codelineno-0-2094" name="__codelineno-0-2094"></a>
+</span><span id="__span-0-2095"><a id="__codelineno-0-2095" name="__codelineno-0-2095"></a>    <span class="nd">@classmethod</span>
+</span><span id="__span-0-2096"><a id="__codelineno-0-2096" name="__codelineno-0-2096"></a>    <span class="nd">@from_pb</span>
+</span><span id="__span-0-2097"><a id="__codelineno-0-2097" name="__codelineno-0-2097"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_pb</span><span class="p">(</span>
+</span><span id="__span-0-2098"><a id="__codelineno-0-2098" name="__codelineno-0-2098"></a>        <span class="bp">cls</span><span class="p">,</span> <span class="n">public_order_filter</span><span class="p">:</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span>
+</span><span id="__span-0-2099"><a id="__codelineno-0-2099" name="__codelineno-0-2099"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+</span><span id="__span-0-2100"><a id="__codelineno-0-2100" name="__codelineno-0-2100"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a protobuf PublicOrderBookFilter to PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2101"><a id="__codelineno-0-2101" name="__codelineno-0-2101"></a>
+</span><span id="__span-0-2102"><a id="__codelineno-0-2102" name="__codelineno-0-2102"></a><span class="sd">        Args:</span>
+</span><span id="__span-0-2103"><a id="__codelineno-0-2103" name="__codelineno-0-2103"></a><span class="sd">            public_order_filter: PublicOrderBookFilter to convert.</span>
+</span><span id="__span-0-2104"><a id="__codelineno-0-2104" name="__codelineno-0-2104"></a>
+</span><span id="__span-0-2105"><a id="__codelineno-0-2105" name="__codelineno-0-2105"></a><span class="sd">        Returns:</span>
+</span><span id="__span-0-2106"><a id="__codelineno-0-2106" name="__codelineno-0-2106"></a><span class="sd">            PublicOrderBookFilter object corresponding to the protobuf message.</span>
+</span><span id="__span-0-2107"><a id="__codelineno-0-2107" name="__codelineno-0-2107"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-2108"><a id="__codelineno-0-2108" name="__codelineno-0-2108"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+</span><span id="__span-0-2109"><a id="__codelineno-0-2109" name="__codelineno-0-2109"></a>            <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2110"><a id="__codelineno-0-2110" name="__codelineno-0-2110"></a>                <span class="n">DeliveryPeriod</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">)</span>
+</span><span id="__span-0-2111"><a id="__codelineno-0-2111" name="__codelineno-0-2111"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_period&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2112"><a id="__codelineno-0-2112" name="__codelineno-0-2112"></a>                <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2113"><a id="__codelineno-0-2113" name="__codelineno-0-2113"></a>            <span class="p">),</span>
+</span><span id="__span-0-2114"><a id="__codelineno-0-2114" name="__codelineno-0-2114"></a>            <span class="n">delivery_area</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2115"><a id="__codelineno-0-2115" name="__codelineno-0-2115"></a>                <span class="n">DeliveryArea</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">)</span>
+</span><span id="__span-0-2116"><a id="__codelineno-0-2116" name="__codelineno-0-2116"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_area&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2117"><a id="__codelineno-0-2117" name="__codelineno-0-2117"></a>                <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2118"><a id="__codelineno-0-2118" name="__codelineno-0-2118"></a>            <span class="p">),</span>
+</span><span id="__span-0-2119"><a id="__codelineno-0-2119" name="__codelineno-0-2119"></a>            <span class="n">side</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2120"><a id="__codelineno-0-2120" name="__codelineno-0-2120"></a>                <span class="n">MarketSide</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
+</span><span id="__span-0-2121"><a id="__codelineno-0-2121" name="__codelineno-0-2121"></a>                <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;side&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2122"><a id="__codelineno-0-2122" name="__codelineno-0-2122"></a>                <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2123"><a id="__codelineno-0-2123" name="__codelineno-0-2123"></a>            <span class="p">),</span>
+</span><span id="__span-0-2124"><a id="__codelineno-0-2124" name="__codelineno-0-2124"></a>        <span class="p">)</span>
+</span><span id="__span-0-2125"><a id="__codelineno-0-2125" name="__codelineno-0-2125"></a>
+</span><span id="__span-0-2126"><a id="__codelineno-0-2126" name="__codelineno-0-2126"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">:</span>
+</span><span id="__span-0-2127"><a id="__codelineno-0-2127" name="__codelineno-0-2127"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a PublicOrderBookFilter object to protobuf PublicOrderBookFilter.</span>
+</span><span id="__span-0-2128"><a id="__codelineno-0-2128" name="__codelineno-0-2128"></a>
+</span><span id="__span-0-2129"><a id="__codelineno-0-2129" name="__codelineno-0-2129"></a><span class="sd">        Returns:</span>
+</span><span id="__span-0-2130"><a id="__codelineno-0-2130" name="__codelineno-0-2130"></a><span class="sd">            Protobuf PublicOrderBookFilter corresponding to the object.</span>
+</span><span id="__span-0-2131"><a id="__codelineno-0-2131" name="__codelineno-0-2131"></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-2132"><a id="__codelineno-0-2132" name="__codelineno-0-2132"></a>        <span class="k">return</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">(</span>
+</span><span id="__span-0-2133"><a id="__codelineno-0-2133" name="__codelineno-0-2133"></a>            <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2134"><a id="__codelineno-0-2134" name="__codelineno-0-2134"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2135"><a id="__codelineno-0-2135" name="__codelineno-0-2135"></a>            <span class="p">),</span>
+</span><span id="__span-0-2136"><a id="__codelineno-0-2136" name="__codelineno-0-2136"></a>            <span class="n">delivery_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-2137"><a id="__codelineno-0-2137" name="__codelineno-0-2137"></a>            <span class="n">side</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2138"><a id="__codelineno-0-2138" name="__codelineno-0-2138"></a>                <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-0-2139"><a id="__codelineno-0-2139" name="__codelineno-0-2139"></a>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span>
+</span><span id="__span-0-2140"><a id="__codelineno-0-2140" name="__codelineno-0-2140"></a>                <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2141"><a id="__codelineno-0-2141" name="__codelineno-0-2141"></a>            <span class="p">),</span>
+</span><span id="__span-0-2142"><a id="__codelineno-0-2142" name="__codelineno-0-2142"></a>        <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
               </details>
 
@@ -22281,11 +22301,7 @@ or better, after a given stop price has been reached.</p>
 
             <details class="quote">
               <summary>Source code in <code>frequenz/client/electricity_trading/_types.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2058">2058</a></span>
-<span class="normal"><a href="#__codelineno-0-2059">2059</a></span>
-<span class="normal"><a href="#__codelineno-0-2060">2060</a></span>
-<span class="normal"><a href="#__codelineno-0-2061">2061</a></span>
-<span class="normal"><a href="#__codelineno-0-2062">2062</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2062">2062</a></span>
 <span class="normal"><a href="#__codelineno-0-2063">2063</a></span>
 <span class="normal"><a href="#__codelineno-0-2064">2064</a></span>
 <span class="normal"><a href="#__codelineno-0-2065">2065</a></span>
@@ -22297,23 +22313,27 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2071">2071</a></span>
 <span class="normal"><a href="#__codelineno-0-2072">2072</a></span>
 <span class="normal"><a href="#__codelineno-0-2073">2073</a></span>
-<span class="normal"><a href="#__codelineno-0-2074">2074</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2058"><a id="__codelineno-0-2058" name="__codelineno-0-2058"></a><span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="__span-0-2059"><a id="__codelineno-0-2059" name="__codelineno-0-2059"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-2060"><a id="__codelineno-0-2060" name="__codelineno-0-2060"></a><span class="sd">    Check if two PublicOrderBookFilter objects are equal.</span>
-</span><span id="__span-0-2061"><a id="__codelineno-0-2061" name="__codelineno-0-2061"></a>
-</span><span id="__span-0-2062"><a id="__codelineno-0-2062" name="__codelineno-0-2062"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-2063"><a id="__codelineno-0-2063" name="__codelineno-0-2063"></a><span class="sd">        other: PublicOrderBookFilter object to compare with.</span>
-</span><span id="__span-0-2064"><a id="__codelineno-0-2064" name="__codelineno-0-2064"></a>
-</span><span id="__span-0-2065"><a id="__codelineno-0-2065" name="__codelineno-0-2065"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-2066"><a id="__codelineno-0-2066" name="__codelineno-0-2066"></a><span class="sd">        True if the two PublicOrderBookFilter objects are equal, False otherwise.</span>
-</span><span id="__span-0-2067"><a id="__codelineno-0-2067" name="__codelineno-0-2067"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-2068"><a id="__codelineno-0-2068" name="__codelineno-0-2068"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PublicOrderBookFilter</span><span class="p">):</span>
-</span><span id="__span-0-2069"><a id="__codelineno-0-2069" name="__codelineno-0-2069"></a>        <span class="k">return</span> <span class="bp">NotImplemented</span>
-</span><span id="__span-0-2070"><a id="__codelineno-0-2070" name="__codelineno-0-2070"></a>    <span class="k">return</span> <span class="p">(</span>
-</span><span id="__span-0-2071"><a id="__codelineno-0-2071" name="__codelineno-0-2071"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_period</span>
-</span><span id="__span-0-2072"><a id="__codelineno-0-2072" name="__codelineno-0-2072"></a>        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_area</span>
-</span><span id="__span-0-2073"><a id="__codelineno-0-2073" name="__codelineno-0-2073"></a>        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">side</span>
-</span><span id="__span-0-2074"><a id="__codelineno-0-2074" name="__codelineno-0-2074"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-2074">2074</a></span>
+<span class="normal"><a href="#__codelineno-0-2075">2075</a></span>
+<span class="normal"><a href="#__codelineno-0-2076">2076</a></span>
+<span class="normal"><a href="#__codelineno-0-2077">2077</a></span>
+<span class="normal"><a href="#__codelineno-0-2078">2078</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2062"><a id="__codelineno-0-2062" name="__codelineno-0-2062"></a><span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="__span-0-2063"><a id="__codelineno-0-2063" name="__codelineno-0-2063"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-2064"><a id="__codelineno-0-2064" name="__codelineno-0-2064"></a><span class="sd">    Check if two PublicOrderBookFilter objects are equal.</span>
+</span><span id="__span-0-2065"><a id="__codelineno-0-2065" name="__codelineno-0-2065"></a>
+</span><span id="__span-0-2066"><a id="__codelineno-0-2066" name="__codelineno-0-2066"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-2067"><a id="__codelineno-0-2067" name="__codelineno-0-2067"></a><span class="sd">        other: PublicOrderBookFilter object to compare with.</span>
+</span><span id="__span-0-2068"><a id="__codelineno-0-2068" name="__codelineno-0-2068"></a>
+</span><span id="__span-0-2069"><a id="__codelineno-0-2069" name="__codelineno-0-2069"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-2070"><a id="__codelineno-0-2070" name="__codelineno-0-2070"></a><span class="sd">        True if the two PublicOrderBookFilter objects are equal, False otherwise.</span>
+</span><span id="__span-0-2071"><a id="__codelineno-0-2071" name="__codelineno-0-2071"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-2072"><a id="__codelineno-0-2072" name="__codelineno-0-2072"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PublicOrderBookFilter</span><span class="p">):</span>
+</span><span id="__span-0-2073"><a id="__codelineno-0-2073" name="__codelineno-0-2073"></a>        <span class="k">return</span> <span class="bp">NotImplemented</span>
+</span><span id="__span-0-2074"><a id="__codelineno-0-2074" name="__codelineno-0-2074"></a>    <span class="k">return</span> <span class="p">(</span>
+</span><span id="__span-0-2075"><a id="__codelineno-0-2075" name="__codelineno-0-2075"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_period</span>
+</span><span id="__span-0-2076"><a id="__codelineno-0-2076" name="__codelineno-0-2076"></a>        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">delivery_area</span>
+</span><span id="__span-0-2077"><a id="__codelineno-0-2077" name="__codelineno-0-2077"></a>        <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">side</span>
+</span><span id="__span-0-2078"><a id="__codelineno-0-2078" name="__codelineno-0-2078"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -22362,11 +22382,7 @@ or better, after a given stop price has been reached.</p>
 
             <details class="quote">
               <summary>Source code in <code>frequenz/client/electricity_trading/_types.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2076">2076</a></span>
-<span class="normal"><a href="#__codelineno-0-2077">2077</a></span>
-<span class="normal"><a href="#__codelineno-0-2078">2078</a></span>
-<span class="normal"><a href="#__codelineno-0-2079">2079</a></span>
-<span class="normal"><a href="#__codelineno-0-2080">2080</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2080">2080</a></span>
 <span class="normal"><a href="#__codelineno-0-2081">2081</a></span>
 <span class="normal"><a href="#__codelineno-0-2082">2082</a></span>
 <span class="normal"><a href="#__codelineno-0-2083">2083</a></span>
@@ -22375,20 +22391,24 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2086">2086</a></span>
 <span class="normal"><a href="#__codelineno-0-2087">2087</a></span>
 <span class="normal"><a href="#__codelineno-0-2088">2088</a></span>
-<span class="normal"><a href="#__codelineno-0-2089">2089</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2076"><a id="__codelineno-0-2076" name="__codelineno-0-2076"></a><span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-</span><span id="__span-0-2077"><a id="__codelineno-0-2077" name="__codelineno-0-2077"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-2078"><a id="__codelineno-0-2078" name="__codelineno-0-2078"></a><span class="sd">    Create hash of the PublicOrderBookFilter object.</span>
-</span><span id="__span-0-2079"><a id="__codelineno-0-2079" name="__codelineno-0-2079"></a>
-</span><span id="__span-0-2080"><a id="__codelineno-0-2080" name="__codelineno-0-2080"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-2081"><a id="__codelineno-0-2081" name="__codelineno-0-2081"></a><span class="sd">        Hash of the PublicOrderBookFilter object.</span>
-</span><span id="__span-0-2082"><a id="__codelineno-0-2082" name="__codelineno-0-2082"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-2083"><a id="__codelineno-0-2083" name="__codelineno-0-2083"></a>    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span>
-</span><span id="__span-0-2084"><a id="__codelineno-0-2084" name="__codelineno-0-2084"></a>        <span class="p">(</span>
-</span><span id="__span-0-2085"><a id="__codelineno-0-2085" name="__codelineno-0-2085"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">,</span>
-</span><span id="__span-0-2086"><a id="__codelineno-0-2086" name="__codelineno-0-2086"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">,</span>
-</span><span id="__span-0-2087"><a id="__codelineno-0-2087" name="__codelineno-0-2087"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span>
-</span><span id="__span-0-2088"><a id="__codelineno-0-2088" name="__codelineno-0-2088"></a>        <span class="p">)</span>
-</span><span id="__span-0-2089"><a id="__codelineno-0-2089" name="__codelineno-0-2089"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-2089">2089</a></span>
+<span class="normal"><a href="#__codelineno-0-2090">2090</a></span>
+<span class="normal"><a href="#__codelineno-0-2091">2091</a></span>
+<span class="normal"><a href="#__codelineno-0-2092">2092</a></span>
+<span class="normal"><a href="#__codelineno-0-2093">2093</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2080"><a id="__codelineno-0-2080" name="__codelineno-0-2080"></a><span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="__span-0-2081"><a id="__codelineno-0-2081" name="__codelineno-0-2081"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-2082"><a id="__codelineno-0-2082" name="__codelineno-0-2082"></a><span class="sd">    Create hash of the PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2083"><a id="__codelineno-0-2083" name="__codelineno-0-2083"></a>
+</span><span id="__span-0-2084"><a id="__codelineno-0-2084" name="__codelineno-0-2084"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-2085"><a id="__codelineno-0-2085" name="__codelineno-0-2085"></a><span class="sd">        Hash of the PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2086"><a id="__codelineno-0-2086" name="__codelineno-0-2086"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-2087"><a id="__codelineno-0-2087" name="__codelineno-0-2087"></a>    <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span>
+</span><span id="__span-0-2088"><a id="__codelineno-0-2088" name="__codelineno-0-2088"></a>        <span class="p">(</span>
+</span><span id="__span-0-2089"><a id="__codelineno-0-2089" name="__codelineno-0-2089"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">,</span>
+</span><span id="__span-0-2090"><a id="__codelineno-0-2090" name="__codelineno-0-2090"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">,</span>
+</span><span id="__span-0-2091"><a id="__codelineno-0-2091" name="__codelineno-0-2091"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="p">,</span>
+</span><span id="__span-0-2092"><a id="__codelineno-0-2092" name="__codelineno-0-2092"></a>        <span class="p">)</span>
+</span><span id="__span-0-2093"><a id="__codelineno-0-2093" name="__codelineno-0-2093"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -22469,11 +22489,7 @@ or better, after a given stop price has been reached.</p>
 
             <details class="quote">
               <summary>Source code in <code>frequenz/client/electricity_trading/_types.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2091">2091</a></span>
-<span class="normal"><a href="#__codelineno-0-2092">2092</a></span>
-<span class="normal"><a href="#__codelineno-0-2093">2093</a></span>
-<span class="normal"><a href="#__codelineno-0-2094">2094</a></span>
-<span class="normal"><a href="#__codelineno-0-2095">2095</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2095">2095</a></span>
 <span class="normal"><a href="#__codelineno-0-2096">2096</a></span>
 <span class="normal"><a href="#__codelineno-0-2097">2097</a></span>
 <span class="normal"><a href="#__codelineno-0-2098">2098</a></span>
@@ -22498,36 +22514,40 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2117">2117</a></span>
 <span class="normal"><a href="#__codelineno-0-2118">2118</a></span>
 <span class="normal"><a href="#__codelineno-0-2119">2119</a></span>
-<span class="normal"><a href="#__codelineno-0-2120">2120</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2091"><a id="__codelineno-0-2091" name="__codelineno-0-2091"></a><span class="nd">@classmethod</span>
-</span><span id="__span-0-2092"><a id="__codelineno-0-2092" name="__codelineno-0-2092"></a><span class="nd">@from_pb</span>
-</span><span id="__span-0-2093"><a id="__codelineno-0-2093" name="__codelineno-0-2093"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_pb</span><span class="p">(</span>
-</span><span id="__span-0-2094"><a id="__codelineno-0-2094" name="__codelineno-0-2094"></a>    <span class="bp">cls</span><span class="p">,</span> <span class="n">public_order_filter</span><span class="p">:</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span>
-</span><span id="__span-0-2095"><a id="__codelineno-0-2095" name="__codelineno-0-2095"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-</span><span id="__span-0-2096"><a id="__codelineno-0-2096" name="__codelineno-0-2096"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a protobuf PublicOrderBookFilter to PublicOrderBookFilter object.</span>
-</span><span id="__span-0-2097"><a id="__codelineno-0-2097" name="__codelineno-0-2097"></a>
-</span><span id="__span-0-2098"><a id="__codelineno-0-2098" name="__codelineno-0-2098"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-2099"><a id="__codelineno-0-2099" name="__codelineno-0-2099"></a><span class="sd">        public_order_filter: PublicOrderBookFilter to convert.</span>
-</span><span id="__span-0-2100"><a id="__codelineno-0-2100" name="__codelineno-0-2100"></a>
-</span><span id="__span-0-2101"><a id="__codelineno-0-2101" name="__codelineno-0-2101"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-2102"><a id="__codelineno-0-2102" name="__codelineno-0-2102"></a><span class="sd">        PublicOrderBookFilter object corresponding to the protobuf message.</span>
-</span><span id="__span-0-2103"><a id="__codelineno-0-2103" name="__codelineno-0-2103"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-2104"><a id="__codelineno-0-2104" name="__codelineno-0-2104"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-</span><span id="__span-0-2105"><a id="__codelineno-0-2105" name="__codelineno-0-2105"></a>        <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2106"><a id="__codelineno-0-2106" name="__codelineno-0-2106"></a>            <span class="n">DeliveryPeriod</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">)</span>
-</span><span id="__span-0-2107"><a id="__codelineno-0-2107" name="__codelineno-0-2107"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_period&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2108"><a id="__codelineno-0-2108" name="__codelineno-0-2108"></a>            <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2109"><a id="__codelineno-0-2109" name="__codelineno-0-2109"></a>        <span class="p">),</span>
-</span><span id="__span-0-2110"><a id="__codelineno-0-2110" name="__codelineno-0-2110"></a>        <span class="n">delivery_area</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2111"><a id="__codelineno-0-2111" name="__codelineno-0-2111"></a>            <span class="n">DeliveryArea</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">)</span>
-</span><span id="__span-0-2112"><a id="__codelineno-0-2112" name="__codelineno-0-2112"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_area&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2113"><a id="__codelineno-0-2113" name="__codelineno-0-2113"></a>            <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2114"><a id="__codelineno-0-2114" name="__codelineno-0-2114"></a>        <span class="p">),</span>
-</span><span id="__span-0-2115"><a id="__codelineno-0-2115" name="__codelineno-0-2115"></a>        <span class="n">side</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2116"><a id="__codelineno-0-2116" name="__codelineno-0-2116"></a>            <span class="n">MarketSide</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
-</span><span id="__span-0-2117"><a id="__codelineno-0-2117" name="__codelineno-0-2117"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;side&quot;</span><span class="p">)</span>
-</span><span id="__span-0-2118"><a id="__codelineno-0-2118" name="__codelineno-0-2118"></a>            <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2119"><a id="__codelineno-0-2119" name="__codelineno-0-2119"></a>        <span class="p">),</span>
-</span><span id="__span-0-2120"><a id="__codelineno-0-2120" name="__codelineno-0-2120"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-2120">2120</a></span>
+<span class="normal"><a href="#__codelineno-0-2121">2121</a></span>
+<span class="normal"><a href="#__codelineno-0-2122">2122</a></span>
+<span class="normal"><a href="#__codelineno-0-2123">2123</a></span>
+<span class="normal"><a href="#__codelineno-0-2124">2124</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2095"><a id="__codelineno-0-2095" name="__codelineno-0-2095"></a><span class="nd">@classmethod</span>
+</span><span id="__span-0-2096"><a id="__codelineno-0-2096" name="__codelineno-0-2096"></a><span class="nd">@from_pb</span>
+</span><span id="__span-0-2097"><a id="__codelineno-0-2097" name="__codelineno-0-2097"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_pb</span><span class="p">(</span>
+</span><span id="__span-0-2098"><a id="__codelineno-0-2098" name="__codelineno-0-2098"></a>    <span class="bp">cls</span><span class="p">,</span> <span class="n">public_order_filter</span><span class="p">:</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span>
+</span><span id="__span-0-2099"><a id="__codelineno-0-2099" name="__codelineno-0-2099"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+</span><span id="__span-0-2100"><a id="__codelineno-0-2100" name="__codelineno-0-2100"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a protobuf PublicOrderBookFilter to PublicOrderBookFilter object.</span>
+</span><span id="__span-0-2101"><a id="__codelineno-0-2101" name="__codelineno-0-2101"></a>
+</span><span id="__span-0-2102"><a id="__codelineno-0-2102" name="__codelineno-0-2102"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-2103"><a id="__codelineno-0-2103" name="__codelineno-0-2103"></a><span class="sd">        public_order_filter: PublicOrderBookFilter to convert.</span>
+</span><span id="__span-0-2104"><a id="__codelineno-0-2104" name="__codelineno-0-2104"></a>
+</span><span id="__span-0-2105"><a id="__codelineno-0-2105" name="__codelineno-0-2105"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-2106"><a id="__codelineno-0-2106" name="__codelineno-0-2106"></a><span class="sd">        PublicOrderBookFilter object corresponding to the protobuf message.</span>
+</span><span id="__span-0-2107"><a id="__codelineno-0-2107" name="__codelineno-0-2107"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-2108"><a id="__codelineno-0-2108" name="__codelineno-0-2108"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+</span><span id="__span-0-2109"><a id="__codelineno-0-2109" name="__codelineno-0-2109"></a>        <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2110"><a id="__codelineno-0-2110" name="__codelineno-0-2110"></a>            <span class="n">DeliveryPeriod</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_period</span><span class="p">)</span>
+</span><span id="__span-0-2111"><a id="__codelineno-0-2111" name="__codelineno-0-2111"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_period&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2112"><a id="__codelineno-0-2112" name="__codelineno-0-2112"></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2113"><a id="__codelineno-0-2113" name="__codelineno-0-2113"></a>        <span class="p">),</span>
+</span><span id="__span-0-2114"><a id="__codelineno-0-2114" name="__codelineno-0-2114"></a>        <span class="n">delivery_area</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2115"><a id="__codelineno-0-2115" name="__codelineno-0-2115"></a>            <span class="n">DeliveryArea</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">delivery_area</span><span class="p">)</span>
+</span><span id="__span-0-2116"><a id="__codelineno-0-2116" name="__codelineno-0-2116"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;delivery_area&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2117"><a id="__codelineno-0-2117" name="__codelineno-0-2117"></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2118"><a id="__codelineno-0-2118" name="__codelineno-0-2118"></a>        <span class="p">),</span>
+</span><span id="__span-0-2119"><a id="__codelineno-0-2119" name="__codelineno-0-2119"></a>        <span class="n">side</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2120"><a id="__codelineno-0-2120" name="__codelineno-0-2120"></a>            <span class="n">MarketSide</span><span class="o">.</span><span class="n">from_pb</span><span class="p">(</span><span class="n">public_order_filter</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
+</span><span id="__span-0-2121"><a id="__codelineno-0-2121" name="__codelineno-0-2121"></a>            <span class="k">if</span> <span class="n">public_order_filter</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;side&quot;</span><span class="p">)</span>
+</span><span id="__span-0-2122"><a id="__codelineno-0-2122" name="__codelineno-0-2122"></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2123"><a id="__codelineno-0-2123" name="__codelineno-0-2123"></a>        <span class="p">),</span>
+</span><span id="__span-0-2124"><a id="__codelineno-0-2124" name="__codelineno-0-2124"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -22576,11 +22596,7 @@ or better, after a given stop price has been reached.</p>
 
             <details class="quote">
               <summary>Source code in <code>frequenz/client/electricity_trading/_types.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2122">2122</a></span>
-<span class="normal"><a href="#__codelineno-0-2123">2123</a></span>
-<span class="normal"><a href="#__codelineno-0-2124">2124</a></span>
-<span class="normal"><a href="#__codelineno-0-2125">2125</a></span>
-<span class="normal"><a href="#__codelineno-0-2126">2126</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2126">2126</a></span>
 <span class="normal"><a href="#__codelineno-0-2127">2127</a></span>
 <span class="normal"><a href="#__codelineno-0-2128">2128</a></span>
 <span class="normal"><a href="#__codelineno-0-2129">2129</a></span>
@@ -22592,23 +22608,27 @@ or better, after a given stop price has been reached.</p>
 <span class="normal"><a href="#__codelineno-0-2135">2135</a></span>
 <span class="normal"><a href="#__codelineno-0-2136">2136</a></span>
 <span class="normal"><a href="#__codelineno-0-2137">2137</a></span>
-<span class="normal"><a href="#__codelineno-0-2138">2138</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2122"><a id="__codelineno-0-2122" name="__codelineno-0-2122"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">:</span>
-</span><span id="__span-0-2123"><a id="__codelineno-0-2123" name="__codelineno-0-2123"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a PublicOrderBookFilter object to protobuf PublicOrderBookFilter.</span>
-</span><span id="__span-0-2124"><a id="__codelineno-0-2124" name="__codelineno-0-2124"></a>
-</span><span id="__span-0-2125"><a id="__codelineno-0-2125" name="__codelineno-0-2125"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-2126"><a id="__codelineno-0-2126" name="__codelineno-0-2126"></a><span class="sd">        Protobuf PublicOrderBookFilter corresponding to the object.</span>
-</span><span id="__span-0-2127"><a id="__codelineno-0-2127" name="__codelineno-0-2127"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-2128"><a id="__codelineno-0-2128" name="__codelineno-0-2128"></a>    <span class="k">return</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">(</span>
-</span><span id="__span-0-2129"><a id="__codelineno-0-2129" name="__codelineno-0-2129"></a>        <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2130"><a id="__codelineno-0-2130" name="__codelineno-0-2130"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2131"><a id="__codelineno-0-2131" name="__codelineno-0-2131"></a>        <span class="p">),</span>
-</span><span id="__span-0-2132"><a id="__codelineno-0-2132" name="__codelineno-0-2132"></a>        <span class="n">delivery_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-2133"><a id="__codelineno-0-2133" name="__codelineno-0-2133"></a>        <span class="n">side</span><span class="o">=</span><span class="p">(</span>
-</span><span id="__span-0-2134"><a id="__codelineno-0-2134" name="__codelineno-0-2134"></a>            <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-</span><span id="__span-0-2135"><a id="__codelineno-0-2135" name="__codelineno-0-2135"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span>
-</span><span id="__span-0-2136"><a id="__codelineno-0-2136" name="__codelineno-0-2136"></a>            <span class="k">else</span> <span class="kc">None</span>
-</span><span id="__span-0-2137"><a id="__codelineno-0-2137" name="__codelineno-0-2137"></a>        <span class="p">),</span>
-</span><span id="__span-0-2138"><a id="__codelineno-0-2138" name="__codelineno-0-2138"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-2138">2138</a></span>
+<span class="normal"><a href="#__codelineno-0-2139">2139</a></span>
+<span class="normal"><a href="#__codelineno-0-2140">2140</a></span>
+<span class="normal"><a href="#__codelineno-0-2141">2141</a></span>
+<span class="normal"><a href="#__codelineno-0-2142">2142</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2126"><a id="__codelineno-0-2126" name="__codelineno-0-2126"></a><span class="k">def</span><span class="w"> </span><span class="nf">to_pb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">:</span>
+</span><span id="__span-0-2127"><a id="__codelineno-0-2127" name="__codelineno-0-2127"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a PublicOrderBookFilter object to protobuf PublicOrderBookFilter.</span>
+</span><span id="__span-0-2128"><a id="__codelineno-0-2128" name="__codelineno-0-2128"></a>
+</span><span id="__span-0-2129"><a id="__codelineno-0-2129" name="__codelineno-0-2129"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-2130"><a id="__codelineno-0-2130" name="__codelineno-0-2130"></a><span class="sd">        Protobuf PublicOrderBookFilter corresponding to the object.</span>
+</span><span id="__span-0-2131"><a id="__codelineno-0-2131" name="__codelineno-0-2131"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-2132"><a id="__codelineno-0-2132" name="__codelineno-0-2132"></a>    <span class="k">return</span> <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">PublicOrderBookFilter</span><span class="p">(</span>
+</span><span id="__span-0-2133"><a id="__codelineno-0-2133" name="__codelineno-0-2133"></a>        <span class="n">delivery_period</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2134"><a id="__codelineno-0-2134" name="__codelineno-0-2134"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_period</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2135"><a id="__codelineno-0-2135" name="__codelineno-0-2135"></a>        <span class="p">),</span>
+</span><span id="__span-0-2136"><a id="__codelineno-0-2136" name="__codelineno-0-2136"></a>        <span class="n">delivery_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span><span class="o">.</span><span class="n">to_pb</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delivery_area</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-2137"><a id="__codelineno-0-2137" name="__codelineno-0-2137"></a>        <span class="n">side</span><span class="o">=</span><span class="p">(</span>
+</span><span id="__span-0-2138"><a id="__codelineno-0-2138" name="__codelineno-0-2138"></a>            <span class="n">electricity_trading_pb2</span><span class="o">.</span><span class="n">MarketSide</span><span class="o">.</span><span class="n">ValueType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</span><span id="__span-0-2139"><a id="__codelineno-0-2139" name="__codelineno-0-2139"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">side</span>
+</span><span id="__span-0-2140"><a id="__codelineno-0-2140" name="__codelineno-0-2140"></a>            <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-2141"><a id="__codelineno-0-2141" name="__codelineno-0-2141"></a>        <span class="p">),</span>
+</span><span id="__span-0-2142"><a id="__codelineno-0-2142" name="__codelineno-0-2142"></a>    <span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
