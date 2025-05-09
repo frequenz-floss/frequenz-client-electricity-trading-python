@@ -2002,6 +2002,12 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
         Returns:
             PublicOrder object corresponding to the protobuf message.
         """
+        execution_option = (
+            OrderExecutionOption.from_pb(public_order.execution_option)
+            if public_order.HasField("execution_option")
+            else None
+        )
+
         return cls(
             public_order_id=public_order.id,
             delivery_area=DeliveryArea.from_pb(public_order.delivery_area),
@@ -2009,9 +2015,7 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
             side=MarketSide.from_pb(public_order.side),
             price=Price.from_pb(public_order.price),
             quantity=Power.from_pb(public_order.quantity),
-            execution_option=OrderExecutionOption.from_pb(
-                public_order.execution_option
-            ),
+            execution_option=execution_option,
             create_time=public_order.create_time.ToDatetime(tzinfo=timezone.utc),
             update_time=public_order.update_time.ToDatetime(tzinfo=timezone.utc),
         )
