@@ -6,7 +6,7 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+- The client interface now requires that other than the `gridpool_id`, all parameters to client methods are kw-only, and can't be specified as positional arguments.
 
 ## New Features
 
