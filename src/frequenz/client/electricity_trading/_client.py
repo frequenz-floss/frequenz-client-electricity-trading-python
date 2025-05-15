@@ -258,9 +258,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return self._stub  # type: ignore
 
     def gridpool_orders_stream(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         self,
         gridpool_id: int,
+        *,
         order_states: list[OrderState] | None = None,
         market_side: MarketSide | None = None,
         delivery_area: DeliveryArea | None = None,
@@ -322,9 +323,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return self._gridpool_orders_streams[stream_key]
 
     def gridpool_trades_stream(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         self,
         gridpool_id: int,
+        *,
         trade_states: list[TradeState] | None = None,
         trade_ids: list[int] | None = None,
         market_side: MarketSide | None = None,
@@ -386,8 +388,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return self._gridpool_trades_streams[stream_key]
 
     def validate_params(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-branches
+        # pylint: disable=too-many-arguments, too-many-branches
         self,
+        *,
         price: Price | None | _Sentinel = NO_VALUE,
         quantity: Power | None | _Sentinel = NO_VALUE,
         stop_price: Price | None | _Sentinel = NO_VALUE,
@@ -466,9 +469,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 raise NotImplementedError("Currently only limit orders are supported.")
 
     async def create_gridpool_order(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+        # pylint: disable=too-many-arguments, too-many-locals
         self,
         gridpool_id: int,
+        *,
         delivery_area: DeliveryArea,
         delivery_period: DeliveryPeriod,
         order_type: OrderType,
@@ -556,9 +560,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return OrderDetail.from_pb(response.order_detail)
 
     async def update_gridpool_order(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+        # pylint: disable=too-many-arguments, too-many-locals
         self,
         gridpool_id: int,
+        *,
         order_id: int,
         price: Price | None | _Sentinel = NO_VALUE,
         quantity: Power | None | _Sentinel = NO_VALUE,
@@ -674,7 +679,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             raise
 
     async def cancel_gridpool_order(
-        self, gridpool_id: int, order_id: int, timeout: timedelta | None = None
+        self,
+        gridpool_id: int,
+        *,
+        order_id: int,
+        timeout: timedelta | None = None,
     ) -> OrderDetail:
         """
         Cancel a single order for a given Gridpool.
@@ -708,7 +717,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             raise
 
     async def cancel_all_gridpool_orders(
-        self, gridpool_id: int, timeout: timedelta | None = None
+        self,
+        gridpool_id: int,
+        *,
+        timeout: timedelta | None = None,
     ) -> int:
         """
         Cancel all orders for a specific Gridpool.
@@ -744,7 +756,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             raise
 
     async def get_gridpool_order(
-        self, gridpool_id: int, order_id: int, timeout: timedelta | None = None
+        self,
+        gridpool_id: int,
+        *,
+        order_id: int,
+        timeout: timedelta | None = None,
     ) -> OrderDetail:
         """
         Get a single order from a given gridpool.
@@ -779,9 +795,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             raise
 
     async def list_gridpool_orders(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-locals
+        # pylint: disable=too-many-arguments, too-many-locals
         self,
         gridpool_id: int,
+        *,
         order_states: list[OrderState] | None = None,
         side: MarketSide | None = None,
         delivery_period: DeliveryPeriod | None = None,
@@ -855,9 +872,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 raise
 
     async def list_gridpool_trades(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         self,
         gridpool_id: int,
+        *,
         trade_states: list[TradeState] | None = None,
         trade_ids: list[int] | None = None,
         market_side: MarketSide | None = None,
@@ -932,8 +950,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 raise
 
     def receive_public_trades(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         self,
+        *,
         states: list[TradeState] | None = None,
         delivery_period: DeliveryPeriod | None = None,
         buy_delivery_area: DeliveryArea | None = None,
@@ -1004,8 +1023,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return self._public_trades_streams[public_trade_filter]
 
     def receive_public_order_book(
-        # pylint: disable=too-many-arguments, too-many-positional-arguments
+        # pylint: disable=too-many-arguments
         self,
+        *,
         delivery_period: DeliveryPeriod | None = None,
         delivery_area: DeliveryArea | None = None,
         side: MarketSide | None = None,

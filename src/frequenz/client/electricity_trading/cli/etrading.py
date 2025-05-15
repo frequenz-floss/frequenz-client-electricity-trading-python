@@ -238,7 +238,7 @@ async def cancel_order(
     if order_id is None:
         await client.cancel_all_gridpool_orders(gridpool_id)
     else:
-        await client.cancel_gridpool_order(gridpool_id, order_id)
+        await client.cancel_gridpool_order(gridpool_id, order_id=order_id)
 
 
 def print_public_trade_header() -> None:
