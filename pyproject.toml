@@ -3,7 +3,7 @@
 
 [build-system]
 requires = [
-  "setuptools == 80.1.0",
+  "setuptools == 80.7.1",
   "setuptools_scm[toml] == 8.3.1",
   "frequenz-repo-config[lib] == 0.13.4",
 ]
@@ -88,7 +88,7 @@ dev-mypy = [
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
-dev-noxfile = ["nox == 2025.2.9", "frequenz-repo-config[lib] == 0.13.4"]
+dev-noxfile = ["nox == 2025.5.1", "frequenz-repo-config[lib] == 0.13.4"]
 dev-pylint = [
   "pylint == 3.3.7",
   # For checking the noxfile, docs/ script, and tests
@@ -100,7 +100,7 @@ dev-pytest = [
   "pytest-mock == 3.14.0",
   "pytest-asyncio == 0.26.0",
   "async-solipsism == 0.7",
-  "deepdiff == 8.4.2",
+  "deepdiff == 8.5.0",
 ]
 dev = [
   "frequenz-client-electricity-trading[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
