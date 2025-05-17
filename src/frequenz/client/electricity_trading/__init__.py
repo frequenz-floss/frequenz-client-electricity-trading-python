@@ -40,7 +40,7 @@ First, initialize the client with the appropriate server URL and API key.
     from frequenz.client.electricity_trading import Client
 
     # Change server address if needed
-    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    SERVICE_URL = "grpc://electricity-trading.url.goes.here.example.com:443"
     with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
         API_KEY = f.read().strip()
 
@@ -79,7 +79,7 @@ Here's an example of how to create a limit order to buy energy.
     from decimal import Decimal
 
     # Change server address if needed
-    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    SERVICE_URL = "grpc://electricity-trading.url.goes.here.example.com:443"
     with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
         API_KEY = f.read().strip()
 
@@ -124,7 +124,7 @@ Orders for a given gridpool can be listed using various filters.
     from frequenz.client.electricity_trading import ( Client, MarketSide )
 
     # Change server address if needed
-    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    SERVICE_URL = "grpc://electricity-trading.url.goes.here.example.com:443"
     with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
         API_KEY = f.read().strip()
 
@@ -136,16 +136,14 @@ Orders for a given gridpool can be listed using various filters.
 
         gridpool_id: int = 1
 
-        # List all orders for a given gridpool
-        orders = await client.list_gridpool_orders(
-            gridpool_id=gridpool_id,
-        )
-
-        # List only the buy orders for a given gridpool
-        buy_orders = await client.list_gridpool_orders(
+        # List all the buy orders for a given gridpool
+        buy_orders = client.list_gridpool_orders(
             gridpool_id=gridpool_id,
             side=MarketSide.BUY,
         )
+
+        async for order in buy_orders:
+            print(order)
 
     asyncio.run(list_orders())
     ```
@@ -161,7 +159,7 @@ To get real-time updates on market trades, use the following code:
     from frequenz.client.electricity_trading import Client
 
     # Change server address if needed
-    SERVICE_URL = "grpc://electricity-trading.api.frequenz.com:443?ssl=true"
+    SERVICE_URL = "grpc://electricity-trading.url.goes.here.example.com:443"
     with open('/path/to/api_key.txt', 'r', encoding='utf-8') as f:
         API_KEY = f.read().strip()
 
@@ -170,8 +168,10 @@ To get real-time updates on market trades, use the following code:
             server_url=SERVICE_URL,
             auth_key=API_KEY
         )
-        stream_public_trades = await client.stream_public_trades()
-        async for public_trade in stream_public_trades:
+
+        public_trades = client.receive_public_trades()
+
+        async for public_trade in public_trades.new_receiver():
             print(f"Received public trade: {public_trade}")
 
     asyncio.run(stream_trades())
