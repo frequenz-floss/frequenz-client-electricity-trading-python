@@ -57,11 +57,11 @@ from ._types import (
 _logger = logging.getLogger(__name__)
 
 
-class _Sentinel:
+class _NoValue:
     """A unique object to signify 'no value passed'."""
 
 
-NO_VALUE = _Sentinel()
+NO_VALUE = _NoValue()
 PRECISION_DECIMAL_PRICE = 2
 PRECISION_DECIMAL_QUANTITY = 1
 
@@ -391,14 +391,14 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         # pylint: disable=too-many-arguments, too-many-branches
         self,
         *,
-        price: Price | None | _Sentinel = NO_VALUE,
-        quantity: Power | None | _Sentinel = NO_VALUE,
-        stop_price: Price | None | _Sentinel = NO_VALUE,
-        peak_price_delta: Price | None | _Sentinel = NO_VALUE,
-        display_quantity: Power | None | _Sentinel = NO_VALUE,
+        price: Price | None | _NoValue = NO_VALUE,
+        quantity: Power | None | _NoValue = NO_VALUE,
+        stop_price: Price | None | _NoValue = NO_VALUE,
+        peak_price_delta: Price | None | _NoValue = NO_VALUE,
+        display_quantity: Power | None | _NoValue = NO_VALUE,
         delivery_period: DeliveryPeriod | None = None,
-        valid_until: datetime | None | _Sentinel = NO_VALUE,
-        execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
+        valid_until: datetime | None | _NoValue = NO_VALUE,
+        execution_option: OrderExecutionOption | None | _NoValue = NO_VALUE,
         order_type: OrderType | None = None,
     ) -> None:
         """
@@ -423,34 +423,34 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             ValueError: If the parameters are invalid.
             NotImplementedError: If the order type is not supported.
         """
-        if not isinstance(price, _Sentinel) and price is not None:
+        if not isinstance(price, _NoValue) and price is not None:
             if price.amount < MIN_PRICE or price.amount > MAX_PRICE:
                 raise ValueError(f"Price must be between {MIN_PRICE} and {MAX_PRICE}.")
             validate_decimal_places(price.amount, PRECISION_DECIMAL_PRICE, "price")
-        if not isinstance(quantity, _Sentinel) and quantity is not None:
+        if not isinstance(quantity, _NoValue) and quantity is not None:
             if quantity.mw <= 0:
                 raise ValueError("Quantity must be strictly positive")
             if quantity.mw < MIN_QUANTITY_MW:
                 raise ValueError(f"Quantity must be at least {MIN_QUANTITY_MW} MW.")
             validate_decimal_places(quantity.mw, PRECISION_DECIMAL_QUANTITY, "quantity")
-        if not isinstance(stop_price, _Sentinel) and stop_price is not None:
+        if not isinstance(stop_price, _NoValue) and stop_price is not None:
             raise NotImplementedError(
                 "STOP_LIMIT orders are not supported yet, so stop_price cannot be set."
             )
-        if not isinstance(peak_price_delta, _Sentinel) and peak_price_delta is not None:
+        if not isinstance(peak_price_delta, _NoValue) and peak_price_delta is not None:
             raise NotImplementedError(
                 "ICEBERG orders are not supported yet, so peak_price_delta cannot be set."
             )
-        if not isinstance(display_quantity, _Sentinel) and display_quantity is not None:
+        if not isinstance(display_quantity, _NoValue) and display_quantity is not None:
             raise NotImplementedError(
                 "ICEBERG orders are not supported yet, so display_quantity cannot be set."
             )
         if delivery_period is not None:
             if delivery_period.start < datetime.now(timezone.utc):
                 raise ValueError("delivery_period must be in the future")
-        if not isinstance(valid_until, _Sentinel) and valid_until is not None:
+        if not isinstance(valid_until, _NoValue) and valid_until is not None:
             if (
-                not isinstance(execution_option, _Sentinel)
+                not isinstance(execution_option, _NoValue)
                 and execution_option is not None
             ):
                 if execution_option in [
@@ -565,15 +565,15 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         gridpool_id: int,
         *,
         order_id: int,
-        price: Price | None | _Sentinel = NO_VALUE,
-        quantity: Power | None | _Sentinel = NO_VALUE,
-        stop_price: Price | None | _Sentinel = NO_VALUE,
-        peak_price_delta: Price | None | _Sentinel = NO_VALUE,
-        display_quantity: Power | None | _Sentinel = NO_VALUE,
-        execution_option: OrderExecutionOption | None | _Sentinel = NO_VALUE,
-        valid_until: datetime | None | _Sentinel = NO_VALUE,
-        payload: dict[str, struct_pb2.Value] | None | _Sentinel = NO_VALUE,
-        tag: str | None | _Sentinel = NO_VALUE,
+        price: Price | None | _NoValue = NO_VALUE,
+        quantity: Power | None | _NoValue = NO_VALUE,
+        stop_price: Price | None | _NoValue = NO_VALUE,
+        peak_price_delta: Price | None | _NoValue = NO_VALUE,
+        display_quantity: Power | None | _NoValue = NO_VALUE,
+        execution_option: OrderExecutionOption | None | _NoValue = NO_VALUE,
+        valid_until: datetime | None | _NoValue = NO_VALUE,
+        payload: dict[str, struct_pb2.Value] | None | _NoValue = NO_VALUE,
+        tag: str | None | _NoValue = NO_VALUE,
         timeout: timedelta | None = None,
     ) -> OrderDetail:
         """
@@ -638,21 +638,21 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         update_mask = field_mask_pb2.FieldMask(paths=paths)
 
         update_order_fields = UpdateOrder(
-            price=None if isinstance(price, _Sentinel) else price,
-            quantity=None if isinstance(quantity, _Sentinel) else quantity,
-            stop_price=None if isinstance(stop_price, _Sentinel) else stop_price,
+            price=None if isinstance(price, _NoValue) else price,
+            quantity=None if isinstance(quantity, _NoValue) else quantity,
+            stop_price=None if isinstance(stop_price, _NoValue) else stop_price,
             peak_price_delta=(
-                None if isinstance(peak_price_delta, _Sentinel) else peak_price_delta
+                None if isinstance(peak_price_delta, _NoValue) else peak_price_delta
             ),
             display_quantity=(
-                None if isinstance(display_quantity, _Sentinel) else display_quantity
+                None if isinstance(display_quantity, _NoValue) else display_quantity
             ),
             execution_option=(
-                None if isinstance(execution_option, _Sentinel) else execution_option
+                None if isinstance(execution_option, _NoValue) else execution_option
             ),
-            valid_until=(None if isinstance(valid_until, _Sentinel) else valid_until),
-            payload=None if isinstance(payload, _Sentinel) else payload,
-            tag=None if isinstance(tag, _Sentinel) else tag,
+            valid_until=(None if isinstance(valid_until, _NoValue) else valid_until),
+            payload=None if isinstance(payload, _NoValue) else payload,
+            tag=None if isinstance(tag, _NoValue) else tag,
         )
 
         try:
