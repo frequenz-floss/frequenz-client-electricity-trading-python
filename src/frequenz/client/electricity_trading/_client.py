@@ -638,23 +638,21 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         update_mask = field_mask_pb2.FieldMask(paths=paths)
 
         update_order_fields = UpdateOrder(
-            price=None if price is NO_VALUE else price,  # type: ignore
-            quantity=None if quantity is NO_VALUE else quantity,  # type: ignore
-            stop_price=None if stop_price is NO_VALUE else stop_price,  # type: ignore
+            price=None if isinstance(price, _Sentinel) else price,
+            quantity=None if isinstance(quantity, _Sentinel) else quantity,
+            stop_price=None if isinstance(stop_price, _Sentinel) else stop_price,
             peak_price_delta=(
-                None if peak_price_delta is NO_VALUE else peak_price_delta  # type: ignore
+                None if isinstance(peak_price_delta, _Sentinel) else peak_price_delta
             ),
             display_quantity=(
-                None if display_quantity is NO_VALUE else display_quantity  # type: ignore
+                None if isinstance(display_quantity, _Sentinel) else display_quantity
             ),
             execution_option=(
-                None if execution_option is NO_VALUE else execution_option  # type: ignore
+                None if isinstance(execution_option, _Sentinel) else execution_option
             ),
-            valid_until=(
-                None if valid_until is NO_VALUE else valid_until  # type: ignore
-            ),
-            payload=None if payload is NO_VALUE else payload,  # type: ignore
-            tag=None if tag is NO_VALUE else tag,  # type: ignore
+            valid_until=(None if isinstance(valid_until, _Sentinel) else valid_until),
+            payload=None if isinstance(payload, _Sentinel) else payload,
+            tag=None if isinstance(tag, _Sentinel) else tag,
         )
 
         try:
