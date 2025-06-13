@@ -1959,6 +1959,9 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
     delivery_period: DeliveryPeriod
     """The delivery period for the contract."""
 
+    type: OrderType | None
+    """The type of order (e.g., LIMIT, STOP_LIMIT, ICEBERG)."""
+
     side: MarketSide
     """Indicates if the order is on the Buy or Sell side of the market."""
 
@@ -2007,11 +2010,17 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
             if public_order.HasField("execution_option")
             else None
         )
+        order_type = (
+            OrderType.from_pb(public_order.type)
+            if public_order.HasField("type")
+            else None
+        )
 
         return cls(
             public_order_id=public_order.id,
             delivery_area=DeliveryArea.from_pb(public_order.delivery_area),
             delivery_period=DeliveryPeriod.from_pb(public_order.delivery_period),
+            type=order_type,
             side=MarketSide.from_pb(public_order.side),
             price=Price.from_pb(public_order.price),
             quantity=Power.from_pb(public_order.quantity),

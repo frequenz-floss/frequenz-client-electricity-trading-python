@@ -179,6 +179,7 @@ PUBLIC_ORDER = PublicOrder(
     public_order_id=42,
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
     delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    type=OrderType.LIMIT,
     side=MarketSide.BUY,
     price=Price(amount=Decimal("100.00"), currency=Currency.EUR),
     quantity=Power(mw=Decimal("5.00")),
@@ -196,6 +197,7 @@ PUBLIC_ORDER_PB = electricity_trading_pb2.PublicOrderBookRecord(
         start=START_TIME_PB,
         duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
     ),
+    type=electricity_trading_pb2.OrderType.ORDER_TYPE_LIMIT,
     side=electricity_trading_pb2.MarketSide.MARKET_SIDE_BUY,
     price=price_pb2.Price(
         amount=decimal_pb2.Decimal(value="100.00"),
