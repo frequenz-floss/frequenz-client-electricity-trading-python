@@ -1,17 +1,14 @@
 # Frequenz Electricity Trading API Client Release Notes
 
-## Summary
-
-<!-- Here goes a general summary of what this release is about -->
-
 ## Upgrading
 
-- The client interface now requires that other than the `gridpool_id`, all parameters to client methods are kw-only, and can't be specified as positional arguments.
+- The minimum allowed version of `protobuf` and `grpcio` has been updated to 6.31.1 and 1.72.1 respectively.
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+- Updated to `v0.8.0` of the Electricity Trading API.
+- Updated to `v0.11.0` of the base client library.
 
 ## Bug Fixes
 
-- Usage examples have been fixed.
+- Added `OrderType` field to `PublicOrder` class.
