@@ -161,10 +161,14 @@ def dt_to_pb_timestamp_utc(dt: datetime) -> Timestamp:
 class Client(BaseApiClient[ElectricityTradingServiceStub]):
     """Electricity trading client."""
 
-    _instances: dict[tuple[str, str | None], "Client"] = {}
+    _instances: dict[tuple[str, str | None, str | None], "Client"] = {}
 
     def __new__(
-        cls, server_url: str, connect: bool = True, auth_key: str | None = None
+        cls,
+        server_url: str,
+        connect: bool = True,
+        auth_key: str | None = None,
+        sign_secret: str | None = None,
     ) -> "Client":
         """
         Create a new instance of the client or return an existing one if it already exists.
@@ -173,11 +177,12 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             server_url: The URL of the Electricity Trading service.
             connect: Whether to connect to the server immediately.
             auth_key: The API key for the authorization.
+            sign_secret: The cryptographic secret to use for HMAC generation.
 
         Returns:
             The client instance.
         """
-        key = (server_url, auth_key)
+        key = (server_url, auth_key, sign_secret)
 
         # Check if an instance already exists for this key
         if key not in cls._instances:
@@ -188,7 +193,11 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         return cls._instances[key]
 
     def __init__(
-        self, server_url: str, connect: bool = True, auth_key: str | None = None
+        self,
+        server_url: str,
+        connect: bool = True,
+        auth_key: str | None = None,
+        sign_secret: str | None = None,
     ) -> None:
         """Initialize the client.
 
@@ -196,6 +205,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             server_url: The URL of the Electricity Trading service.
             connect: Whether to connect to the server immediately.
             auth_key: The API key for the authorization.
+            sign_secret: The cryptographic secret to use for HMAC generation.
         """
         if not hasattr(
             self, "_initialized"
@@ -204,6 +214,8 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 server_url,
                 connect=connect,
                 create_stub=ElectricityTradingServiceStub,
+                auth_key=auth_key,
+                sign_secret=sign_secret,
             )
             self._initialized = True
 
@@ -235,8 +247,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                 list[PublicOrder],
             ],
         ] = {}
-
-        self._metadata = (("key", auth_key),) if auth_key else ()
 
     @property
     def stub(self) -> electricity_trading_pb2_grpc.ElectricityTradingServiceAsyncStub:
@@ -311,7 +321,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                             gridpool_id=gridpool_id,
                             filter=gridpool_order_filter.to_pb(),
                         ),
-                        metadata=self._metadata,
                     ),
                     lambda response: OrderDetail.from_pb(response.order_detail),
                 )
@@ -376,7 +385,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                             gridpool_id=gridpool_id,
                             filter=gridpool_trade_filter.to_pb(),
                         ),
-                        metadata=self._metadata,
                     ),
                     lambda response: Trade.from_pb(response.trade),
                 )
@@ -549,7 +557,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.CreateGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order=order.to_pb()
                     ),
-                    metadata=self._metadata,
                     timeout=timeout,
                 ),
             )
@@ -666,7 +673,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                         update_order_fields=update_order_fields.to_pb(),
                         update_mask=update_mask,
                     ),
-                    metadata=self._metadata,
                     timeout=timeout,
                 ),
             )
@@ -705,7 +711,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.CancelGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
                     ),
-                    metadata=self._metadata,
                     timeout=timeout,
                 ),
             )
@@ -741,7 +746,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.CancelAllGridpoolOrdersRequest(
                         gridpool_id=gridpool_id
                     ),
-                    metadata=self._metadata,
                     timeout=timeout,
                 ),
             )
@@ -782,7 +786,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     electricity_trading_pb2.GetGridpoolOrderRequest(
                         gridpool_id=gridpool_id, order_id=order_id
                     ),
-                    metadata=self._metadata,
                     timeout=timeout,
                 ),
             )
@@ -848,7 +851,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     grpc_call_with_timeout(
                         self.stub.ListGridpoolOrders,
                         request,
-                        metadata=self._metadata,
                         timeout=timeout,
                     ),
                 )
@@ -926,7 +928,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                     grpc_call_with_timeout(
                         self.stub.ListGridpoolTrades,
                         request,
-                        metadata=self._metadata,
                         timeout=timeout,
                     ),
                 )
@@ -1010,7 +1011,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                                     dt_to_pb_timestamp(end_time) if end_time else None
                                 ),
                             ),
-                            metadata=self._metadata,
                         ),
                         lambda response: PublicTrade.from_pb(response.public_trade),
                     )
@@ -1071,7 +1071,6 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
                                 start_time=start_time_utc,
                                 end_time=end_time_utc,
                             ),
-                            metadata=self._metadata,
                         ),
                         lambda response: [
                             PublicOrder.from_pb(public_order)

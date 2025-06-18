@@ -41,24 +41,26 @@ def check_delivery_start(
         raise ValueError("Delivery period must be a multiple of `duration`.")
 
 
-async def receive_public_trades(
+async def receive_public_trades(  # pylint: disable=too-many-arguments
     url: str,
-    key: str,
+    auth_key: str,
     *,
     delivery_start: datetime | None = None,
     start: datetime | None = None,
     end: datetime | None = None,
+    sign_secret: str | None = None,
 ) -> None:
     """List trades and stream new public trades.
 
     Args:
         url: URL of the trading API.
-        key: API key.
+        auth_key: API key.
         delivery_start: Start of the delivery period or None.
         start: First execution time to list trades from.
         end: Last execution time to list trades until.
+        sign_secret: The cryptographic secret to use for HMAC generation.
     """
-    client = Client(server_url=url, auth_key=key)
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
     print_public_trade_header()
 
@@ -80,7 +82,12 @@ async def receive_public_trades(
 
 
 async def list_gridpool_trades(
-    url: str, key: str, gid: int, *, delivery_start: datetime
+    url: str,
+    auth_key: str,
+    gid: int,
+    *,
+    delivery_start: datetime,
+    sign_secret: str | None = None,
 ) -> None:
     """List gridpool trades and stream new gridpool trades.
 
@@ -88,11 +95,12 @@ async def list_gridpool_trades(
 
     Args:
         url: URL of the trading API.
-        key: API key.
+        auth_key: API key.
         gid: Gridpool ID.
         delivery_start: Start of the delivery period or None.
+        sign_secret: The cryptographic secret to use for HMAC generation.
     """
-    client = Client(server_url=url, auth_key=key)
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
     print_trade_header()
 
@@ -120,7 +128,12 @@ async def list_gridpool_trades(
 
 
 async def list_gridpool_orders(
-    url: str, key: str, *, delivery_start: datetime, gid: int
+    url: str,
+    auth_key: str,
+    *,
+    delivery_start: datetime,
+    gid: int,
+    sign_secret: str | None = None,
 ) -> None:
     """List orders and stream new gridpool orders.
 
@@ -133,11 +146,12 @@ async def list_gridpool_orders(
 
     Args:
         url: URL of the trading API.
-        key: API key.
+        auth_key: API key.
         delivery_start: Start of the delivery period or None.
         gid: Gridpool ID.
+        sign_secret: The cryptographic secret to use for HMAC generation.
     """
-    client = Client(server_url=url, auth_key=key)
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
     print_order_header()
 
@@ -167,7 +181,7 @@ async def list_gridpool_orders(
 # pylint: disable=too-many-arguments
 async def create_order(
     url: str,
-    key: str,
+    auth_key: str,
     *,
     gid: int,
     delivery_start: datetime,
@@ -176,6 +190,7 @@ async def create_order(
     quantity_mw: str,
     currency: str,
     duration: timedelta,
+    sign_secret: str | None = None,
 ) -> None:
     """Create a limit order for a given price and quantity (in MW).
 
@@ -185,7 +200,7 @@ async def create_order(
 
     Args:
         url: URL of the trading API.
-        key: API key.
+        auth_key: API key.
         gid: Gridpool ID.
         delivery_start: Start of the delivery period.
         delivery_area: Delivery area code.
@@ -193,8 +208,9 @@ async def create_order(
         quantity_mw: Quantity in MW, positive for buy orders and negative for sell orders.
         currency: Currency of the price.
         duration: Duration of the delivery period.
+        sign_secret: The cryptographic secret to use for HMAC generation.
     """
-    client = Client(server_url=url, auth_key=key)
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
     side = MarketSide.SELL if quantity_mw[0] == "-" else MarketSide.BUY
     quantity = Power(mw=Decimal(quantity_mw.lstrip("-")))
@@ -222,7 +238,12 @@ async def create_order(
 
 
 async def cancel_order(
-    url: str, key: str, *, gridpool_id: int, order_id: int | None
+    url: str,
+    auth_key: str,
+    *,
+    gridpool_id: int,
+    order_id: int | None,
+    sign_secret: str | None = None,
 ) -> None:
     """Cancel an order by order ID.
 
@@ -230,11 +251,12 @@ async def cancel_order(
 
     Args:
         url: URL of the trading API.
-        key: API key.
+        auth_key: API key.
         gridpool_id: Gridpool ID.
         order_id: Order ID to cancel or None to cancel all orders.
+        sign_secret: The cryptographic secret to use for HMAC generation.
     """
-    client = Client(server_url=url, auth_key=key)
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
     if order_id is None:
         await client.cancel_all_gridpool_orders(gridpool_id)
     else:
