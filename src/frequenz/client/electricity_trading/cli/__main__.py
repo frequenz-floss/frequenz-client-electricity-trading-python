@@ -46,48 +46,88 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--delivery-start", default=None, type=iso)
 @click.option("--start", default=None, type=iso)
 @click.option("--end", default=None, type=iso)
-def receive_public_trades(
-    url: str, key: str, *, start: datetime, end: datetime, delivery_start: datetime
+@click.option("--sign_secret", default=None, type=str)
+def receive_public_trades(  # pylint: disable=too-many-arguments
+    url: str,
+    auth_key: str,
+    *,
+    start: datetime,
+    end: datetime,
+    delivery_start: datetime,
+    sign_secret: str | None = None,
 ) -> None:
     """List and/or stream public trades."""
     asyncio.run(
         run_receive_public_trades(
-            url=url, key=key, delivery_start=delivery_start, start=start, end=end
+            url=url,
+            auth_key=auth_key,
+            delivery_start=delivery_start,
+            start=start,
+            end=end,
+            sign_secret=sign_secret,
         )
     )
 
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
 @click.option("--start", default=None, type=iso)
-def receive_gridpool_trades(url: str, key: str, gid: int, *, start: datetime) -> None:
+@click.option("--sign_secret", default=None, type=str)
+def receive_gridpool_trades(
+    url: str,
+    auth_key: str,
+    gid: int,
+    *,
+    start: datetime,
+    sign_secret: str | None = None,
+) -> None:
     """List and/or stream gridpool trades."""
     asyncio.run(
-        run_list_gridpool_trades(url=url, key=key, gid=gid, delivery_start=start)
+        run_list_gridpool_trades(
+            url=url,
+            auth_key=auth_key,
+            gid=gid,
+            delivery_start=start,
+            sign_secret=sign_secret,
+        )
     )
 
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--start", default=None, type=iso)
 @click.option("--gid", required=True, type=int)
-def receive_gridpool_orders(url: str, key: str, *, start: datetime, gid: int) -> None:
+@click.option("--sign_secret", default=None, type=str)
+def receive_gridpool_orders(
+    url: str,
+    auth_key: str,
+    *,
+    start: datetime,
+    gid: int,
+    sign_secret: str | None = None,
+) -> None:
     """List and/or stream gridpool orders."""
     asyncio.run(
-        run_list_gridpool_orders(url=url, key=key, delivery_start=start, gid=gid)
+        run_list_gridpool_orders(
+            url=url,
+            auth_key=auth_key,
+            delivery_start=start,
+            gid=gid,
+            sign_secret=sign_secret,
+        )
     )
 
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--start", required=True, type=iso)
 @click.option("--gid", required=True, type=int)
 @click.option("--quantity", required=True, type=str)
@@ -95,10 +135,11 @@ def receive_gridpool_orders(url: str, key: str, *, start: datetime, gid: int) ->
 @click.option("--area", required=True, type=str)
 @click.option("--currency", default="EUR", type=str)
 @click.option("--duration", default=900, type=int)
+@click.option("--sign_secret", default=None, type=str)
 def create_order(
     # pylint: disable=too-many-arguments
     url: str,
-    key: str,
+    auth_key: str,
     *,
     start: datetime,
     gid: int,
@@ -107,6 +148,7 @@ def create_order(
     area: str,
     currency: str,
     duration: int,
+    sign_secret: str | None = None,
 ) -> None:
     """Create an order.
 
@@ -118,7 +160,7 @@ def create_order(
     asyncio.run(
         run_create_order(
             url=url,
-            key=key,
+            auth_key=auth_key,
             delivery_start=start,
             gid=gid,
             quantity_mw=quantity,
@@ -126,27 +168,50 @@ def create_order(
             delivery_area=area,
             currency=currency,
             duration=timedelta(seconds=duration),
+            sign_secret=sign_secret,
         )
     )
 
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
 @click.option("--order", required=True, type=int)
-def cancel_order(url: str, key: str, gid: int, order: int) -> None:
+@click.option("--sign_secret", default=None, type=str)
+def cancel_order(
+    url: str, auth_key: str, gid: int, order: int, sign_secret: str | None = None
+) -> None:
     """Cancel an order."""
-    asyncio.run(run_cancel_order(url=url, key=key, gridpool_id=gid, order_id=order))
+    asyncio.run(
+        run_cancel_order(
+            url=url,
+            auth_key=auth_key,
+            gridpool_id=gid,
+            order_id=order,
+            sign_secret=sign_secret,
+        )
+    )
 
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--key", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
-def cancel_all_orders(url: str, key: str, gid: int) -> None:
+@click.option("--sign_secret", default=None, type=str)
+def cancel_all_orders(
+    url: str, auth_key: str, gid: int, sign_secret: str | None = None
+) -> None:
     """Cancel all orders for a gridpool ID."""
-    asyncio.run(run_cancel_order(url=url, key=key, gridpool_id=gid, order_id=None))
+    asyncio.run(
+        run_cancel_order(
+            url=url,
+            auth_key=auth_key,
+            gridpool_id=gid,
+            order_id=None,
+            sign_secret=sign_secret,
+        )
+    )
 
 
 @cli.command()
