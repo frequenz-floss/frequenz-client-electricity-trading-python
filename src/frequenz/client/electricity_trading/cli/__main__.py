@@ -23,6 +23,9 @@ from frequenz.client.electricity_trading.cli.etrading import (
     list_gridpool_trades as run_list_gridpool_trades,
 )
 from frequenz.client.electricity_trading.cli.etrading import (
+    receive_public_orders as run_receive_public_orders,
+)
+from frequenz.client.electricity_trading.cli.etrading import (
     receive_public_trades as run_receive_public_trades,
 )
 
@@ -63,6 +66,35 @@ def receive_public_trades(  # pylint: disable=too-many-arguments
     """List and/or stream public trades."""
     asyncio.run(
         run_receive_public_trades(
+            url=url,
+            auth_key=auth_key,
+            delivery_start=delivery_start,
+            start=start,
+            end=end,
+            sign_secret=sign_secret,
+        )
+    )
+
+
+@cli.command()
+@click.option("--url", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
+@click.option("--delivery-start", default=None, type=iso)
+@click.option("--start", default=None, type=iso)
+@click.option("--end", default=None, type=iso)
+@click.option("--sign_secret", default=None, type=str)
+def receive_public_orders(  # pylint: disable=too-many-arguments
+    url: str,
+    auth_key: str,
+    *,
+    start: datetime,
+    end: datetime,
+    delivery_start: datetime,
+    sign_secret: str | None = None,
+) -> None:
+    """List and/or stream public trades."""
+    asyncio.run(
+        run_receive_public_orders(
             url=url,
             auth_key=auth_key,
             delivery_start=delivery_start,
