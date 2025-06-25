@@ -20,6 +20,7 @@ from frequenz.client.electricity_trading import (
     OrderType,
     Power,
     Price,
+    PublicOrder,
     PublicTrade,
     Trade,
 )
@@ -79,6 +80,47 @@ async def receive_public_trades(  # pylint: disable=too-many-arguments
     )
     async for trade in stream.new_receiver():
         print_public_trade(trade)
+
+
+async def receive_public_orders(  # pylint: disable=too-many-arguments
+    url: str,
+    auth_key: str,
+    *,
+    delivery_start: datetime | None = None,
+    start: datetime | None = None,
+    end: datetime | None = None,
+    sign_secret: str | None = None,
+) -> None:
+    """List trades and stream new public trades.
+
+    Args:
+        url: URL of the trading API.
+        auth_key: API key.
+        delivery_start: Start of the delivery period or None.
+        start: First execution time to list trades from.
+        end: Last execution time to list trades until.
+        sign_secret: The cryptographic secret to use for HMAC generation.
+    """
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
+
+    print_public_orders_header()
+
+    delivery_period = None
+    # If delivery period is selected, list historical trades also
+    if delivery_start is not None:
+        check_delivery_start(delivery_start)
+        delivery_period = DeliveryPeriod(
+            start=delivery_start,
+            duration=timedelta(minutes=15),
+        )
+    stream = client.receive_public_order_book(
+        delivery_period=delivery_period,
+        start_time=start,
+        end_time=end,
+    )
+    async for orders in stream.new_receiver():
+        for order in orders:
+            print_public_order(order)
 
 
 async def list_gridpool_trades(
@@ -297,6 +339,44 @@ def print_public_trade(trade: PublicTrade) -> None:
         trade.price.currency,
         trade.price.amount,
         trade.state,
+    )
+    print(",".join(v.name if isinstance(v, Enum) else str(v) for v in values))
+
+
+def print_public_orders_header() -> None:
+    """Print public order header in CSV format."""
+    header = (
+        "public_order_id,"
+        "create_time,"
+        "update_time,"
+        "delivery_period_start,"
+        "delivery_period_duration,"
+        "delivery_area_code,"
+        "quantity_mw,"
+        "side,"
+        "price_amount,"
+        "price_currency,"
+        "type,"
+        "execution_option"
+    )
+    print(header)
+
+
+def print_public_order(order: PublicOrder) -> None:
+    """Print public order details to stdout in CSV format."""
+    values = (
+        order.public_order_id,
+        order.create_time.isoformat(),
+        order.update_time.isoformat(),
+        order.delivery_period.start.isoformat(),
+        order.delivery_period.duration,
+        order.delivery_area.code,
+        order.quantity.mw,
+        order.side,
+        order.price.amount,
+        order.price.currency,
+        order.type,
+        order.execution_option,
     )
     print(",".join(v.name if isinstance(v, Enum) else str(v) for v in values))
 
