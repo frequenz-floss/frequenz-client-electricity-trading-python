@@ -402,16 +402,17 @@ async def test_stream_public_trades(set_up: dict[str, Any]) -> None:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
 
 
-async def test_stream_gridpool_trades(set_up: dict[str, Any]) -> None:
-    """Test stream gridpool trades."""
-    stream = await set_up["client"].stream_gridpool_trades(GRIDPOOL_ID)
+async def test_gridpool_trades_stream(set_up: dict[str, Any]) -> None:
+    """Test gridpool trades stream."""
+    stream = set_up["client"].gridpool_trades_stream(GRIDPOOL_ID)
+    receiver = stream.new_receiver()
 
     # Create identical orders on opposite sides to try to trigger a trade
     await create_test_trade(set_up)
 
     try:
         # Stream trades with a 15-second timeout to avoid indefinite hanging
-        streamed_trade = await asyncio.wait_for(anext(stream), timeout=15)
+        streamed_trade = await asyncio.wait_for(anext(receiver), timeout=15)
         assert streamed_trade is not None, "Failed to receive streamed trade"
     except asyncio.TimeoutError:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
