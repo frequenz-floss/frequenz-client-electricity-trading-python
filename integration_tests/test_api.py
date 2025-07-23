@@ -390,13 +390,14 @@ async def test_gridpool_orders_stream(set_up: dict[str, Any]) -> None:
         pytest.fail("Streaming timed out, no order received in 15 seconds")
 
 
-async def test_stream_public_trades(set_up: dict[str, Any]) -> None:
-    """Test stream public trades."""
-    stream = await set_up["client"].stream_public_trades()
+async def test_receive_public_trades(set_up: dict[str, Any]) -> None:
+    """Test receive public trades."""
+    stream = set_up["client"].receive_public_trades()
+    receiver = stream.new_receiver()
 
     try:
         # Stream trades with a 15-second timeout to avoid indefinite hanging
-        streamed_trade = await asyncio.wait_for(anext(stream), timeout=15)
+        streamed_trade = await asyncio.wait_for(anext(receiver), timeout=15)
         assert streamed_trade is not None, "Failed to receive streamed trade"
     except asyncio.TimeoutError:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
