@@ -372,14 +372,16 @@ async def test_list_public_trades(set_up: dict[str, Any]) -> None:
     assert len(public_trades) == 10, "Failed to retrieve 10 public trades"
 
 
-async def test_stream_gridpool_orders(set_up: dict[str, Any]) -> None:
-    """Test streaming gridpool orders."""
-    stream = await set_up["client"].stream_gridpool_orders(GRIDPOOL_ID)
+async def test_gridpool_orders_stream(set_up: dict[str, Any]) -> None:
+    """Test gridpool orders stream."""
+    stream = set_up["client"].gridpool_orders_stream(GRIDPOOL_ID)
+    receiver = stream.new_receiver()
+
     test_order = await create_test_order(set_up)
 
     try:
         # Stream trades with a 15-second timeout to avoid indefinite hanging
-        streamed_order = await asyncio.wait_for(anext(stream), timeout=15)
+        streamed_order = await asyncio.wait_for(anext(receiver), timeout=15)
         assert streamed_order is not None, "Failed to receive streamed order."
         assert (
             streamed_order.order == test_order.order
@@ -576,20 +578,23 @@ async def test_multiple_streams_different_filters(set_up: dict[str, Any]) -> Non
         code="10YDE-RWENET---I", code_type=EnergyMarketCodeType.EUROPE_EIC
     )
 
-    stream_1 = await set_up["client"].stream_gridpool_orders(
+    stream_1 = set_up["client"].gridpool_orders_stream(
         GRIDPOOL_ID, delivery_area=area_1
     )
-    stream_2 = await set_up["client"].stream_gridpool_orders(
+    receiver_1 = stream_1.new_receiver()
+
+    stream_2 = set_up["client"].gridpool_orders_stream(
         GRIDPOOL_ID, delivery_area=area_2
     )
+    receiver_2 = stream_2.new_receiver()
 
     # Create orders in each area to see if they appear on correct streams
     order_1 = await create_test_order(set_up, delivery_area=area_1)
     order_2 = await create_test_order(set_up, delivery_area=area_2)
 
     try:
-        streamed_order_1 = await asyncio.wait_for(anext(stream_1), timeout=15)
-        streamed_order_2 = await asyncio.wait_for(anext(stream_2), timeout=15)
+        streamed_order_1 = await asyncio.wait_for(anext(receiver_1), timeout=15)
+        streamed_order_2 = await asyncio.wait_for(anext(receiver_2), timeout=15)
 
         assert (
             streamed_order_1.order == order_1.order
