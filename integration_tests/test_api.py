@@ -599,11 +599,3 @@ async def test_multiple_streams_different_filters(set_up: dict[str, Any]) -> Non
         ), "Streamed order does not match area-specific order in stream 2"
     except asyncio.TimeoutError:
         pytest.fail("Failed to receive streamed orders within timeout")
-
-
-@pytest.fixture(scope="session")
-def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
-    """Create an event loop for the tests."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
