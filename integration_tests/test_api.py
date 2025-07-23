@@ -46,6 +46,11 @@ async def set_up() -> dict[str, Any]:
         server_url=SERVER_URL,
         auth_key=API_KEY,
     )
+    # The gRPC client is a singleton and its internal state can be corrupted
+    # when used concurrently from multiple async contexts. Reconnecting
+    # ensures that the client is in a clean state for each test.
+    await client.disconnect()
+    client.connect()
 
     delivery_area = DeliveryArea(
         code="10YDE-EON------1", code_type=EnergyMarketCodeType.EUROPE_EIC
