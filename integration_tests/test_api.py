@@ -150,7 +150,7 @@ async def test_create_and_get_order(set_up: dict[str, Any]) -> None:
 
     # Fetch order to check it exists remotely
     fetched_order = await set_up["client"].get_gridpool_order(
-        GRIDPOOL_ID, order.order_id
+        GRIDPOOL_ID, order_id=order.order_id
     )
 
     assert fetched_order.order == order.order, "Order mismatch"
@@ -246,7 +246,7 @@ async def test_update_order_price(set_up: dict[str, Any]) -> None:
 
     assert updated_order.order.price.amount == new_price.amount, "Price update failed"
     fetched_order = await set_up["client"].get_gridpool_order(
-        GRIDPOOL_ID, order.order_id
+        GRIDPOOL_ID, order_id=order.order_id
     )
     assert (
         fetched_order.order.price.amount == updated_order.order.price.amount
@@ -282,12 +282,12 @@ async def test_cancel_order(set_up: dict[str, Any]) -> None:
 
     # Cancel the created order and ensure it's cancelled
     cancelled_order = await set_up["client"].cancel_gridpool_order(
-        GRIDPOOL_ID, order.order_id
+        GRIDPOOL_ID, order_id=order.order_id
     )
     assert cancelled_order.order_id == order.order_id, "Order cancellation failed"
 
     fetched_order = await set_up["client"].get_gridpool_order(
-        GRIDPOOL_ID, order.order_id
+        GRIDPOOL_ID, order_id=order.order_id
     )
     assert (
         fetched_order.state_detail.state == OrderState.CANCELED
@@ -300,7 +300,7 @@ async def test_update_cancelled_order_failure(set_up: dict[str, Any]) -> None:
     order = await create_test_order(set_up)
 
     # Cancel the created order
-    await set_up["client"].cancel_gridpool_order(GRIDPOOL_ID, order.order_id)
+    await set_up["client"].cancel_gridpool_order(GRIDPOOL_ID, order_id=order.order_id)
 
     # Expected failure as cancelled order cannot be updated
     with pytest.raises(grpc.aio.AioRpcError) as excinfo:
@@ -448,7 +448,9 @@ async def test_cancel_non_existent_order(set_up: dict[str, Any]) -> None:
     """Test canceling a non-existent order and expecting an error."""
     non_existent_order_id = 999999
     with pytest.raises(grpc.aio.AioRpcError) as excinfo:
-        await set_up["client"].cancel_gridpool_order(GRIDPOOL_ID, non_existent_order_id)
+        await set_up["client"].cancel_gridpool_order(
+            GRIDPOOL_ID, order_id=non_existent_order_id
+        )
     assert (
         excinfo.value.code() == grpc.StatusCode.UNAVAILABLE
     ), "Cancelling non-existent order should return an error"
@@ -457,10 +459,10 @@ async def test_cancel_non_existent_order(set_up: dict[str, Any]) -> None:
 async def test_cancel_already_cancelled_order(set_up: dict[str, Any]) -> None:
     """Test cancelling an order twice to ensure idempotent behavior."""
     order = await create_test_order(set_up)
-    await set_up["client"].cancel_gridpool_order(GRIDPOOL_ID, order.order_id)
+    await set_up["client"].cancel_gridpool_order(GRIDPOOL_ID, order_id=order.order_id)
     with pytest.raises(grpc.aio.AioRpcError) as excinfo:
         cancelled_order = await set_up["client"].cancel_gridpool_order(
-            GRIDPOOL_ID, order.order_id
+            GRIDPOOL_ID, order_id=order.order_id
         )
     assert (
         excinfo.value.code() == grpc.StatusCode.INVALID_ARGUMENT
@@ -548,7 +550,7 @@ async def test_concurrent_cancel_and_update_order(set_up: dict[str, Any]) -> Non
     new_price = Price(amount=Decimal("50"), currency=Currency.EUR)
 
     cancelled_order = await set_up["client"].cancel_gridpool_order(
-        GRIDPOOL_ID, order.order_id
+        GRIDPOOL_ID, order_id=order.order_id
     )
 
     with pytest.raises(grpc.aio.AioRpcError) as excinfo:
