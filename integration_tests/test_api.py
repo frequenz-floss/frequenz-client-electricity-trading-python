@@ -317,6 +317,9 @@ async def test_update_cancelled_order_failure(set_up: dict[str, Any]) -> None:
     ), "Expected INVALID_ARGUMENT error"
 
 
+@pytest.mark.skip(
+    reason="Broken endpoint, see https://github.com/frequenz-floss/frequenz-client-electricity-trading-python/issues/162"
+)
 async def test_cancel_all_orders(set_up: dict[str, Any]) -> None:
     """Test cancelling all orders."""
     # Create multiple orders
