@@ -14,4 +14,4 @@
 
 ## Bug Fixes
 
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+* Fixed a public order book stream bug where a stream was reused for requests with different start and stop time parameters.
