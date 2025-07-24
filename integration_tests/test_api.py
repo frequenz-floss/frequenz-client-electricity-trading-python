@@ -352,26 +352,6 @@ async def test_list_gridpool_trades(set_up: dict[str, Any]) -> None:
     assert len(trades) >= 1
 
 
-async def test_list_public_trades(set_up: dict[str, Any]) -> None:
-    """Test listing public trades."""
-    delivery_period = DeliveryPeriod(
-        start=datetime.fromisoformat("2024-06-10T10:00:00+00:00"),
-        duration=timedelta(minutes=15),
-    )
-
-    public_trades = []
-    counter = 0
-    async for trade in set_up["client"].list_public_trades(
-        delivery_period=delivery_period
-    ):
-        public_trades.append(trade)
-        counter += 1
-        if counter == 10:
-            break
-
-    assert len(public_trades) == 10, "Failed to retrieve 10 public trades"
-
-
 async def test_gridpool_orders_stream(set_up: dict[str, Any]) -> None:
     """Test gridpool orders stream."""
     stream = set_up["client"].gridpool_orders_stream(GRIDPOOL_ID)
@@ -401,6 +381,35 @@ async def test_receive_public_trades(set_up: dict[str, Any]) -> None:
         assert streamed_trade is not None, "Failed to receive streamed trade"
     except asyncio.TimeoutError:
         pytest.fail("Streaming timed out, no trade received in 15 seconds")
+
+
+async def test_receive_public_trades_filter(set_up: dict[str, Any]) -> None:
+    """Test receive public trades with filter set."""
+    start_time = datetime.now(timezone.utc).replace(second=0, microsecond=0)
+    start_time += timedelta(minutes=30 - start_time.minute % 15)  # next 15-minute mark
+
+    delivery_period = DeliveryPeriod(start=start_time, duration=timedelta(minutes=15))
+
+    price = Price(amount=Decimal("808"), currency=Currency.EUR)
+
+    stream = set_up["client"].receive_public_trades(
+        delivery_period=delivery_period,
+    )
+    receiver = stream.new_receiver()
+
+    _ = await create_test_order(
+        set_up, delivery_period=delivery_period, side=MarketSide.BUY, price=price
+    )
+    _ = await create_test_order(
+        set_up, delivery_period=delivery_period, side=MarketSide.SELL, price=price
+    )
+
+    try:
+        public_trade = await asyncio.wait_for(anext(receiver), timeout=15)
+        assert public_trade, "Failed to receive public trade"
+        assert public_trade.delivery_period.start == delivery_period.start
+    except asyncio.TimeoutError:
+        pytest.fail("Streaming timed out, no public trade received in 15 seconds")
 
 
 async def test_gridpool_trades_stream(set_up: dict[str, Any]) -> None:
