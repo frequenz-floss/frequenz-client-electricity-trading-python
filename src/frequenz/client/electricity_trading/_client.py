@@ -241,7 +241,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         ] = {}
 
         self._public_orders_streams: dict[
-            PublicOrderBookFilter,
+            tuple[
+                PublicOrderBookFilter, tuple[int, int] | None, tuple[int, int] | None
+            ],
             GrpcStreamBroadcaster[
                 electricity_trading_pb2.ReceivePublicOrderBookStreamResponse,
                 list[PublicOrder],
@@ -1057,28 +1059,35 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         start_time_utc = dt_to_pb_timestamp_utc(start_time) if start_time else None
         end_time_utc = dt_to_pb_timestamp_utc(end_time) if end_time else None
 
+        # We are caching requests to Enable Efficient Reuse and Resource Management.
+        # The following cache key contains all fields of a `ReceivePublicOrderBookStreamRequest`
+        # to ensure that the stream is unique for each combination of parameters.
+        cache_key = (
+            public_order_filter,
+            (start_time_utc.seconds, start_time_utc.nanos) if start_time_utc else None,
+            (end_time_utc.seconds, end_time_utc.nanos) if end_time_utc else None,
+        )
+
         if (
-            public_order_filter not in self._public_orders_streams
-            or not self._public_orders_streams[public_order_filter].is_running
+            cache_key not in self._public_orders_streams
+            or not self._public_orders_streams[cache_key].is_running
         ):
             try:
-                self._public_orders_streams[public_order_filter] = (
-                    GrpcStreamBroadcaster(
-                        f"electricity-trading-{public_order_filter}",
-                        lambda: self.stub.ReceivePublicOrderBookStream(
-                            electricity_trading_pb2.ReceivePublicOrderBookStreamRequest(
-                                filter=public_order_filter.to_pb(),
-                                start_time=start_time_utc,
-                                end_time=end_time_utc,
-                            ),
+                self._public_orders_streams[cache_key] = GrpcStreamBroadcaster(
+                    f"electricity-trading-{cache_key}",
+                    lambda: self.stub.ReceivePublicOrderBookStream(
+                        electricity_trading_pb2.ReceivePublicOrderBookStreamRequest(
+                            filter=public_order_filter.to_pb(),
+                            start_time=start_time_utc,
+                            end_time=end_time_utc,
                         ),
-                        lambda response: [
-                            PublicOrder.from_pb(public_order)
-                            for public_order in response.public_order_book_records
-                        ],
-                    )
+                    ),
+                    lambda response: [
+                        PublicOrder.from_pb(public_order)
+                        for public_order in response.public_order_book_records
+                    ],
                 )
             except grpc.RpcError as e:
                 _logger.exception("Error occurred while streaming public orders: %s", e)
                 raise
-        return self._public_orders_streams[public_order_filter]
+        return self._public_orders_streams[cache_key]
