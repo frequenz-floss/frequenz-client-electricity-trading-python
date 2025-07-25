@@ -1059,6 +1059,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         start_time_utc = dt_to_pb_timestamp_utc(start_time) if start_time else None
         end_time_utc = dt_to_pb_timestamp_utc(end_time) if end_time else None
 
+        # We are caching requests to Enable Efficient Reuse and Resource Management.
+        # The following cache key contains all fields of a `ReceivePublicOrderBookStreamRequest`
+        # to ensure that the stream is unique for each combination of parameters.
         cache_key = (
             public_order_filter,
             (start_time_utc.seconds, start_time_utc.nanos) if start_time_utc else None,
