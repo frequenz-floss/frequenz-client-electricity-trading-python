@@ -92,7 +92,7 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
     delivery_start: datetime,
     sign_secret: str | None = None,
 ) -> None:
-    """List and/or stream public trades."""
+    """List and/or stream public orders."""
     asyncio.run(
         run_receive_public_orders(
             url=url,
