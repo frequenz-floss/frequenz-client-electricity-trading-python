@@ -8,6 +8,7 @@
 
 * Widen the version range of api-common to also allow v0.8.x.
 * Restrict entsoe client dependency version range up to v0.7.x.
+* Listing gridpool orders that do not contain a price or quantity no longer raises an exception. Users must validate orders themselves.
 
 ## New Features
 
