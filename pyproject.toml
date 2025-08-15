@@ -80,7 +80,7 @@ dev-mkdocs = [
   "frequenz-repo-config[lib] == 0.13.5",
 ]
 dev-mypy = [
-  "mypy == 1.16.1",
+  "mypy == 1.17.1",
   "grpc-stubs == 1.53.0.6",
   "pandas-stubs == 2.3.0.250703",
   "types-Markdown == 3.8.0.20250415",
@@ -100,7 +100,7 @@ dev-pytest = [
   "pytest-mock == 3.14.1",
   "pytest-asyncio == 1.0.0",
   "async-solipsism == 0.8",
-  "deepdiff == 8.5.0",
+  "deepdiff == 8.6.0",
 ]
 dev = [
   "frequenz-client-electricity-trading[dev-mkdocs,dev-flake8,dev-formatting,dev-mkdocs,dev-mypy,dev-noxfile,dev-pylint,dev-pytest]",
