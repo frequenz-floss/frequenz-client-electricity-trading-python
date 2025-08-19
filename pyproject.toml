@@ -39,8 +39,7 @@ requires-python = ">= 3.11, < 4"
 # TODO(cookiecutter): Remove and add more dependencies if appropriate
 dependencies = [
   "click >= 8.1.8, < 9",
-  # Versions beyond 0.7.2 fail mypy checks
-  "entsoe-py >= 0.6.16, < 0.7.2",
+  "entsoe-py >= 0.6.16, < 0.8.0",
   "frequenz-api-common >= 0.6.5, < 0.9.0",
   "grpcio >= 1.72.1, < 2",
   "frequenz-channels >= 1.6.1, < 2",
