@@ -6,7 +6,8 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+* Widen the version range of api-common to also allow v0.8.x.
+* Restrict entsoe client dependency version range up to v0.7.x.
 
 ## New Features
 
