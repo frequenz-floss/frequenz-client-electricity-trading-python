@@ -41,11 +41,11 @@ dependencies = [
   "click >= 8.1.8, < 9",
   "entsoe-py >= 0.6.16, < 1",
   "frequenz-api-common >= 0.6.5, < 0.8.0",
-  "grpcio >= 1.72.1, < 2",
+  "frequenz-api-electricity-trading >= 0.8.0, < 0.9.0",
   "frequenz-channels >= 1.6.1, < 2",
   "frequenz-client-base >= 0.11.0, < 0.12.0",
   "frequenz-client-common >= 0.1.0, < 0.4.0",
-  "frequenz-api-electricity-trading >= 0.8.0, < 0.9.0",
+  "grpcio >= 1.72.1, < 2",
   "protobuf >= 6.31.1, < 8", # Do not widen beyond 8!
 ]
 dynamic = ["version"]
