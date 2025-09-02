@@ -84,7 +84,7 @@ dev-mypy = [
   "grpc-stubs == 1.53.0.6",
   "pandas-stubs == 2.3.0.250703",
   "types-Markdown == 3.8.0.20250809",
-  "types-protobuf == 6.30.2.20250703",
+  "types-protobuf == 6.30.2.20250822",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
