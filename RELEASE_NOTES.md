@@ -10,7 +10,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* Support tags in CLI create-order command.
 
 ## Bug Fixes
 
