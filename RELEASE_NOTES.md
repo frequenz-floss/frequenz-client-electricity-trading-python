@@ -6,9 +6,7 @@
 
 ## Upgrading
 
-* Widen the version range of api-common to also allow v0.8.x.
-* Restrict entsoe client dependency version range up to v0.7.x.
-* Listing gridpool orders that do not contain a price or quantity no longer raises an exception. Users must validate orders themselves.
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 ## New Features
 
@@ -16,4 +14,4 @@
 
 ## Bug Fixes
 
-* Fixed typo in the trading CLI help text.
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
