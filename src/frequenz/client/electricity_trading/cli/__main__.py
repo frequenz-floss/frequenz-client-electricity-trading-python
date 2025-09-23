@@ -168,6 +168,7 @@ def receive_gridpool_orders(
 @click.option("--currency", default="EUR", type=str)
 @click.option("--duration", default=900, type=int)
 @click.option("--sign_secret", default=None, type=str)
+@click.option("--tag", default=None, type=str)
 def create_order(
     # pylint: disable=too-many-arguments
     url: str,
@@ -181,6 +182,7 @@ def create_order(
     currency: str,
     duration: int,
     sign_secret: str | None = None,
+    tag: str | None = None,
 ) -> None:
     """Create an order.
 
@@ -201,6 +203,7 @@ def create_order(
             currency=currency,
             duration=timedelta(seconds=duration),
             sign_secret=sign_secret,
+            tag=tag,
         )
     )
 

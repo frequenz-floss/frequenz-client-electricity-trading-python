@@ -233,6 +233,7 @@ async def create_order(
     currency: str,
     duration: timedelta,
     sign_secret: str | None = None,
+    tag: str | None = None,
 ) -> None:
     """Create a limit order for a given price and quantity (in MW).
 
@@ -251,6 +252,7 @@ async def create_order(
         currency: Currency of the price.
         duration: Duration of the delivery period.
         sign_secret: The cryptographic secret to use for HMAC generation.
+        tag: Optional tag to attach to the order.
     """
     client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
@@ -274,6 +276,7 @@ async def create_order(
             currency=Currency[currency],
         ),
         quantity=quantity,
+        tag=tag,
     )
 
     print_order(order)
