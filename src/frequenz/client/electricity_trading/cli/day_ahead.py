@@ -6,7 +6,7 @@
 from datetime import datetime
 
 import pandas as pd
-from entsoe import EntsoePandasClient  # type: ignore[attr-defined]
+from entsoe import EntsoePandasClient
 
 
 def list_day_ahead_prices(
