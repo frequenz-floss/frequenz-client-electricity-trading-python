@@ -1576,6 +1576,9 @@ class GridpoolTradeFilter:
     delivery_area: DeliveryArea | None = None
     """Delivery area to filter for."""
 
+    tag: str | None = None
+    """Tag associated with the trades to be filtered."""
+
     def __eq__(self, other: object) -> bool:
         """
         Check if two GridpoolTradeFilter objects are equal.
@@ -1594,6 +1597,7 @@ class GridpoolTradeFilter:
             and self.side == other.side
             and self.delivery_period == other.delivery_period
             and self.delivery_area == other.delivery_area
+            and self.tag == other.tag
         )
 
     def __hash__(self) -> int:
@@ -1610,6 +1614,7 @@ class GridpoolTradeFilter:
                 self.side,
                 self.delivery_period,
                 self.delivery_area,
+                self.tag,
             )
         )
 
@@ -1652,6 +1657,11 @@ class GridpoolTradeFilter:
                 if gridpool_trade_filter.HasField("delivery_area")
                 else None
             ),
+            tag=(
+                gridpool_trade_filter.tag
+                if gridpool_trade_filter.HasField("tag")
+                else None
+            ),
         )
 
     def to_pb(self) -> electricity_trading_pb2.GridpoolTradeFilter:
@@ -1673,6 +1683,7 @@ class GridpoolTradeFilter:
                 self.delivery_period.to_pb() if self.delivery_period else None
             ),
             delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
+            tag=self.tag if self.tag else None,
         )
 
 

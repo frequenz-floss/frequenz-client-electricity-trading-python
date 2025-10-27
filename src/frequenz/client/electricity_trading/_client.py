@@ -15,7 +15,7 @@ from typing import Any, AsyncIterator, Awaitable, Callable, cast
 from zoneinfo import ZoneInfo
 
 import grpc
-from frequenz.api.common.v1.pagination.pagination_params_pb2 import PaginationParams
+from frequenz.api.common.v1alpha8.pagination.pagination_params_pb2 import PaginationParams
 
 # pylint: disable=no-member
 from frequenz.api.electricity_trading.v1 import (
@@ -343,6 +343,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         market_side: MarketSide | None = None,
         delivery_period: DeliveryPeriod | None = None,
         delivery_area: DeliveryArea | None = None,
+        tag: str | None = None,
     ) -> GrpcStreamBroadcaster[
         electricity_trading_pb2.ReceiveGridpoolTradesStreamResponse, Trade
     ]:
@@ -356,6 +357,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             market_side: The market side to filter for.
             delivery_period: The delivery period to filter for.
             delivery_area: The delivery area to filter for.
+            tag: The tag to filter for.
 
         Returns:
             The gridpool trades streamer.
@@ -371,6 +373,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             side=market_side,
             delivery_period=delivery_period,
             delivery_area=delivery_area,
+            tag=tag,
         )
 
         stream_key = (gridpool_id, gridpool_trade_filter)
