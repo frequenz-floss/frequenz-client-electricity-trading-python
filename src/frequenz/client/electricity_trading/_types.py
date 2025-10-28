@@ -16,9 +16,9 @@ from functools import wraps
 from typing import Callable, Concatenate, ParamSpec, Self, TypeVar
 
 # pylint: disable=no-member
-from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
-from frequenz.api.common.v1.market import power_pb2, price_pb2
-from frequenz.api.common.v1.types import decimal_pb2
+from frequenz.api.common.v1alpha8.grid import delivery_area_pb2, delivery_duration_pb2
+from frequenz.api.common.v1alpha8.market import power_pb2, price_pb2
+from frequenz.api.common.v1alpha8.types import decimal_pb2, interval_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import json_format, struct_pb2, timestamp_pb2
 
@@ -486,6 +486,92 @@ class DeliveryPeriod:
         return delivery_duration_pb2.DeliveryPeriod(
             start=start,
             duration=self.duration.to_pb(),
+        )
+
+
+@dataclass(frozen=True)
+class Interval:
+    """
+    Represents a time interval filter.
+
+    The interval includes the start time and excludes the end time.
+    This follows the convention used in ISO 8601 for time intervals,
+    Pandas slicing, and Python slicing: [start_time, end_time).
+
+    * If `start_time` is omitted, the interval is
+      considered unbounded at the start.
+    * If `end_time` is omitted, the interval is
+      considered unbounded at the end.
+    """
+
+    start_time: datetime | None = None
+    """The beginning of the interval (inclusive)
+
+    Must be a UTC timestamp.
+    """
+
+    end_time: datetime | None = None
+    """The end of the interval (exclusive)
+
+    Must be a UTC timestamp.
+    """
+
+    def __eq__(self, other: object) -> bool:
+        """Check if two Interval objects are equal.
+
+        Args:
+            other: The object to compare with.
+
+        Returns:
+            True if the two objects are equal, False otherwise.
+        """
+        if not isinstance(other, Interval):
+            return NotImplemented
+        return self.start_time == other.start_time and self.end_time == other.end_time
+
+    def __hash__(self) -> int:
+        """Hash the Interval object.
+
+        Returns:
+            Hash of the Interval object.
+        """
+        return hash((self.start_time, self.end_time))
+
+    @classmethod
+    @from_pb
+    def from_pb(cls, interval: interval_pb2.Interval) -> Self:
+        """Convert a protobuf Interval to Interval object.
+
+        Args:
+            interval: The protobuf Interval to convert.
+
+        Returns:
+            The Interval object.
+        """
+        return cls(
+            start_time=interval.start_time.ToDatetime(tzinfo=timezone.utc),
+            end_time=interval.end_time.ToDatetime(tzinfo=timezone.utc),
+        )
+
+    def to_pb(self) -> interval_pb2.Interval:
+        """Convert an Interval object to protobuf Interval.
+
+        Returns:
+            The protobuf Interval.
+        """
+        start_time = None
+        end_time = None
+
+        if self.start_time is not None:
+            start_time = timestamp_pb2.Timestamp()
+            start_time.FromDatetime(self.start_time)
+
+        if self.end_time is not None:
+            end_time = timestamp_pb2.Timestamp()
+            end_time.FromDatetime(self.end_time)
+        return interval_pb2.Interval(
+            start_time=start_time,
+            end_time=end_time,
         )
 
 
@@ -1433,6 +1519,86 @@ class PublicTrade:  # pylint: disable=too-many-instance-attributes
 
 
 @dataclass(frozen=True)
+class DeliveryTimeFilter:
+    """Parameters for filtering Gridpool orders by delivery time."""
+
+    time_interval: Interval | None = None
+    """Time window for matching delivery period start times."""
+
+    duration_filters: list[DeliveryDuration] | None = None
+    """List of allowed delivery durations."""
+
+    def __eq__(self, other: object) -> bool:
+        """Check if two DeliveryTimeFilter objects are equal.
+
+        Args:
+            other: The object to compare with.
+
+        Returns:
+            True if the two objects are equal, False otherwise.
+        """
+        if not isinstance(other, DeliveryTimeFilter):
+            return NotImplemented
+        return (
+            self.time_interval == other.time_interval
+            and self.duration_filters == other.duration_filters
+        )
+
+    def __hash__(self) -> int:
+        """Hash the DeliveryTimeFilter object."""
+        return hash(
+            (
+                self.time_interval,
+                tuple(self.duration_filters) if self.duration_filters else None,
+            )
+        )
+
+    @classmethod
+    @from_pb
+    def from_pb(
+        cls, delivery_time_filter: electricity_trading_pb2.DeliveryTimeFilter
+    ) -> Self:
+        """Convert a protobuf DeliveryTimeFilter to DeliveryTimeFilter object.
+
+        Args:
+            delivery_time_filter: The protobuf DeliveryTimeFilter to convert.
+
+        Returns:
+            The DeliveryTimeFilter object.
+        """
+        return cls(
+            time_interval=(
+                Interval.from_pb(delivery_time_filter.time_interval)
+                if delivery_time_filter.HasField("time_interval")
+                else None
+            ),
+            duration_filters=(
+                [
+                    DeliveryDuration.from_pb(duration)
+                    for duration in delivery_time_filter.duration_filters
+                ]
+                if delivery_time_filter.duration_filters
+                else None
+            ),
+        )
+
+    def to_pb(self) -> electricity_trading_pb2.DeliveryTimeFilter:
+        """Convert a DeliveryTimeFilter object to protobuf DeliveryTimeFilter.
+
+        Returns:
+            The protobuf DeliveryTimeFilter.
+        """
+        return electricity_trading_pb2.DeliveryTimeFilter(
+            time_interval=self.time_interval.to_pb() if self.time_interval else None,
+            duration_filters=(
+                [duration.to_pb() for duration in self.duration_filters]
+                if self.duration_filters
+                else None
+            ),
+        )
+
+
+@dataclass(frozen=True)
 class GridpoolOrderFilter:
     """Parameters for filtering Gridpool orders."""
 
@@ -1442,7 +1608,7 @@ class GridpoolOrderFilter:
     side: MarketSide | None = None
     """Market side to filter for."""
 
-    delivery_period: DeliveryPeriod | None = None
+    delivery_time_filter: DeliveryTimeFilter | None = None
     """Delivery period to filter for."""
 
     delivery_area: DeliveryArea | None = None
@@ -1466,7 +1632,7 @@ class GridpoolOrderFilter:
         return (
             self.order_states == other.order_states
             and self.side == other.side
-            and self.delivery_period == other.delivery_period
+            and self.delivery_time_filter == other.delivery_time_filter
             and self.delivery_area == other.delivery_area
             and self.tag == other.tag
         )
@@ -1482,7 +1648,7 @@ class GridpoolOrderFilter:
             (
                 tuple(self.order_states) if self.order_states is not None else None,
                 self.side,
-                self.delivery_period,
+                self.delivery_time_filter,
                 self.delivery_area,
                 self.tag,
             )
@@ -1512,9 +1678,9 @@ class GridpoolOrderFilter:
                 if gridpool_order_filter.HasField("side")
                 else None
             ),
-            delivery_period=(
-                DeliveryPeriod.from_pb(gridpool_order_filter.delivery_period)
-                if gridpool_order_filter.HasField("delivery_period")
+            delivery_time_filter=(
+                DeliveryTimeFilter.from_pb(gridpool_order_filter.delivery_time_filter)
+                if gridpool_order_filter.HasField("delivery_time_filter")
                 else None
             ),
             delivery_area=(
@@ -1549,8 +1715,8 @@ class GridpoolOrderFilter:
                 if self.side
                 else None
             ),
-            delivery_period=(
-                self.delivery_period.to_pb() if self.delivery_period else None
+            delivery_time_filter=(
+                self.delivery_time_filter.to_pb() if self.delivery_time_filter else None
             ),
             delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
             tag=self.tag if self.tag else None,
@@ -1570,8 +1736,8 @@ class GridpoolTradeFilter:
     side: MarketSide | None = None
     """Market side to filter for."""
 
-    delivery_period: DeliveryPeriod | None = None
-    """Delivery period to filter for."""
+    delivery_time_filter: DeliveryTimeFilter | None = None
+    """Delivery time to filter for."""
 
     delivery_area: DeliveryArea | None = None
     """Delivery area to filter for."""
@@ -1595,7 +1761,7 @@ class GridpoolTradeFilter:
             self.trade_states == other.trade_states
             and self.trade_ids == other.trade_ids
             and self.side == other.side
-            and self.delivery_period == other.delivery_period
+            and self.delivery_time_filter == other.delivery_time_filter
             and self.delivery_area == other.delivery_area
             and self.tag == other.tag
         )
@@ -1612,7 +1778,7 @@ class GridpoolTradeFilter:
                 tuple(self.trade_states) if self.trade_states is not None else None,
                 tuple(self.trade_ids) if self.trade_ids is not None else None,
                 self.side,
-                self.delivery_period,
+                self.delivery_time_filter,
                 self.delivery_area,
                 self.tag,
             )
@@ -1647,9 +1813,9 @@ class GridpoolTradeFilter:
                 if gridpool_trade_filter.HasField("side")
                 else None
             ),
-            delivery_period=(
-                DeliveryPeriod.from_pb(gridpool_trade_filter.delivery_period)
-                if gridpool_trade_filter.HasField("delivery_period")
+            delivery_time_filter=(
+                DeliveryTimeFilter.from_pb(gridpool_trade_filter.delivery_time_filter)
+                if gridpool_trade_filter.HasField("delivery_time_filter")
                 else None
             ),
             delivery_area=(
@@ -1679,8 +1845,8 @@ class GridpoolTradeFilter:
             ),
             trade_ids=self.trade_ids if self.trade_ids else None,
             side=MarketSide.to_pb(self.side) if self.side else None,
-            delivery_period=(
-                self.delivery_period.to_pb() if self.delivery_period else None
+            delivery_time_filter=(
+                self.delivery_time_filter.to_pb() if self.delivery_time_filter else None
             ),
             delivery_area=self.delivery_area.to_pb() if self.delivery_area else None,
             tag=self.tag if self.tag else None,

@@ -24,6 +24,7 @@ from frequenz.client.electricity_trading import (
     PublicTrade,
     Trade,
 )
+from frequenz.client.electricity_trading._types import DeliveryTimeFilter, Interval
 
 
 def check_delivery_start(
@@ -146,15 +147,18 @@ async def list_gridpool_trades(
 
     print_trade_header()
 
-    delivery_period = None
+    delivery_time_filter = None
     # If delivery period is selected, list historical trades also
     if delivery_start is not None:
         check_delivery_start(delivery_start)
-        delivery_period = DeliveryPeriod(
-            start=delivery_start,
-            duration=timedelta(minutes=15),
+        delivery_time_filter = DeliveryTimeFilter(
+            time_interval=Interval(
+                start_time=delivery_start,
+                end_time=delivery_start + timedelta(minutes=15),
+            ),
+            duration_filters=[],
         )
-    lst = client.list_gridpool_trades(gid, delivery_period=delivery_period)
+    lst = client.list_gridpool_trades(gid, delivery_time_filter=delivery_time_filter)
 
     async for trade in lst:
         print_trade(trade)
@@ -163,7 +167,7 @@ async def list_gridpool_trades(
         return
 
     stream = client.gridpool_trades_stream(
-        gid, delivery_period=delivery_period
+        gid, delivery_time_filter=delivery_time_filter
     ).new_receiver()
     async for trade in stream:
         print_trade(trade)
@@ -197,15 +201,18 @@ async def list_gridpool_orders(
 
     print_order_header()
 
-    delivery_period = None
+    delivery_time_filter = None
     # If delivery period is selected, list historical orders also
     if delivery_start is not None:
         check_delivery_start(delivery_start)
-        delivery_period = DeliveryPeriod(
-            start=delivery_start,
-            duration=timedelta(minutes=15),
+        delivery_time_filter = DeliveryTimeFilter(
+            time_interval=Interval(
+                start_time=delivery_start,
+                end_time=delivery_start + timedelta(minutes=15),
+            ),
+            duration_filters=[],
         )
-    lst = client.list_gridpool_orders(gid, delivery_period=delivery_period)
+    lst = client.list_gridpool_orders(gid, delivery_time_filter=delivery_time_filter)
 
     async for order in reverse_iterator(lst):
         print_order(order)
@@ -214,7 +221,7 @@ async def list_gridpool_orders(
         return
 
     stream = client.gridpool_orders_stream(
-        gid, delivery_period=delivery_period
+        gid, delivery_time_filter=delivery_time_filter
     ).new_receiver()
     async for order in stream:
         print_order(order)
