@@ -15,7 +15,9 @@ from typing import Any, AsyncIterator, Awaitable, Callable, cast
 from zoneinfo import ZoneInfo
 
 import grpc
-from frequenz.api.common.v1.pagination.pagination_params_pb2 import PaginationParams
+from frequenz.api.common.v1alpha8.pagination.pagination_params_pb2 import (
+    PaginationParams,
+)
 
 # pylint: disable=no-member
 from frequenz.api.electricity_trading.v1 import (
@@ -28,13 +30,13 @@ from frequenz.api.electricity_trading.v1.electricity_trading_pb2_grpc import (
 from frequenz.client.base.client import BaseApiClient
 from frequenz.client.base.exception import ClientNotConnected
 from frequenz.client.base.streaming import GrpcStreamBroadcaster
-from frequenz.client.common.pagination import Params
 from google.protobuf import field_mask_pb2, struct_pb2
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from ._types import (
     DeliveryArea,
     DeliveryPeriod,
+    DeliveryTimeFilter,
     GridpoolOrderFilter,
     GridpoolTradeFilter,
     MarketSide,
@@ -277,7 +279,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         order_states: list[OrderState] | None = None,
         market_side: MarketSide | None = None,
         delivery_area: DeliveryArea | None = None,
-        delivery_period: DeliveryPeriod | None = None,
+        delivery_time_filter: DeliveryTimeFilter | None = None,
         tag: str | None = None,
     ) -> GrpcStreamBroadcaster[
         electricity_trading_pb2.ReceiveGridpoolOrdersStreamResponse, OrderDetail
@@ -290,7 +292,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             order_states: List of order states to filter for.
             market_side: Market side to filter for.
             delivery_area: Delivery area to filter for.
-            delivery_period: Delivery period to filter for.
+            delivery_time_filter: Delivery time to filter for.
             tag: Tag to filter for.
 
         Returns:
@@ -299,13 +301,13 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         Raises:
             grpc.RpcError: If an error occurs while streaming the orders.
         """
-        self.validate_params(delivery_period=delivery_period)
+        self.validate_params(delivery_time_filter=delivery_time_filter)
 
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
             side=market_side,
             delivery_area=delivery_area,
-            delivery_period=delivery_period,
+            delivery_time_filter=delivery_time_filter,
             tag=tag,
         )
 
@@ -341,8 +343,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         trade_states: list[TradeState] | None = None,
         trade_ids: list[int] | None = None,
         market_side: MarketSide | None = None,
-        delivery_period: DeliveryPeriod | None = None,
+        delivery_time_filter: DeliveryTimeFilter | None = None,
         delivery_area: DeliveryArea | None = None,
+        tag: str | None = None,
     ) -> GrpcStreamBroadcaster[
         electricity_trading_pb2.ReceiveGridpoolTradesStreamResponse, Trade
     ]:
@@ -354,8 +357,9 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             trade_states: List of trade states to filter for.
             trade_ids: List of trade IDs to filter for.
             market_side: The market side to filter for.
-            delivery_period: The delivery period to filter for.
+            delivery_time_filter: The delivery time filter of the trade.
             delivery_area: The delivery area to filter for.
+            tag: The tag to filter for.
 
         Returns:
             The gridpool trades streamer.
@@ -363,14 +367,15 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         Raises:
             grpc.RpcError: If an error occurs while streaming gridpool trades.
         """
-        self.validate_params(delivery_period=delivery_period)
+        self.validate_params(delivery_time_filter=delivery_time_filter)
 
         gridpool_trade_filter = GridpoolTradeFilter(
             trade_states=trade_states,
             trade_ids=trade_ids,
             side=market_side,
-            delivery_period=delivery_period,
+            delivery_time_filter=delivery_time_filter,
             delivery_area=delivery_area,
+            tag=tag,
         )
 
         stream_key = (gridpool_id, gridpool_trade_filter)
@@ -407,6 +412,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         peak_price_delta: Price | None | _NoValue = NO_VALUE,
         display_quantity: Power | None | _NoValue = NO_VALUE,
         delivery_period: DeliveryPeriod | None = None,
+        delivery_time_filter: DeliveryTimeFilter | None = None,
         valid_until: datetime | None | _NoValue = NO_VALUE,
         execution_option: OrderExecutionOption | None | _NoValue = NO_VALUE,
         order_type: OrderType | None = None,
@@ -425,6 +431,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             peak_price_delta: The peak price delta of the order.
             display_quantity: The display quantity of the order.
             delivery_period: The delivery period of the order.
+            delivery_time_filter: The delivery time filter of the order.
             valid_until: The valid until of the order.
             execution_option: The execution option of the order.
             order_type: The order type.
@@ -458,6 +465,23 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         if delivery_period is not None:
             if delivery_period.start < datetime.now(timezone.utc):
                 raise ValueError("delivery_period must be in the future")
+        if (
+            delivery_time_filter is not None
+            and delivery_time_filter.time_interval is not None
+            and delivery_time_filter.time_interval.start_time is not None
+        ):
+            if delivery_time_filter.time_interval.start_time < datetime.now(
+                timezone.utc
+            ):
+                raise ValueError("delivery_time_filter must be in the future")
+            if (
+                delivery_time_filter.time_interval.end_time is not None
+                and delivery_time_filter.time_interval.end_time
+                < delivery_time_filter.time_interval.start_time
+            ):
+                raise ValueError(
+                    "delivery_time_filter end time must be after start time"
+                )
         if not isinstance(valid_until, _NoValue) and valid_until is not None:
             if (
                 not isinstance(execution_option, _NoValue)
@@ -804,7 +828,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         *,
         order_states: list[OrderState] | None = None,
         side: MarketSide | None = None,
-        delivery_period: DeliveryPeriod | None = None,
+        delivery_time_filter: DeliveryTimeFilter | None = None,
         delivery_area: DeliveryArea | None = None,
         tag: str | None = None,
         page_size: int | None = None,
@@ -817,7 +841,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             gridpool_id: The Gridpool to retrieve the orders for.
             order_states: List of order states to filter by.
             side: The side of the market to filter by.
-            delivery_period: The delivery period to filter by.
+            delivery_time_filter: The delivery time filter of the order.
             delivery_area: The delivery area to filter by.
             tag: The tag to filter by.
             page_size: The number of orders to return per page.
@@ -832,7 +856,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
             side=side,
-            delivery_period=delivery_period,
+            delivery_time_filter=delivery_time_filter,
             delivery_area=delivery_area,
             tag=tag,
         )
@@ -841,7 +865,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             gridpool_id=gridpool_id,
             filter=gridpool_order_filter.to_pb(),
             pagination_params=(
-                Params(page_size=page_size, page_token="").to_proto()
+                PaginationParams(page_size=page_size, page_token="")
                 if page_size
                 else None
             ),
@@ -881,7 +905,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         trade_states: list[TradeState] | None = None,
         trade_ids: list[int] | None = None,
         market_side: MarketSide | None = None,
-        delivery_period: DeliveryPeriod | None = None,
+        delivery_time_filter: DeliveryTimeFilter | None = None,
         delivery_area: DeliveryArea | None = None,
         page_size: int | None = None,
         timeout: timedelta | None = None,
@@ -894,7 +918,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             trade_states: List of trade states to filter by.
             trade_ids: List of trade IDs to filter by.
             market_side: The side of the market to filter by.
-            delivery_period: The delivery period to filter by.
+            delivery_time_filter: The delivery time filter of the order.
             delivery_area: The delivery area to filter by.
             page_size: The number of trades to return per page.
             timeout: Timeout duration, defaults to None.
@@ -909,7 +933,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             trade_states=trade_states,
             trade_ids=trade_ids,
             side=market_side,
-            delivery_period=delivery_period,
+            delivery_time_filter=delivery_time_filter,
             delivery_area=delivery_area,
         )
 
@@ -917,7 +941,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
             gridpool_id=gridpool_id,
             filter=gridpool_trade_filter.to_pb(),
             pagination_params=(
-                Params(page_size=page_size, page_token="").to_proto()
+                PaginationParams(page_size=page_size, page_token="")
                 if page_size
                 else None
             ),

@@ -11,9 +11,9 @@ import pytest
 from deepdiff import DeepDiff
 
 # pylint: disable=no-member
-from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
-from frequenz.api.common.v1.market import power_pb2, price_pb2
-from frequenz.api.common.v1.types import decimal_pb2
+from frequenz.api.common.v1alpha8.grid import delivery_area_pb2, delivery_duration_pb2
+from frequenz.api.common.v1alpha8.market import power_pb2, price_pb2
+from frequenz.api.common.v1alpha8.types import decimal_pb2, interval_pb2
 from frequenz.api.electricity_trading.v1 import electricity_trading_pb2
 from google.protobuf import timestamp_pb2
 
@@ -43,6 +43,7 @@ from frequenz.client.electricity_trading import (
     TradeState,
     UpdateOrder,
 )
+from frequenz.client.electricity_trading._types import DeliveryTimeFilter, Interval
 
 T = TypeVar("T")
 
@@ -227,7 +228,12 @@ PUBLIC_ORDER_BOOK_FILTER_PB = electricity_trading_pb2.PublicOrderBookFilter(
 GRIDPOOL_ORDER_FILTER = GridpoolOrderFilter(
     order_states=[OrderState.ACTIVE, OrderState.CANCELED],
     side=MarketSide.BUY,
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_time_filter=DeliveryTimeFilter(
+        time_interval=Interval(
+            start_time=START_TIME, end_time=START_TIME + timedelta(minutes=15)
+        ),
+        duration_filters=[DeliveryDuration.MINUTES_15],
+    ),
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
     tag="test",
 )
@@ -237,9 +243,12 @@ GRIDPOOL_ORDER_FILTER_PB = electricity_trading_pb2.GridpoolOrderFilter(
         electricity_trading_pb2.OrderState.ORDER_STATE_CANCELED,
     ],
     side=electricity_trading_pb2.MarketSide.MARKET_SIDE_BUY,
-    delivery_period=delivery_duration_pb2.DeliveryPeriod(
-        start=START_TIME_PB,
-        duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
+    delivery_time_filter=electricity_trading_pb2.DeliveryTimeFilter(
+        time_interval=interval_pb2.Interval(
+            start_time=START_TIME_PB,
+            end_time=timestamp_pb2.Timestamp(seconds=START_TIME_PB.seconds + 15 * 60),
+        ),
+        duration_filters=[delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15],
     ),
     delivery_area=delivery_area_pb2.DeliveryArea(
         code="XYZ",

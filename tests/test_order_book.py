@@ -11,9 +11,9 @@ from typing import Any
 
 import grpc
 import pytest
-from frequenz.api.common.v1.grid import delivery_area_pb2, delivery_duration_pb2
-from frequenz.api.common.v1.market import power_pb2, price_pb2
-from frequenz.api.common.v1.types import decimal_pb2
+from frequenz.api.common.v1alpha8.grid import delivery_area_pb2, delivery_duration_pb2
+from frequenz.api.common.v1alpha8.market import power_pb2, price_pb2
+from frequenz.api.common.v1alpha8.types import decimal_pb2
 from frequenz.api.electricity_trading.v1 import (
     electricity_trading_pb2,
     electricity_trading_pb2_grpc,
