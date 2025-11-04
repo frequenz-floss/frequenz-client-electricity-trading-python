@@ -13,6 +13,7 @@ from frequenz.client.electricity_trading import (
     Client,
     Currency,
     DeliveryArea,
+    DeliveryDuration,
     DeliveryPeriod,
     EnergyMarketCodeType,
     MarketSide,
@@ -71,7 +72,7 @@ async def receive_public_trades(  # pylint: disable=too-many-arguments
         check_delivery_start(delivery_start)
         delivery_period = DeliveryPeriod(
             start=delivery_start,
-            duration=timedelta(minutes=15),
+            duration=DeliveryDuration.MINUTES_15,
         )
     stream = client.receive_public_trades(
         delivery_period=delivery_period,
@@ -111,7 +112,7 @@ async def receive_public_orders(  # pylint: disable=too-many-arguments
         check_delivery_start(delivery_start)
         delivery_period = DeliveryPeriod(
             start=delivery_start,
-            duration=timedelta(minutes=15),
+            duration=DeliveryDuration.MINUTES_15,
         )
     stream = client.receive_public_order_book(
         delivery_period=delivery_period,
@@ -151,8 +152,7 @@ async def list_gridpool_trades(
     if delivery_start is not None:
         check_delivery_start(delivery_start)
         delivery_period = DeliveryPeriod(
-            start=delivery_start,
-            duration=timedelta(minutes=15),
+            start=delivery_start, duration=DeliveryDuration.MINUTES_15
         )
     lst = client.list_gridpool_trades(gid, delivery_period=delivery_period)
 
@@ -203,7 +203,7 @@ async def list_gridpool_orders(
         check_delivery_start(delivery_start)
         delivery_period = DeliveryPeriod(
             start=delivery_start,
-            duration=timedelta(minutes=15),
+            duration=DeliveryDuration.MINUTES_15,
         )
     lst = client.list_gridpool_orders(gid, delivery_period=delivery_period)
 
@@ -265,7 +265,7 @@ async def create_order(
         ),
         delivery_period=DeliveryPeriod(
             start=delivery_start,
-            duration=duration,
+            duration=DeliveryDuration.from_timedelta(duration),
         ),
         order_type=OrderType.LIMIT,
         side=side,
