@@ -488,7 +488,7 @@ def test_no_timezone_raises_value_error() -> None:
 
 
 def test_invalid_timezone() -> None:
-    """Test that non-UTC timezones are converted to UTC."""
+    """Test that non-UTC timezones raise a ValueError."""
     with pytest.raises(ValueError):
         DeliveryPeriod(
             start=datetime.now(timezone(timedelta(hours=1))),
@@ -612,25 +612,23 @@ def test_order_detail_no_timezone_error() -> None:
         )
 
 
-def test_order_detail_timezone_converted_to_utc() -> None:
-    """Test that an order detail with inputs with non-UTC timezone is converted to UTC."""
+def test_order_detail_non_utc_timezone() -> None:
+    """Test that an order detail with inputs with non-UTC timezone raises a ValueError."""
     start = datetime.now(timezone(timedelta(hours=1)))
-    order_detail = OrderDetail(
-        order_id=1,
-        order=ORDER,
-        state_detail=StateDetail(
-            state=OrderState.ACTIVE,
-            state_reason=StateReason.ADD,
-            market_actor=MarketActor.USER,
-        ),
-        open_quantity=Power(mw=Decimal("5.00")),
-        filled_quantity=Power(mw=Decimal("0.00")),
-        create_time=start,
-        modification_time=start,
-    )
-
-    assert order_detail.create_time.tzinfo == timezone.utc
-    assert order_detail.modification_time.tzinfo == timezone.utc
+    with pytest.raises(ValueError):
+        OrderDetail(
+            order_id=1,
+            order=ORDER,
+            state_detail=StateDetail(
+                state=OrderState.ACTIVE,
+                state_reason=StateReason.ADD,
+                market_actor=MarketActor.USER,
+            ),
+            open_quantity=Power(mw=Decimal("5.00")),
+            filled_quantity=Power(mw=Decimal("0.00")),
+            create_time=start,
+            modification_time=start,
+        )
 
 
 def test_gridpool_order_filter_to_pb() -> None:
