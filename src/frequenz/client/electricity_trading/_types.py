@@ -386,6 +386,10 @@ class DeliveryPeriod:
     duration: DeliveryDuration
     """The length of the delivery period."""
 
+    def __post_init__(self) -> None:
+        """Validate that the start timestamp is in UTC."""
+        if self.start.tzinfo is None or self.start.tzinfo != timezone.utc:
+            raise ValueError("Start timestamp must be in UTC timezone.")
 
     def __eq__(
         self,
@@ -951,11 +955,11 @@ class Order:  # pylint: disable=too-many-instance-attributes
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
         if self.valid_until is not None:
-            if self.valid_until.tzinfo is None:
+            if (
+                self.valid_until.tzinfo is None
+                or self.valid_until.tzinfo != timezone.utc
+            ):
                 raise ValueError("Valid until must be a UTC datetime.")
-            if self.valid_until.tzinfo != timezone.utc:
-                _logger.warning("Valid until is not a UTC datetime. Converting to UTC.")
-                self.valid_until = self.valid_until.astimezone(timezone.utc)
 
     @classmethod
     @from_pb
@@ -1124,11 +1128,11 @@ class Trade:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.execution_time.tzinfo is None:
-            raise ValueError("Execution time must have timezone information")
-        if self.execution_time.tzinfo != timezone.utc:
-            _logger.warning("Execution timenis not in UTC timezone. Converting to UTC.")
-            self.execution_time = self.execution_time.astimezone(timezone.utc)
+        if (
+            self.execution_time.tzinfo is None
+            or self.execution_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Execution time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1255,19 +1259,14 @@ class OrderDetail:
             ValueError: If create_time or modification_time do not have timezone information.
 
         """
-        if self.create_time.tzinfo is None:
-            raise ValueError("Create time must have timezone information")
-        if self.create_time.tzinfo != timezone.utc:
-            _logger.warning("Create time is not in UTC timezone. Converting to UTC.")
-            self.create_time = self.create_time.astimezone(timezone.utc)
+        if self.create_time.tzinfo is None or self.create_time.tzinfo != timezone.utc:
+            raise ValueError("Create time must be a UTC datetime.")
 
-        if self.modification_time.tzinfo is None:
-            raise ValueError("Modification time must have timezone information")
-        if self.modification_time.tzinfo != timezone.utc:
-            _logger.warning(
-                "Modification time is not in UTC timezone. Converting to UTC."
-            )
-            self.modification_time = self.modification_time.astimezone(timezone.utc)
+        if (
+            self.modification_time.tzinfo is None
+            or self.modification_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Modification time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1346,11 +1345,11 @@ class PublicTrade:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.execution_time.tzinfo is None:
-            raise ValueError("Execution time must have timezone information")
-        if self.execution_time.tzinfo != timezone.utc:
-            _logger.warning("Execution time is not in UTC timezone. Converting to UTC.")
-            self.execution_time = self.execution_time.astimezone(timezone.utc)
+        if (
+            self.execution_time.tzinfo is None
+            or self.execution_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Execution time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1796,12 +1795,10 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.valid_until is not None:
-            if self.valid_until.tzinfo is None:
-                raise ValueError("Valid until must be a UTC datetime.")
-            if self.valid_until.tzinfo != timezone.utc:
-                _logger.warning("Valid until is not a UTC datetime. Converting to UTC.")
-                self.valid_until = self.valid_until.astimezone(timezone.utc)
+        if self.valid_until is not None and (
+            self.valid_until.tzinfo is None or self.valid_until.tzinfo != timezone.utc
+        ):
+            raise ValueError("Valid until must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1928,18 +1925,6 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
 
     update_time: datetime
     """UTC Timestamp of the last update to the order."""
-
-    def __post_init__(self) -> None:
-        """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.delivery_period.start.tzinfo is None:
-            raise ValueError("Delivery period start must have timezone information")
-        if self.delivery_period.start.tzinfo != timezone.utc:
-            _logger.warning(
-                "Delivery period start is not in UTC timezone. Converting to UTC."
-            )
-            self.delivery_period.start = self.delivery_period.start.astimezone(
-                timezone.utc
-            )
 
     @classmethod
     @from_pb
