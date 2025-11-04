@@ -313,6 +313,34 @@ class DeliveryDuration(enum.Enum):
     """1-hour contract duration."""
 
     @classmethod
+    def from_timedelta(cls, duration: timedelta) -> Self:
+        """Convert a timedelta to a DeliveryDuration enum.
+
+        Args:
+            duration: The duration as a timedelta.
+
+        Returns:
+            The corresponding DeliveryDuration enum value.
+
+        Raises:
+            ValueError: If the duration is not one of the supported values.
+        """
+        minutes = duration.total_seconds() / 60
+        match minutes:
+            case 5:
+                return DeliveryDuration.MINUTES_5
+            case 15:
+                return DeliveryDuration.MINUTES_15
+            case 30:
+                return DeliveryDuration.MINUTES_30
+            case 60:
+                return DeliveryDuration.MINUTES_60
+            case _:
+                raise ValueError(
+                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
+                )
+
+    @classmethod
     @from_pb
     def from_pb(
         cls, delivery_duration: delivery_duration_pb2.DeliveryDuration.ValueType
