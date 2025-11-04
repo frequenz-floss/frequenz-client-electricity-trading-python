@@ -58,7 +58,9 @@ MODIFICATION_TIME = datetime.fromisoformat("2023-01-01T12:00:00+00:00")
 MODIFICATION_TIME_PB = timestamp_pb2.Timestamp(seconds=1672574400)
 ORDER = Order(
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(
+        start=START_TIME, duration=DeliveryDuration.MINUTES_15
+    ),
     type=OrderType.LIMIT,
     side=MarketSide.BUY,
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
@@ -87,7 +89,7 @@ TRADE = Trade(
     side=MarketSide.BUY,
     execution_time=EXECUTION_TIME,
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
-    delivery_period=DeliveryPeriod(START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(START_TIME, duration=DeliveryDuration.MINUTES_15),
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
     quantity=Power(mw=Decimal("5.00")),
     state=TradeState.ACTIVE,
@@ -148,7 +150,9 @@ PUBLIC_TRADE = PublicTrade(
     sell_delivery_area=DeliveryArea(
         code="ABC", code_type=EnergyMarketCodeType.EUROPE_EIC
     ),
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(
+        start=START_TIME, duration=DeliveryDuration.MINUTES_15
+    ),
     execution_time=EXECUTION_TIME,
     price=Price(amount=Decimal("100.00"), currency=Currency.USD),
     quantity=Power(mw=Decimal("5.00")),
@@ -179,7 +183,9 @@ PUBLIC_TRADE_PB = electricity_trading_pb2.PublicTrade(
 PUBLIC_ORDER = PublicOrder(
     public_order_id=42,
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(
+        start=START_TIME, duration=DeliveryDuration.MINUTES_15
+    ),
     type=OrderType.LIMIT,
     side=MarketSide.BUY,
     price=Price(amount=Decimal("100.00"), currency=Currency.EUR),
@@ -211,7 +217,9 @@ PUBLIC_ORDER_PB = electricity_trading_pb2.PublicOrderBookRecord(
 )
 PUBLIC_ORDER_BOOK_FILTER = PublicOrderBookFilter(
     delivery_area=DeliveryArea(code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC),
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(
+        start=START_TIME, duration=DeliveryDuration.MINUTES_15
+    ),
     side=MarketSide.SELL,
 )
 PUBLIC_ORDER_BOOK_FILTER_PB = electricity_trading_pb2.PublicOrderBookFilter(
@@ -266,7 +274,9 @@ PUBLIC_TRADE_FILTER = PublicTradeFilter(
         code="XYZ", code_type=EnergyMarketCodeType.EUROPE_EIC
     ),
     sell_delivery_area=None,
-    delivery_period=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+    delivery_period=DeliveryPeriod(
+        start=START_TIME, duration=DeliveryDuration.MINUTES_15
+    ),
 )
 PUBLIC_TRADE_FILTER_PB = electricity_trading_pb2.PublicTradeFilter(
     states=[
@@ -438,7 +448,7 @@ def test_delivery_duration_from_pb() -> None:
 def test_delivery_period_to_pb() -> None:
     """Test the client delivery period type conversions to protobuf."""
     assert_conversion_to_pb(
-        original=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+        original=DeliveryPeriod(start=START_TIME, duration=DeliveryDuration.MINUTES_15),
         expected_pb=delivery_duration_pb2.DeliveryPeriod(
             start=START_TIME_PB,
             duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
@@ -454,7 +464,7 @@ def test_delivery_period_from_pb() -> None:
             start=START_TIME_PB,
             duration=delivery_duration_pb2.DeliveryDuration.DELIVERY_DURATION_15,
         ),
-        expected=DeliveryPeriod(start=START_TIME, duration=timedelta(minutes=15)),
+        expected=DeliveryPeriod(start=START_TIME, duration=DeliveryDuration.MINUTES_15),
         assert_func=assert_equal,
     )
 
@@ -462,22 +472,28 @@ def test_delivery_period_from_pb() -> None:
 def test_invalid_duration_raises_value_error() -> None:
     """Test that an invalid duration raises a ValueError."""
     with pytest.raises(ValueError):
-        DeliveryPeriod(start=datetime.now(timezone.utc), duration=timedelta(minutes=10))
+        DeliveryPeriod(
+            start=datetime.now(timezone.utc),
+            duration=DeliveryDuration.from_timedelta(timedelta(minutes=10)),
+        )
 
 
 def test_no_timezone_raises_value_error() -> None:
     """Test that a datetime without timezone raises a ValueError."""
     with pytest.raises(ValueError):
-        DeliveryPeriod(start=datetime.now(), duration=timedelta(minutes=5))
+        DeliveryPeriod(
+            start=datetime.now(),
+            duration=DeliveryDuration.MINUTES_5,
+        )
 
 
-def test_invalid_timezone_converted_to_utc() -> None:
+def test_invalid_timezone() -> None:
     """Test that non-UTC timezones are converted to UTC."""
-    start = datetime.now(timezone(timedelta(hours=1)))
-    period = DeliveryPeriod(start=start, duration=timedelta(minutes=5))
-
-    assert period.start.tzinfo == timezone.utc
-    assert start.hour == period.start.hour + 1
+    with pytest.raises(ValueError):
+        DeliveryPeriod(
+            start=datetime.now(timezone(timedelta(hours=1))),
+            duration=DeliveryDuration.MINUTES_5,
+        )
 
 
 def test_delivery_area_to_pb() -> None:
