@@ -386,54 +386,6 @@ class DeliveryPeriod:
     duration: DeliveryDuration
     """The length of the delivery period."""
 
-    def __init__(
-        self,
-        start: datetime,
-        duration: timedelta,
-    ) -> None:
-        """
-        Initialize the DeliveryPeriod object.
-
-        Args:
-            start: Start UTC timestamp represents the beginning of the delivery period.
-            duration: The length of the delivery period.
-
-        Raises:
-            ValueError: If the start timestamp does not have a timezone.
-                        or if the duration is not 5, 15, 30, or 60 minutes.
-        """
-        if start.tzinfo is None:
-            raise ValueError("Start timestamp must have a timezone.")
-        if start.tzinfo != timezone.utc:
-            _logger.warning(
-                "Start timestamp is not in UTC timezone. Converting to UTC."
-            )
-            start = start.astimezone(timezone.utc)
-        self.start = start
-
-        minutes = duration.total_seconds() / 60
-        match minutes:
-            case 5:
-                self.duration = DeliveryDuration.MINUTES_5
-            case 15:
-                self.duration = DeliveryDuration.MINUTES_15
-            case 30:
-                self.duration = DeliveryDuration.MINUTES_30
-            case 60:
-                self.duration = DeliveryDuration.MINUTES_60
-            case _:
-                raise ValueError(
-                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
-                )
-
-    def __hash__(self) -> int:
-        """
-        Create hash of the DeliveryPeriod object.
-
-        Returns:
-            Hash of the DeliveryPeriod object.
-        """
-        return hash((self.start, self.duration))
 
     def __eq__(
         self,
@@ -481,27 +433,10 @@ class DeliveryPeriod:
 
         Returns:
             DeliveryPeriod object corresponding to the protobuf message.
-
-        Raises:
-            ValueError: If the duration is not 5, 15, 30, or 60 minutes.
         """
         start = delivery_period.start.ToDatetime(tzinfo=timezone.utc)
         delivery_duration_enum = DeliveryDuration.from_pb(delivery_period.duration)
-
-        match delivery_duration_enum:
-            case DeliveryDuration.MINUTES_5:
-                duration = timedelta(minutes=5)
-            case DeliveryDuration.MINUTES_15:
-                duration = timedelta(minutes=15)
-            case DeliveryDuration.MINUTES_30:
-                duration = timedelta(minutes=30)
-            case DeliveryDuration.MINUTES_60:
-                duration = timedelta(minutes=60)
-            case _:
-                raise ValueError(
-                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
-                )
-        return cls(start=start, duration=duration)
+        return cls(start=start, duration=delivery_duration_enum)
 
     def to_pb(self) -> delivery_duration_pb2.DeliveryPeriod:
         """Convert a DeliveryPeriod object to protobuf DeliveryPeriod.
