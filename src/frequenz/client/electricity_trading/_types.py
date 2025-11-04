@@ -371,6 +371,7 @@ class DeliveryDuration(enum.Enum):
         return delivery_duration_pb2.DeliveryDuration.ValueType(self.value)
 
 
+@dataclass(frozen=True)
 class DeliveryPeriod:
     """
     Time period during which the contract is delivered.
@@ -992,7 +993,7 @@ class MarketActor(enum.Enum):
         return self.value
 
 
-@dataclass()
+@dataclass(frozen=True)
 class Order:  # pylint: disable=too-many-instance-attributes
     """Represents an order in the electricity market."""
 
@@ -1180,7 +1181,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class Trade:  # pylint: disable=too-many-instance-attributes
     """Represents a private trade in the electricity market."""
 
@@ -1314,7 +1315,7 @@ class StateDetail:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class OrderDetail:
     """
     Represents an order with full details, including its ID, state, and associated UTC timestamps.
@@ -1401,7 +1402,7 @@ class OrderDetail:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicTrade:  # pylint: disable=too-many-instance-attributes
     """Represents a public order in the market."""
 
@@ -1929,7 +1930,7 @@ class PublicTradeFilter:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class UpdateOrder:  # pylint: disable=too-many-instance-attributes
     """
     Represents the order properties that can be updated after an order has been placed.
@@ -2069,7 +2070,7 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicOrder:  # pylint: disable=too-many-instance-attributes
     """Represents a public order in the market."""
 
@@ -2170,7 +2171,7 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicOrderBookFilter:
     """Parameters for filtering the public orders in the market."""
 
