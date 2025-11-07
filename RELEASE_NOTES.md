@@ -6,7 +6,9 @@
 
 ## Upgrading
 
-<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
+- `DeliveryPeriod` instances now require a `DeliveryDuration` as an argument in their constructors, and can't be instantiated from `timedelta`s any more.  Instead, `DeliveryDuration`s can be created from `timedelta` instances with `DeliveryDuration.from_timedelta()`.
+
+- Timestamps are no-longer automatically converted to UTC.  If provided timestamps are not in UTC, the client will raise an exception.
 
 ## New Features
 
