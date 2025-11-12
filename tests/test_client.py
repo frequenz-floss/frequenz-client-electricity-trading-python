@@ -19,6 +19,7 @@ from frequenz.client.electricity_trading import (
     Client,
     Currency,
     DeliveryArea,
+    DeliveryDuration,
     DeliveryPeriod,
     EnergyMarketCodeType,
     MarketActor,
@@ -80,7 +81,7 @@ def set_up() -> Generator[Any, Any, Any]:
     delivery_area = DeliveryArea(code="DE", code_type=EnergyMarketCodeType.EUROPE_EIC)
     delivery_period = DeliveryPeriod(
         start=delivery_start,
-        duration=timedelta(minutes=15),
+        duration=DeliveryDuration.MINUTES_15,
     )
     order_type = OrderType.LIMIT
     side = MarketSide.BUY
@@ -342,7 +343,7 @@ async def test_list_gridpool_orders(
             Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
-                duration=timedelta(hours=1),
+                duration=DeliveryDuration.MINUTES_60,
             ),
             None,
             OrderExecutionOption.AON,  # Using AON here but valid_until is None
@@ -354,7 +355,7 @@ async def test_list_gridpool_orders(
             Power(mw=Decimal("0.1234")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
-                duration=timedelta(hours=1),
+                duration=DeliveryDuration.MINUTES_60,
             ),
             None,
             OrderExecutionOption.AON,
@@ -366,7 +367,7 @@ async def test_list_gridpool_orders(
             Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) - timedelta(days=1)),
-                duration=timedelta(hours=1),
+                duration=DeliveryDuration.MINUTES_60,
             ),
             None,
             OrderExecutionOption.AON,
@@ -378,7 +379,7 @@ async def test_list_gridpool_orders(
             Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
-                duration=timedelta(hours=1),
+                duration=DeliveryDuration.MINUTES_60,
             ),
             datetime.now(timezone.utc) - timedelta(hours=1),
             OrderExecutionOption.UNSPECIFIED,  # Using an option that allows valid_until
@@ -390,7 +391,7 @@ async def test_list_gridpool_orders(
             Power(mw=Decimal("0.1")),
             DeliveryPeriod(
                 start=(datetime.now(timezone.utc) + timedelta(days=1)),
-                duration=timedelta(hours=1),
+                duration=DeliveryDuration.MINUTES_60,
             ),
             datetime.now(timezone.utc) + timedelta(days=1),
             OrderExecutionOption.AON,  # Invalid case with AON and valid_until set

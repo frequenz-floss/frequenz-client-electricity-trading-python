@@ -313,6 +313,34 @@ class DeliveryDuration(enum.Enum):
     """1-hour contract duration."""
 
     @classmethod
+    def from_timedelta(cls, duration: timedelta) -> Self:
+        """Convert a timedelta to a DeliveryDuration enum.
+
+        Args:
+            duration: The duration as a timedelta.
+
+        Returns:
+            The corresponding DeliveryDuration enum value.
+
+        Raises:
+            ValueError: If the duration is not one of the supported values.
+        """
+        minutes = duration.total_seconds() / 60
+        match minutes:
+            case 5:
+                return DeliveryDuration.MINUTES_5
+            case 15:
+                return DeliveryDuration.MINUTES_15
+            case 30:
+                return DeliveryDuration.MINUTES_30
+            case 60:
+                return DeliveryDuration.MINUTES_60
+            case _:
+                raise ValueError(
+                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
+                )
+
+    @classmethod
     @from_pb
     def from_pb(
         cls, delivery_duration: delivery_duration_pb2.DeliveryDuration.ValueType
@@ -343,6 +371,7 @@ class DeliveryDuration(enum.Enum):
         return delivery_duration_pb2.DeliveryDuration.ValueType(self.value)
 
 
+@dataclass(frozen=True)
 class DeliveryPeriod:
     """
     Time period during which the contract is delivered.
@@ -358,54 +387,10 @@ class DeliveryPeriod:
     duration: DeliveryDuration
     """The length of the delivery period."""
 
-    def __init__(
-        self,
-        start: datetime,
-        duration: timedelta,
-    ) -> None:
-        """
-        Initialize the DeliveryPeriod object.
-
-        Args:
-            start: Start UTC timestamp represents the beginning of the delivery period.
-            duration: The length of the delivery period.
-
-        Raises:
-            ValueError: If the start timestamp does not have a timezone.
-                        or if the duration is not 5, 15, 30, or 60 minutes.
-        """
-        if start.tzinfo is None:
-            raise ValueError("Start timestamp must have a timezone.")
-        if start.tzinfo != timezone.utc:
-            _logger.warning(
-                "Start timestamp is not in UTC timezone. Converting to UTC."
-            )
-            start = start.astimezone(timezone.utc)
-        self.start = start
-
-        minutes = duration.total_seconds() / 60
-        match minutes:
-            case 5:
-                self.duration = DeliveryDuration.MINUTES_5
-            case 15:
-                self.duration = DeliveryDuration.MINUTES_15
-            case 30:
-                self.duration = DeliveryDuration.MINUTES_30
-            case 60:
-                self.duration = DeliveryDuration.MINUTES_60
-            case _:
-                raise ValueError(
-                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
-                )
-
-    def __hash__(self) -> int:
-        """
-        Create hash of the DeliveryPeriod object.
-
-        Returns:
-            Hash of the DeliveryPeriod object.
-        """
-        return hash((self.start, self.duration))
+    def __post_init__(self) -> None:
+        """Validate that the start timestamp is in UTC."""
+        if self.start.tzinfo is None or self.start.tzinfo != timezone.utc:
+            raise ValueError("Start timestamp must be in UTC timezone.")
 
     def __eq__(
         self,
@@ -453,27 +438,10 @@ class DeliveryPeriod:
 
         Returns:
             DeliveryPeriod object corresponding to the protobuf message.
-
-        Raises:
-            ValueError: If the duration is not 5, 15, 30, or 60 minutes.
         """
         start = delivery_period.start.ToDatetime(tzinfo=timezone.utc)
         delivery_duration_enum = DeliveryDuration.from_pb(delivery_period.duration)
-
-        match delivery_duration_enum:
-            case DeliveryDuration.MINUTES_5:
-                duration = timedelta(minutes=5)
-            case DeliveryDuration.MINUTES_15:
-                duration = timedelta(minutes=15)
-            case DeliveryDuration.MINUTES_30:
-                duration = timedelta(minutes=30)
-            case DeliveryDuration.MINUTES_60:
-                duration = timedelta(minutes=60)
-            case _:
-                raise ValueError(
-                    "Invalid duration value. Duration must be 5, 15, 30, or 60 minutes."
-                )
-        return cls(start=start, duration=duration)
+        return cls(start=start, duration=delivery_duration_enum)
 
     def to_pb(self) -> delivery_duration_pb2.DeliveryPeriod:
         """Convert a DeliveryPeriod object to protobuf DeliveryPeriod.
@@ -1025,7 +993,7 @@ class MarketActor(enum.Enum):
         return self.value
 
 
-@dataclass()
+@dataclass(frozen=True)
 class Order:  # pylint: disable=too-many-instance-attributes
     """Represents an order in the electricity market."""
 
@@ -1074,11 +1042,11 @@ class Order:  # pylint: disable=too-many-instance-attributes
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
         if self.valid_until is not None:
-            if self.valid_until.tzinfo is None:
+            if (
+                self.valid_until.tzinfo is None
+                or self.valid_until.tzinfo != timezone.utc
+            ):
                 raise ValueError("Valid until must be a UTC datetime.")
-            if self.valid_until.tzinfo != timezone.utc:
-                _logger.warning("Valid until is not a UTC datetime. Converting to UTC.")
-                self.valid_until = self.valid_until.astimezone(timezone.utc)
 
     @classmethod
     @from_pb
@@ -1213,7 +1181,7 @@ class Order:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class Trade:  # pylint: disable=too-many-instance-attributes
     """Represents a private trade in the electricity market."""
 
@@ -1247,11 +1215,11 @@ class Trade:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.execution_time.tzinfo is None:
-            raise ValueError("Execution time must have timezone information")
-        if self.execution_time.tzinfo != timezone.utc:
-            _logger.warning("Execution timenis not in UTC timezone. Converting to UTC.")
-            self.execution_time = self.execution_time.astimezone(timezone.utc)
+        if (
+            self.execution_time.tzinfo is None
+            or self.execution_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Execution time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1347,7 +1315,7 @@ class StateDetail:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class OrderDetail:
     """
     Represents an order with full details, including its ID, state, and associated UTC timestamps.
@@ -1378,19 +1346,14 @@ class OrderDetail:
             ValueError: If create_time or modification_time do not have timezone information.
 
         """
-        if self.create_time.tzinfo is None:
-            raise ValueError("Create time must have timezone information")
-        if self.create_time.tzinfo != timezone.utc:
-            _logger.warning("Create time is not in UTC timezone. Converting to UTC.")
-            self.create_time = self.create_time.astimezone(timezone.utc)
+        if self.create_time.tzinfo is None or self.create_time.tzinfo != timezone.utc:
+            raise ValueError("Create time must be a UTC datetime.")
 
-        if self.modification_time.tzinfo is None:
-            raise ValueError("Modification time must have timezone information")
-        if self.modification_time.tzinfo != timezone.utc:
-            _logger.warning(
-                "Modification time is not in UTC timezone. Converting to UTC."
-            )
-            self.modification_time = self.modification_time.astimezone(timezone.utc)
+        if (
+            self.modification_time.tzinfo is None
+            or self.modification_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Modification time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1439,7 +1402,7 @@ class OrderDetail:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicTrade:  # pylint: disable=too-many-instance-attributes
     """Represents a public order in the market."""
 
@@ -1469,11 +1432,11 @@ class PublicTrade:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.execution_time.tzinfo is None:
-            raise ValueError("Execution time must have timezone information")
-        if self.execution_time.tzinfo != timezone.utc:
-            _logger.warning("Execution time is not in UTC timezone. Converting to UTC.")
-            self.execution_time = self.execution_time.astimezone(timezone.utc)
+        if (
+            self.execution_time.tzinfo is None
+            or self.execution_time.tzinfo != timezone.utc
+        ):
+            raise ValueError("Execution time must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -1967,7 +1930,7 @@ class PublicTradeFilter:
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class UpdateOrder:  # pylint: disable=too-many-instance-attributes
     """
     Represents the order properties that can be updated after an order has been placed.
@@ -2010,12 +1973,10 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
 
     def __post_init__(self) -> None:
         """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.valid_until is not None:
-            if self.valid_until.tzinfo is None:
-                raise ValueError("Valid until must be a UTC datetime.")
-            if self.valid_until.tzinfo != timezone.utc:
-                _logger.warning("Valid until is not a UTC datetime. Converting to UTC.")
-                self.valid_until = self.valid_until.astimezone(timezone.utc)
+        if self.valid_until is not None and (
+            self.valid_until.tzinfo is None or self.valid_until.tzinfo != timezone.utc
+        ):
+            raise ValueError("Valid until must be a UTC datetime.")
 
     @classmethod
     @from_pb
@@ -2109,7 +2070,7 @@ class UpdateOrder:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicOrder:  # pylint: disable=too-many-instance-attributes
     """Represents a public order in the market."""
 
@@ -2142,18 +2103,6 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
 
     update_time: datetime
     """UTC Timestamp of the last update to the order."""
-
-    def __post_init__(self) -> None:
-        """Post initialization checks to ensure that all datetimes are UTC."""
-        if self.delivery_period.start.tzinfo is None:
-            raise ValueError("Delivery period start must have timezone information")
-        if self.delivery_period.start.tzinfo != timezone.utc:
-            _logger.warning(
-                "Delivery period start is not in UTC timezone. Converting to UTC."
-            )
-            self.delivery_period.start = self.delivery_period.start.astimezone(
-                timezone.utc
-            )
 
     @classmethod
     @from_pb
@@ -2222,7 +2171,7 @@ class PublicOrder:  # pylint: disable=too-many-instance-attributes
         )
 
 
-@dataclass()
+@dataclass(frozen=True)
 class PublicOrderBookFilter:
     """Parameters for filtering the public orders in the market."""
 
