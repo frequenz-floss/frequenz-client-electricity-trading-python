@@ -15,8 +15,11 @@ from frequenz.client.electricity_trading import (
     Client,
     Currency,
     DeliveryArea,
+    DeliveryDuration,
     DeliveryPeriod,
+    DeliveryTimeFilter,
     EnergyMarketCodeType,
+    Interval,
     MarketSide,
     OrderDetail,
     OrderState,
@@ -57,7 +60,7 @@ class _TestTrader:
         )
         self.delivery_period = DeliveryPeriod(
             start=self.delivery_start,
-            duration=timedelta(minutes=15),
+            duration=DeliveryDuration.from_timedelta(timedelta(minutes=15)),
         )
         self.price = Price(amount=Decimal("56"), currency=Currency.EUR)
         self.quantity = Power(mw=Decimal("0.1"))
@@ -134,7 +137,7 @@ async def create_test_trade(
     )
     delivery_period = DeliveryPeriod(
         start=delivery_start,
-        duration=timedelta(minutes=15),
+        duration=DeliveryDuration.from_timedelta(timedelta(minutes=15)),
     )
     buy_order = await create_test_order(
         trader=trader,
@@ -236,7 +239,11 @@ async def test_list_gridpool_orders(trader: _TestTrader) -> None:
     orders = [
         order
         async for order in trader.client.list_gridpool_orders(
-            gridpool_id=GRIDPOOL_ID, delivery_period=trader.delivery_period
+            gridpool_id=GRIDPOOL_ID,
+            delivery_time_filter=DeliveryTimeFilter(
+                time_interval=Interval(trader.delivery_period.start),
+                duration_filters=[trader.delivery_period.duration],
+            ),
         )
     ]
     listed_orders_id = [order.order_id for order in orders]
@@ -350,12 +357,15 @@ async def test_cancel_all_orders(trader: _TestTrader) -> None:
 
 async def test_list_gridpool_trades(trader: _TestTrader) -> None:
     """Test listing gridpool trades."""
-    buy_order, sell_order = await create_test_trade(trader)
+    await create_test_trade(trader)
     trades = [
         trade
         async for trade in trader.client.list_gridpool_trades(
             GRIDPOOL_ID,
-            delivery_period=buy_order.order.delivery_period,
+            delivery_time_filter=DeliveryTimeFilter(
+                time_interval=Interval(trader.delivery_period.start),
+                duration_filters=[trader.delivery_period.duration],
+            ),
         )
     ]
     assert len(trades) >= 1
@@ -397,7 +407,10 @@ async def test_receive_public_trades_filter(trader: _TestTrader) -> None:
     start_time = datetime.now(timezone.utc).replace(second=0, microsecond=0)
     start_time += timedelta(minutes=30 - start_time.minute % 15)  # next 15-minute mark
 
-    delivery_period = DeliveryPeriod(start=start_time, duration=timedelta(minutes=15))
+    delivery_period = DeliveryPeriod(
+        start=start_time,
+        duration=DeliveryDuration.from_timedelta(timedelta(minutes=15)),
+    )
 
     price = Price(amount=Decimal("808"), currency=Currency.EUR)
 
