@@ -300,8 +300,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         Raises:
             grpc.RpcError: If an error occurs while streaming the orders.
+            ValueError: If an invalid delivery_time_filter is provided.
         """
-        self.validate_params(delivery_time_filter=delivery_time_filter)
+        if delivery_time_filter and not delivery_time_filter.is_valid:
+            raise ValueError("Invalid delivery_time_filter provided.")
 
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
@@ -366,8 +368,10 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         Raises:
             grpc.RpcError: If an error occurs while streaming gridpool trades.
+            ValueError: If an invalid delivery_time_filter is provided.
         """
-        self.validate_params(delivery_time_filter=delivery_time_filter)
+        if delivery_time_filter and not delivery_time_filter.is_valid:
+            raise ValueError("Invalid delivery_time_filter provided.")
 
         gridpool_trade_filter = GridpoolTradeFilter(
             trade_states=trade_states,
