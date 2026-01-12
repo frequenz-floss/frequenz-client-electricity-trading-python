@@ -162,7 +162,7 @@ async def list_gridpool_trades(
     lst = client.list_gridpool_trades(gid, delivery_time_filter=delivery_time_filter)
 
     async for trade in lst:
-        print_trade(trade)
+        print_trade(trade, gid)
 
     if delivery_start and delivery_start <= datetime.now(timezone.utc):
         return
@@ -171,7 +171,7 @@ async def list_gridpool_trades(
         gid, delivery_time_filter=delivery_time_filter
     ).new_receiver()
     async for trade in stream:
-        print_trade(trade)
+        print_trade(trade, gid)
 
 
 async def list_gridpool_orders(
@@ -216,7 +216,7 @@ async def list_gridpool_orders(
     lst = client.list_gridpool_orders(gid, delivery_time_filter=delivery_time_filter)
 
     async for order in reverse_iterator(lst):
-        print_order(order)
+        print_order(order, gid)
 
     if delivery_start and delivery_start <= datetime.now(timezone.utc):
         return
@@ -225,7 +225,7 @@ async def list_gridpool_orders(
         gid, delivery_time_filter=delivery_time_filter
     ).new_receiver()
     async for order in stream:
-        print_order(order)
+        print_order(order, gid)
 
 
 # pylint: disable=too-many-arguments
@@ -287,7 +287,7 @@ async def create_order(
         tag=tag,
     )
 
-    print_order(order)
+    print_order(order, gid)
 
 
 async def cancel_order(
@@ -406,12 +406,13 @@ def print_trade_header() -> None:
         "quantity_mw,"
         "currency,"
         "price,"
-        "state "
+        "state,"
+        "gridpool_id"
     )
     print(header)
 
 
-def print_trade(trade: Trade) -> None:
+def print_trade(trade: Trade, gid: int) -> None:
     """Print trade details to stdout in CSV format."""
     values = (
         trade.id,
@@ -426,6 +427,7 @@ def print_trade(trade: Trade) -> None:
         trade.price.currency,
         trade.price.amount,
         trade.state,
+        gid,
     )
     print(",".join(v.name if isinstance(v, Enum) else str(v) for v in values))
 
@@ -447,12 +449,13 @@ def print_order_header() -> None:
         "currency,"
         "price,"
         "state,"
-        "tag"
+        "tag,"
+        "gridpool_id"
     )
     print(header)
 
 
-def print_order(order: OrderDetail) -> None:
+def print_order(order: OrderDetail, gid: int) -> None:
     """
     Print order details to stdout in CSV format.
 
@@ -469,6 +472,7 @@ def print_order(order: OrderDetail) -> None:
 
     Args:
         order: OrderDetail object
+        gid: Gridpool ID
     """
     values = [
         order.order_id,
@@ -486,6 +490,7 @@ def print_order(order: OrderDetail) -> None:
         order.order.price.amount,
         order.state_detail.state,
         order.order.tag,
+        gid,
     ]
     print(",".join(v.name if isinstance(v, Enum) else str(v) for v in values))
 
