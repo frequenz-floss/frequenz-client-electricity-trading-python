@@ -1577,6 +1577,25 @@ class DeliveryTimeFilter:
             ),
         )
 
+    @property
+    def is_valid(self) -> bool:
+        """Check if the DeliveryTimeFilter is valid.
+
+        Verifies that the start and end dates in the time interval are logical, if both are set.
+
+        Returns:
+            True if the filter is valid, False otherwise.
+        """
+        if self.time_interval is None:
+            return True
+
+        start = self.time_interval.start_time
+        end = self.time_interval.end_time
+        if start is None or end is None:
+            return True
+
+        return start < end
+
 
 @dataclass(frozen=True)
 class GridpoolOrderFilter:
