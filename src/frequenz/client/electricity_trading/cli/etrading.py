@@ -125,51 +125,47 @@ async def receive_public_orders(  # pylint: disable=too-many-arguments
             print_public_order(order)
 
 
+# pylint: disable=too-many-arguments
 async def list_gridpool_trades(
     url: str,
     auth_key: str,
     gid: int,
     *,
-    delivery_start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     sign_secret: str | None = None,
 ) -> None:
     """List gridpool trades and stream new gridpool trades.
 
-    Optionally a delivery_start can be provided to filter the trades by delivery period.
+    Optionally trades can be filtered by delivery period.
 
     Args:
         url: URL of the trading API.
         auth_key: API key.
         gid: Gridpool ID.
-        delivery_start: Start of the delivery period or None.
+        delivery_from: Start timestamp (inclusive) to filter delivery start times or None.
+        delivery_to: End timestamp (exclusive) to filter delivery start times or None.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
     client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
 
     print_trade_header()
 
-    delivery_time_filter = None
-    # If delivery period is selected, list historical trades also
-    if delivery_start is not None:
-        check_delivery_start(delivery_start)
-        delivery_time_filter = DeliveryTimeFilter(
-            time_interval=Interval(
-                start_time=delivery_start,
-                end_time=delivery_start + timedelta(minutes=15),
-            ),
-            duration_filters=[],
-        )
-    lst = client.list_gridpool_trades(gid, delivery_time_filter=delivery_time_filter)
+    delivery_time_filter = DeliveryTimeFilter(Interval(delivery_from, delivery_to))
+    lst = client.list_gridpool_trades(
+        gid,
+        delivery_time_filter=delivery_time_filter,
+    )
+
+    # Initialize the stream before printing to minimize the gap between the two
+    stream = client.gridpool_trades_stream(
+        gid,
+        delivery_time_filter=delivery_time_filter,
+    ).new_receiver()
 
     async for trade in lst:
         print_trade(trade, gid)
 
-    if delivery_start and delivery_start <= datetime.now(timezone.utc):
-        return
-
-    stream = client.gridpool_trades_stream(
-        gid, delivery_time_filter=delivery_time_filter
-    ).new_receiver()
     async for trade in stream:
         print_trade(trade, gid)
 

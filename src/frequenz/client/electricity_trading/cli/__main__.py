@@ -105,18 +105,21 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
     )
 
 
+# pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
-@click.option("--start", default=None, type=iso)
+@click.option("--delivery-from", default=None, type=iso)
+@click.option("--delivery-to", default=None, type=iso)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_trades(
     url: str,
     auth_key: str,
     gid: int,
     *,
-    start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool trades."""
@@ -125,7 +128,8 @@ def receive_gridpool_trades(
             url=url,
             auth_key=auth_key,
             gid=gid,
-            delivery_start=start,
+            delivery_from=delivery_from,
+            delivery_to=delivery_to,
             sign_secret=sign_secret,
         )
     )
