@@ -135,17 +135,20 @@ def receive_gridpool_trades(
     )
 
 
+# pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
-@click.option("--start", default=None, type=iso)
+@click.option("--delivery-from", default=None, type=iso)
+@click.option("--delivery-to", default=None, type=iso)
 @click.option("--gid", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
     auth_key: str,
     *,
-    start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     gid: int,
     sign_secret: str | None = None,
 ) -> None:
@@ -154,7 +157,8 @@ def receive_gridpool_orders(
         run_list_gridpool_orders(
             url=url,
             auth_key=auth_key,
-            delivery_start=start,
+            delivery_from=delivery_from,
+            delivery_to=delivery_to,
             gid=gid,
             sign_secret=sign_secret,
         )

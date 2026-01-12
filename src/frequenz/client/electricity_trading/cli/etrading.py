@@ -4,7 +4,7 @@
 """CLI tool to interact with the trading API."""
 
 from collections import deque
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import Enum
 from typing import AsyncIterator
@@ -170,19 +170,19 @@ async def list_gridpool_trades(
         print_trade(trade, gid)
 
 
+# pylint: disable=too-many-arguments
 async def list_gridpool_orders(
     url: str,
     auth_key: str,
     *,
-    delivery_start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     gid: int,
     sign_secret: str | None = None,
 ) -> None:
     """List orders and stream new gridpool orders.
 
-    If delivery_start is provided, list historical orders and stream new orders
-    for the 15 minute delivery period starting at delivery_start.
-    If no delivery_start is provided, stream new orders for any delivery period.
+    Optionally orders can be filtered by delivery period.
 
     Note that retrieved sort order for listed orders (starting from the newest)
     is reversed in chunks trying to bring more recent orders to the bottom.
@@ -190,7 +190,8 @@ async def list_gridpool_orders(
     Args:
         url: URL of the trading API.
         auth_key: API key.
-        delivery_start: Start of the delivery period or None.
+        delivery_from: Start timestamp (inclusive) to filter delivery start times or None.
+        delivery_to: End timestamp (exclusive) to filter delivery start times or None.
         gid: Gridpool ID.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
@@ -198,28 +199,21 @@ async def list_gridpool_orders(
 
     print_order_header()
 
-    delivery_time_filter = None
-    # If delivery period is selected, list historical orders also
-    if delivery_start is not None:
-        check_delivery_start(delivery_start)
-        delivery_time_filter = DeliveryTimeFilter(
-            time_interval=Interval(
-                start_time=delivery_start,
-                end_time=delivery_start + timedelta(minutes=15),
-            ),
-            duration_filters=[],
-        )
-    lst = client.list_gridpool_orders(gid, delivery_time_filter=delivery_time_filter)
+    delivery_time_filter = DeliveryTimeFilter(Interval(delivery_from, delivery_to))
+
+    lst = client.list_gridpool_orders(
+        gid,
+        delivery_time_filter=delivery_time_filter,
+    )
+
+    stream = client.gridpool_orders_stream(
+        gid,
+        delivery_time_filter=delivery_time_filter,
+    ).new_receiver()
 
     async for order in reverse_iterator(lst):
         print_order(order, gid)
 
-    if delivery_start and delivery_start <= datetime.now(timezone.utc):
-        return
-
-    stream = client.gridpool_orders_stream(
-        gid, delivery_time_filter=delivery_time_filter
-    ).new_receiver()
     async for order in stream:
         print_order(order, gid)
 
