@@ -110,8 +110,18 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
-@click.option("--delivery-from", default=None, type=iso)
-@click.option("--delivery-to", default=None, type=iso)
+@click.option(
+    "--delivery-from",
+    default=None,
+    type=iso,
+    help="Start timestamp (inclusive) to filter delivery start times.",
+)
+@click.option(
+    "--delivery-to",
+    default=None,
+    type=iso,
+    help="End timestamp (exclusive) to filter delivery start times.",
+)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_trades(
     url: str,
@@ -139,8 +149,18 @@ def receive_gridpool_trades(
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
-@click.option("--delivery-from", default=None, type=iso)
-@click.option("--delivery-to", default=None, type=iso)
+@click.option(
+    "--delivery-from",
+    default=None,
+    type=iso,
+    help="Start timestamp (inclusive) to filter delivery start times.",
+)
+@click.option(
+    "--delivery-to",
+    default=None,
+    type=iso,
+    help="End timestamp (exclusive) to filter delivery start times.",
+)
 @click.option("--gid", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
