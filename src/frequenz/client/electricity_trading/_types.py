@@ -1380,6 +1380,23 @@ class OrderDetail:
 
         return od
 
+    @property
+    def is_valid(self) -> bool:
+        """Check if the order detail is valid.
+
+        Returns:
+            True if the order detail is valid, False otherwise.
+        """
+        # Only cancelled orders are allowed to have missing price or quantity
+        if self.state_detail.state == OrderState.CANCELED:
+            return True
+
+        return not (
+            self.order.price.amount.is_nan()
+            or self.order.price.currency == Currency.UNSPECIFIED
+            or self.order.quantity.mw.is_nan()
+        )
+
     def to_pb(self) -> electricity_trading_pb2.OrderDetail:
         """Convert an OrderDetail object to protobuf OrderDetail.
 

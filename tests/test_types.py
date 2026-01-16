@@ -580,18 +580,26 @@ def test_order_detail_from_pb_missing_fields() -> None:
     # Missing price
     od_pb1 = electricity_trading_pb2.OrderDetail()
     od_pb1.CopyFrom(ORDER_DETAIL_PB)
+    assert OrderDetail.from_pb(od_pb1).is_valid
     od_pb1.order.ClearField("price")
     OrderDetail.from_pb(od_pb1)
+    # Not allowed for active orders
+    assert not OrderDetail.from_pb(od_pb1).is_valid
     od_pb1.state_detail.state = electricity_trading_pb2.OrderState.ORDER_STATE_CANCELED
     OrderDetail.from_pb(od_pb1)
+    # But allowed for canceled orders
+    assert OrderDetail.from_pb(od_pb1).is_valid
 
     # Missing quantity (same logic as above)
     od_pb2 = electricity_trading_pb2.OrderDetail()
     od_pb2.CopyFrom(ORDER_DETAIL_PB)
+    assert OrderDetail.from_pb(od_pb2).is_valid
     od_pb2.order.ClearField("quantity")
     OrderDetail.from_pb(od_pb2)
+    assert not OrderDetail.from_pb(od_pb2).is_valid
     od_pb2.state_detail.state = electricity_trading_pb2.OrderState.ORDER_STATE_CANCELED
     OrderDetail.from_pb(od_pb2)
+    assert OrderDetail.from_pb(od_pb2).is_valid
 
 
 def test_order_detail_no_timezone_error() -> None:
