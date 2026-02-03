@@ -51,15 +51,15 @@ def cli() -> None:
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
 @click.option("--delivery-start", default=None, type=iso)
-@click.option("--start", default=None, type=iso)
-@click.option("--end", default=None, type=iso)
+@click.option("--execution-from", default=None, type=iso)
+@click.option("--execution-to", default=None, type=iso)
 @click.option("--sign_secret", default=None, type=str)
 def receive_public_trades(  # pylint: disable=too-many-arguments
     url: str,
     auth_key: str,
     *,
-    start: datetime,
-    end: datetime,
+    execution_from: datetime,
+    execution_to: datetime,
     delivery_start: datetime,
     sign_secret: str | None = None,
 ) -> None:
@@ -69,8 +69,8 @@ def receive_public_trades(  # pylint: disable=too-many-arguments
             url=url,
             auth_key=auth_key,
             delivery_start=delivery_start,
-            start=start,
-            end=end,
+            start=execution_from,
+            end=execution_to,
             sign_secret=sign_secret,
         )
     )
@@ -80,15 +80,15 @@ def receive_public_trades(  # pylint: disable=too-many-arguments
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
 @click.option("--delivery-start", default=None, type=iso)
-@click.option("--start", default=None, type=iso)
-@click.option("--end", default=None, type=iso)
+@click.option("--execution-from", default=None, type=iso)
+@click.option("--execution-to", default=None, type=iso)
 @click.option("--sign_secret", default=None, type=str)
 def receive_public_orders(  # pylint: disable=too-many-arguments
     url: str,
     auth_key: str,
     *,
-    start: datetime,
-    end: datetime,
+    execution_from: datetime,
+    execution_to: datetime,
     delivery_start: datetime,
     sign_secret: str | None = None,
 ) -> None:
@@ -98,25 +98,38 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
             url=url,
             auth_key=auth_key,
             delivery_start=delivery_start,
-            start=start,
-            end=end,
+            start=execution_from,
+            end=execution_to,
             sign_secret=sign_secret,
         )
     )
 
 
+# pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
 @click.option("--gid", required=True, type=int)
-@click.option("--start", default=None, type=iso)
+@click.option(
+    "--delivery-from",
+    default=None,
+    type=iso,
+    help="Start timestamp (inclusive) to filter delivery start times.",
+)
+@click.option(
+    "--delivery-to",
+    default=None,
+    type=iso,
+    help="End timestamp (exclusive) to filter delivery start times.",
+)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_trades(
     url: str,
     auth_key: str,
     gid: int,
     *,
-    start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool trades."""
@@ -125,23 +138,37 @@ def receive_gridpool_trades(
             url=url,
             auth_key=auth_key,
             gid=gid,
-            delivery_start=start,
+            delivery_from=delivery_from,
+            delivery_to=delivery_to,
             sign_secret=sign_secret,
         )
     )
 
 
+# pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
 @click.option("--auth_key", required=True, type=str)
-@click.option("--start", default=None, type=iso)
+@click.option(
+    "--delivery-from",
+    default=None,
+    type=iso,
+    help="Start timestamp (inclusive) to filter delivery start times.",
+)
+@click.option(
+    "--delivery-to",
+    default=None,
+    type=iso,
+    help="End timestamp (exclusive) to filter delivery start times.",
+)
 @click.option("--gid", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
     auth_key: str,
     *,
-    start: datetime,
+    delivery_from: datetime | None,
+    delivery_to: datetime | None,
     gid: int,
     sign_secret: str | None = None,
 ) -> None:
@@ -150,7 +177,8 @@ def receive_gridpool_orders(
         run_list_gridpool_orders(
             url=url,
             auth_key=auth_key,
-            delivery_start=start,
+            delivery_from=delivery_from,
+            delivery_to=delivery_to,
             gid=gid,
             sign_secret=sign_secret,
         )
