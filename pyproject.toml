@@ -40,7 +40,7 @@ requires-python = ">= 3.11, < 4"
 dependencies = [
   "click >= 8.1.8, < 9",
   # Stick to a version without a polluting `tests` package: https://github.com/EnergieID/entsoe-py/pull/447
-  "entsoe-py >= 0.6.16, < 0.7.1",
+  "entsoe-py >= 0.6.16, < 0.7.11",
   "frequenz-api-common >= 0.8.1, < 0.9.0",
   "grpcio >= 1.72.1, < 2",
   "frequenz-channels >= 1.6.1, < 2",
