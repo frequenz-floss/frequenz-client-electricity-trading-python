@@ -2,6 +2,7 @@
 # Copyright © 2024 Frequenz Energy-as-a-Service GmbH
 
 """Tests for the function validating the amount of decimal places."""
+
 import unittest
 from decimal import Decimal
 
