@@ -2,6 +2,7 @@
 # Copyright © 2023 Frequenz Energy-as-a-Service GmbH
 
 """Tests for the methods in the client."""
+
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
