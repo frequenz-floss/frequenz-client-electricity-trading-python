@@ -6,13 +6,12 @@
 
 ## Upgrading
 
-* Update delivery period time filter validation to remove inappropriate start time check.
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 ## New Features
 
-* Add check to validate order details.
-* CLI: Support delivery time filter in gridpool streams.
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
-* Fixed duration type in delivery period for integration tests.
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
