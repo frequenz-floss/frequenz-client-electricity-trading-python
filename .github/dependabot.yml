@@ -39,11 +39,14 @@ updates:
           - "frequenz-api-electricity-trading"
           - "frequenz-client-base"
           - "frequenz-client-common"
-          - "frequenz-repo-config*"
+          - "frequenz-repo-config"
+          - "frequenz-repo-config[lib]"
+          - "frequenz-repo-config[extra-lint-examples]"
           - "markdown-callouts"
           - "mkdocs-gen-files"
           - "mkdocs-literate-nav"
           - "mkdocstrings*"
+          - "mkdocstrings[python]"
           - "pydoclint"
           - "pytest-asyncio"
       # We group repo-config updates as it uses optional dependencies that are
@@ -51,10 +54,13 @@ updates:
       # each if we don't group them.
       repo-config:
         patterns:
-          - "frequenz-repo-config*"
+          - "frequenz-repo-config"
+          - "frequenz-repo-config[lib]"
+          - "frequenz-repo-config[extra-lint-examples]"
       mkdocstrings:
         patterns:
           - "mkdocstrings*"
+          - "mkdocstrings[python]"
 
   - package-ecosystem: "github-actions"
     directory: "/"
