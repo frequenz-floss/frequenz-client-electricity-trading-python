@@ -49,6 +49,7 @@ T = TypeVar("T")
 
 # Set up some constants for reusability
 START_TIME = datetime.fromisoformat("2023-01-01T12:00:00+00:00")
+START_TIME_NO_TZ = datetime.fromisoformat("2023-01-01T12:00:00")
 START_TIME_PB = timestamp_pb2.Timestamp(seconds=1672574400)
 EXECUTION_TIME = datetime.fromisoformat("2024-01-03T10:00:00+00:00")
 EXECUTION_TIME_PB = timestamp_pb2.Timestamp(seconds=1704276000)
@@ -482,7 +483,7 @@ def test_no_timezone_raises_value_error() -> None:
     """Test that a datetime without timezone raises a ValueError."""
     with pytest.raises(ValueError):
         DeliveryPeriod(
-            start=datetime.now(),
+            start=START_TIME_NO_TZ,
             duration=DeliveryDuration.MINUTES_5,
         )
 
@@ -615,8 +616,8 @@ def test_order_detail_no_timezone_error() -> None:
             ),
             open_quantity=Power(mw=Decimal("5.00")),
             filled_quantity=Power(mw=Decimal("0.00")),
-            create_time=datetime.now(),
-            modification_time=datetime.now(),
+            create_time=START_TIME_NO_TZ,
+            modification_time=START_TIME_NO_TZ,
         )
 
 
