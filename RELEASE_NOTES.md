@@ -14,4 +14,4 @@
 
 ## Bug Fixes
 
-<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
+* Fixed CLI helper and help documentation for `delivery-to` filters to refer to delivery end times instead of start times.

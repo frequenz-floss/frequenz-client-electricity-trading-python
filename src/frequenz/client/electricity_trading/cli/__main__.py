@@ -120,7 +120,7 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
     "--delivery-to",
     default=None,
     type=iso,
-    help="End timestamp (exclusive) to filter delivery start times.",
+    help="End timestamp (exclusive) to filter delivery end times.",
 )
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_trades(
@@ -159,7 +159,7 @@ def receive_gridpool_trades(
     "--delivery-to",
     default=None,
     type=iso,
-    help="End timestamp (exclusive) to filter delivery start times.",
+    help="End timestamp (exclusive) to filter delivery end times.",
 )
 @click.option("--gid", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)

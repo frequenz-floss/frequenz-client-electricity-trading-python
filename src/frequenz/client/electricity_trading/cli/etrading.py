@@ -144,7 +144,7 @@ async def list_gridpool_trades(
         auth_key: API key.
         gid: Gridpool ID.
         delivery_from: Start timestamp (inclusive) to filter delivery start times or None.
-        delivery_to: End timestamp (exclusive) to filter delivery start times or None.
+        delivery_to: End timestamp (exclusive) to filter delivery end times or None.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
     client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
@@ -191,7 +191,7 @@ async def list_gridpool_orders(
         url: URL of the trading API.
         auth_key: API key.
         delivery_from: Start timestamp (inclusive) to filter delivery start times or None.
-        delivery_to: End timestamp (exclusive) to filter delivery start times or None.
+        delivery_to: End timestamp (exclusive) to filter delivery end times or None.
         gid: Gridpool ID.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
