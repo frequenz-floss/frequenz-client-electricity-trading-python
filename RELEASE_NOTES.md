@@ -10,7 +10,7 @@
 
 ## New Features
 
-<!-- Here goes the main new features and examples or instructions on how to use them -->
+* Added a new `get-gridpool-order` CLI command to fetch a single order by gridpool ID and order ID.
 
 ## Bug Fixes
 

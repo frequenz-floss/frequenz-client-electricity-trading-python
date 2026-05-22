@@ -306,6 +306,29 @@ async def cancel_order(
         await client.cancel_gridpool_order(gridpool_id, order_id=order_id)
 
 
+async def get_gridpool_order(
+    url: str,
+    auth_key: str,
+    *,
+    gridpool_id: int,
+    order_id: int,
+    sign_secret: str | None = None,
+) -> None:
+    """Fetch and print a single order by gridpool ID and order ID.
+
+    Args:
+        url: URL of the trading API.
+        auth_key: API key.
+        gridpool_id: Gridpool ID for the order to retrieve.
+        order_id: Order ID of the order to retrieve within the gridpool.
+        sign_secret: The cryptographic secret to use for HMAC generation.
+    """
+    client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
+    order = await client.get_gridpool_order(gridpool_id=gridpool_id, order_id=order_id)
+    print_order_header()
+    print_order(order=order, gid=gridpool_id)
+
+
 def print_public_trade_header() -> None:
     """Print trade header in CSV format."""
     header = (
