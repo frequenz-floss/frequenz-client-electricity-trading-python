@@ -17,6 +17,9 @@ from frequenz.client.electricity_trading.cli.etrading import (
     create_order as run_create_order,
 )
 from frequenz.client.electricity_trading.cli.etrading import (
+    get_gridpool_order as run_get_gridpool_order,
+)
+from frequenz.client.electricity_trading.cli.etrading import (
     list_gridpool_orders as run_list_gridpool_orders,
 )
 from frequenz.client.electricity_trading.cli.etrading import (
@@ -272,6 +275,27 @@ def cancel_all_orders(
             auth_key=auth_key,
             gridpool_id=gid,
             order_id=None,
+            sign_secret=sign_secret,
+        )
+    )
+
+
+@cli.command()
+@click.option("--url", required=True, type=str)
+@click.option("--auth_key", required=True, type=str)
+@click.option("--gid", required=True, type=int)
+@click.option("--order", required=True, type=int)
+@click.option("--sign_secret", default=None, type=str)
+def get_gridpool_order(
+    url: str, auth_key: str, gid: int, order: int, sign_secret: str | None = None
+) -> None:
+    """Get a single order for a gridpool ID."""
+    asyncio.run(
+        run_get_gridpool_order(
+            url=url,
+            auth_key=auth_key,
+            gridpool_id=gid,
+            order_id=order,
             sign_secret=sign_secret,
         )
     )
