@@ -2,10 +2,16 @@
 
 ## Summary
 
-* Mostly maintenance work with Dependabot-driven dependency updates and a migration
-to the latest `repo-config` version, plus the addition of a new CLI command.
+<!-- Here goes a general summary of what this release is about -->
 
+## Upgrading
+
+<!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
 
 ## New Features
 
-* Added a new `get-gridpool-order` CLI command to fetch a single order by gridpool ID and order ID.
+<!-- Here goes the main new features and examples or instructions on how to use them -->
+
+## Bug Fixes
+
+<!-- Here goes notable bug fixes that are worth a special mention or explanation -->
