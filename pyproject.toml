@@ -84,7 +84,7 @@ dev-mkdocs = [
 dev-mypy = [
   "mypy == 1.20.2",
   "grpc-stubs == 1.53.0.6",
-  "pandas-stubs == 3.0.0.260204",
+  "pandas-stubs == 3.0.3.260530",
   "types-Markdown == 3.10.2.20260408",
   "types-protobuf == 7.34.1.20260503",
   # For checking the noxfile, docs/ script, and tests
