@@ -8,6 +8,7 @@
     "keywords": "client, api, python, trading, electricity-trading",
     "github_org": "frequenz-floss",
     "license": "MIT",
+    "private_repo": "no",
     "author_name": "Frequenz Energy-as-a-Service GmbH",
     "author_email": "floss@frequenz.com",
     "python_package": "frequenz.client.electricity_trading",
@@ -35,6 +36,10 @@
     "license": [
       "MIT",
       "Proprietary"
+    ],
+    "private_repo": [
+      "{{ 'yes' if cookiecutter.license == 'Proprietary' else 'no' }}",
+      "{{ 'no' if cookiecutter.license == 'Proprietary' else 'yes' }}"
     ],
     "author_name": "Frequenz Energy-as-a-Service GmbH",
     "author_email": "floss@frequenz.com",
