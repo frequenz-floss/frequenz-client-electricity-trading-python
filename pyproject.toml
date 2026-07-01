@@ -45,7 +45,7 @@ dependencies = [
   "grpcio >= 1.72.1, < 2",
   "frequenz-channels >= 1.6.1, < 2",
   "frequenz-client-base >= 0.11.0, < 0.12.0",
-  "frequenz-client-common >= 0.1.0, < 0.4.0",
+  "frequenz-client-common >= 0.1.0, < 0.5.0",
   "frequenz-api-electricity-trading >= 0.9.0, < 0.10.0",
   "protobuf >= 6.31.1, < 8", # Do not widen beyond 8!
 ]
