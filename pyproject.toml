@@ -86,11 +86,11 @@ dev-mypy = [
   "grpc-stubs == 1.53.0.6",
   "pandas-stubs == 3.0.3.260530",
   "types-Markdown == 3.10.2.20260712",
-  "types-protobuf == 7.34.1.20260518",
+  "types-protobuf == 7.35.1.20260827",
   # For checking the noxfile, docs/ script, and tests
   "frequenz-client-electricity-trading[dev-mkdocs,dev-noxfile,dev-pytest]",
 ]
-dev-noxfile = ["nox == 2026.7.11", "frequenz-repo-config[lib] == 0.18.0"]
+dev-noxfile = ["nox == 2026.8.17", "frequenz-repo-config[lib] == 0.18.0"]
 dev-pylint = [
   "pylint == 4.0.6",
   # For checking the noxfile, docs/ script, and tests
