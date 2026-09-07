@@ -48,6 +48,44 @@ def test_receive_gridpool_orders_tag_filter(monkeypatch: pytest.MonkeyPatch) -> 
         delivery_to=None,
         gid=123,
         tag="portfolio-a",
+        order_ids=None,
+        sign_secret=None,
+    )
+
+
+def test_receive_gridpool_orders_order_id_filter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test forwarding order ID filters from the CLI."""
+    list_gridpool_orders = AsyncMock()
+    monkeypatch.setattr(cli_main, "run_list_gridpool_orders", list_gridpool_orders)
+
+    result = CliRunner().invoke(
+        cli_main.cli,
+        [
+            "receive-gridpool-orders",
+            "--url",
+            "grpc://example.com",
+            "--auth_key",
+            "secret",
+            "--gid",
+            "123",
+            "--order-id",
+            "41",
+            "--order-id",
+            "42",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    list_gridpool_orders.assert_awaited_once_with(
+        url="grpc://example.com",
+        auth_key="secret",
+        delivery_from=None,
+        delivery_to=None,
+        gid=123,
+        tag=None,
+        order_ids=(41, 42),
         sign_secret=None,
     )
 
@@ -78,3 +116,31 @@ async def test_list_gridpool_orders_applies_tag_to_list_and_stream(
     assert stream_call.args == (123,)
     assert list_call.kwargs == stream_call.kwargs
     assert list_call.kwargs["tag"] == "portfolio-a"
+
+
+async def test_list_gridpool_orders_applies_order_ids_to_list_and_stream(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test applying order ID filters to historical and live results."""
+    client = Mock()
+    client.list_gridpool_orders.return_value = _empty_async_iterator()
+    stream = Mock()
+    stream.new_receiver.return_value = _empty_async_iterator()
+    client.gridpool_orders_stream.return_value = stream
+    monkeypatch.setattr(etrading, "Client", Mock(return_value=client))
+
+    await etrading.list_gridpool_orders(
+        url="grpc://example.com",
+        auth_key="secret",
+        delivery_from=None,
+        delivery_to=None,
+        gid=123,
+        order_ids=(41, 42),
+    )
+
+    list_call = client.list_gridpool_orders.call_args
+    stream_call = client.gridpool_orders_stream.call_args
+    assert list_call.args == (123,)
+    assert stream_call.args == (123,)
+    assert list_call.kwargs == stream_call.kwargs
+    assert list_call.kwargs["order_ids"] == (41, 42)

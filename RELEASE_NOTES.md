@@ -11,6 +11,8 @@
 ## New Features
 
 * Added tag filtering to the `receive-gridpool-orders` command.
+* Added gridpool order ID filtering to `Client.list_gridpool_orders()`,
+  `Client.gridpool_orders_stream()`, and the `receive-gridpool-orders` command.
 
 ## Bug Fixes
 

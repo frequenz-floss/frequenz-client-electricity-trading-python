@@ -166,6 +166,13 @@ def receive_gridpool_trades(
 )
 @click.option("--gid", required=True, type=int)
 @click.option("--tag", default=None, type=str, help="Tag to filter by.")
+@click.option(
+    "--order-id",
+    "order_ids",
+    multiple=True,
+    type=int,
+    help="Gridpool order ID to filter by. Can be specified multiple times.",
+)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
@@ -175,6 +182,7 @@ def receive_gridpool_orders(
     delivery_to: datetime | None,
     gid: int,
     tag: str | None,
+    order_ids: tuple[int, ...],
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool orders."""
@@ -186,6 +194,7 @@ def receive_gridpool_orders(
             delivery_to=delivery_to,
             gid=gid,
             tag=tag,
+            order_ids=order_ids if len(order_ids) > 0 else None,
             sign_secret=sign_secret,
         )
     )

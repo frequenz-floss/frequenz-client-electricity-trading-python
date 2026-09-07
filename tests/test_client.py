@@ -158,12 +158,25 @@ async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) 
     # Fields to filter for
     order_states = [OrderState.ACTIVE]
     tag = "test-tag"
+    expected_order_ids = [1, 2]
+    order_ids = expected_order_ids.copy()
 
     stream = set_up.client.gridpool_orders_stream(
         set_up.gridpool_id,
         order_states=order_states,
         tag=tag,
+        order_ids=order_ids,
     )
+
+    order_ids.append(3)
+    same_stream = set_up.client.gridpool_orders_stream(
+        set_up.gridpool_id,
+        order_states=order_states,
+        tag=tag,
+        order_ids=expected_order_ids,
+    )
+    assert same_stream is stream
+
     await asyncio.sleep(0)
 
     set_up.mock_stub.ReceiveGridpoolOrdersStream.assert_called_once()
@@ -173,6 +186,28 @@ async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) 
         order_state.to_pb() for order_state in order_states
     ]
     assert args[0].filter.tag == tag
+    assert args[0].filter.order_ids == expected_order_ids
+    await stream.stop()
+
+
+async def test_stream_gridpool_orders_with_empty_order_ids(
+    set_up: SetupParams,
+) -> None:
+    """Test that empty and omitted order IDs share a stream."""
+    set_up.mock_stub.ReceiveGridpoolOrdersStream = Mock(
+        return_value=_FakeAsyncIterable()
+    )
+
+    stream = set_up.client.gridpool_orders_stream(
+        set_up.gridpool_id,
+        order_ids=[],
+    )
+    same_stream = set_up.client.gridpool_orders_stream(set_up.gridpool_id)
+
+    assert same_stream is stream
+
+    await asyncio.sleep(0)
+    set_up.mock_stub.ReceiveGridpoolOrdersStream.assert_called_once()
     await stream.stop()
 
 
@@ -326,6 +361,7 @@ async def test_list_gridpool_orders(
     side = MarketSide.BUY
     order_states = [OrderState.ACTIVE]
     tag = "test-tag"
+    order_ids = [1, 2]
 
     orders = [
         order
@@ -334,6 +370,7 @@ async def test_list_gridpool_orders(
             side=side,
             order_states=order_states,
             tag=tag,
+            order_ids=order_ids,
         )
     ]
 
@@ -344,6 +381,7 @@ async def test_list_gridpool_orders(
     ]
     assert args[0].filter.side == side.to_pb()
     assert args[0].filter.tag == tag
+    assert args[0].filter.order_ids == order_ids
     assert len(orders) == len(mock_response.order_details)
 
 

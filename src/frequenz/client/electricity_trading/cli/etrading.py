@@ -4,6 +4,7 @@
 """CLI tool to interact with the trading API."""
 
 from collections import deque
+from collections.abc import Sequence
 from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import Enum
@@ -179,11 +180,12 @@ async def list_gridpool_orders(
     delivery_to: datetime | None,
     gid: int,
     tag: str | None = None,
+    order_ids: Sequence[int] | None = None,
     sign_secret: str | None = None,
 ) -> None:
     """List orders and stream new gridpool orders.
 
-    Optionally orders can be filtered by delivery period and tag.
+    Optionally orders can be filtered by delivery period, tag, and order IDs.
 
     Note that retrieved sort order for listed orders (starting from the newest)
     is reversed in chunks trying to bring more recent orders to the bottom.
@@ -195,6 +197,7 @@ async def list_gridpool_orders(
         delivery_to: End timestamp (exclusive) to filter delivery start times or None.
         gid: Gridpool ID.
         tag: Tag to filter by.
+        order_ids: Gridpool order IDs to filter by.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
     client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
@@ -207,12 +210,14 @@ async def list_gridpool_orders(
         gid,
         delivery_time_filter=delivery_time_filter,
         tag=tag,
+        order_ids=order_ids,
     )
 
     stream = client.gridpool_orders_stream(
         gid,
         delivery_time_filter=delivery_time_filter,
         tag=tag,
+        order_ids=order_ids,
     ).new_receiver()
 
     async for order in reverse_iterator(lst):

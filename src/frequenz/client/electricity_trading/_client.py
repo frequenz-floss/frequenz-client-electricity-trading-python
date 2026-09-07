@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import Sequence
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, AsyncIterator, Awaitable, Callable, cast
@@ -70,6 +71,22 @@ PRECISION_DECIMAL_QUANTITY = 1
 MIN_QUANTITY_MW = Decimal("0.1")
 MIN_PRICE = Decimal(-9999.0)
 MAX_PRICE = Decimal(9999.0)
+
+
+def _normalize_order_ids(
+    order_ids: Sequence[int] | None,
+) -> tuple[int, ...] | None:
+    """Create an immutable order ID filter.
+
+    Args:
+        order_ids: Order IDs to normalize.
+
+    Returns:
+        An immutable snapshot, or `None` when no IDs were provided.
+    """
+    if order_ids is None or len(order_ids) == 0:
+        return None
+    return tuple(order_ids)
 
 
 def validate_decimal_places(value: Decimal, decimal_places: int, name: str) -> None:
@@ -277,6 +294,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         gridpool_id: int,
         *,
         order_states: list[OrderState] | None = None,
+        order_ids: Sequence[int] | None = None,
         market_side: MarketSide | None = None,
         delivery_area: DeliveryArea | None = None,
         delivery_time_filter: DeliveryTimeFilter | None = None,
@@ -290,6 +308,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         Args:
             gridpool_id: ID of the gridpool to stream orders for.
             order_states: List of order states to filter for.
+            order_ids: List of order IDs to filter for.
             market_side: Market side to filter for.
             delivery_area: Delivery area to filter for.
             delivery_time_filter: Delivery time to filter for.
@@ -307,6 +326,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
 
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
+            order_ids=_normalize_order_ids(order_ids),
             side=market_side,
             delivery_area=delivery_area,
             delivery_time_filter=delivery_time_filter,
@@ -831,6 +851,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         gridpool_id: int,
         *,
         order_states: list[OrderState] | None = None,
+        order_ids: Sequence[int] | None = None,
         side: MarketSide | None = None,
         delivery_time_filter: DeliveryTimeFilter | None = None,
         delivery_area: DeliveryArea | None = None,
@@ -844,6 +865,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         Args:
             gridpool_id: The Gridpool to retrieve the orders for.
             order_states: List of order states to filter by.
+            order_ids: List of order IDs to filter by.
             side: The side of the market to filter by.
             delivery_time_filter: The delivery time filter of the order.
             delivery_area: The delivery area to filter by.
@@ -859,6 +881,7 @@ class Client(BaseApiClient[ElectricityTradingServiceStub]):
         """
         gridpool_order_filter = GridpoolOrderFilter(
             order_states=order_states,
+            order_ids=_normalize_order_ids(order_ids),
             side=side,
             delivery_time_filter=delivery_time_filter,
             delivery_area=delivery_area,
