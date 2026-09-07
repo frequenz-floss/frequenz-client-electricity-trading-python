@@ -178,11 +178,12 @@ async def list_gridpool_orders(
     delivery_from: datetime | None,
     delivery_to: datetime | None,
     gid: int,
+    tag: str | None = None,
     sign_secret: str | None = None,
 ) -> None:
     """List orders and stream new gridpool orders.
 
-    Optionally orders can be filtered by delivery period.
+    Optionally orders can be filtered by delivery period and tag.
 
     Note that retrieved sort order for listed orders (starting from the newest)
     is reversed in chunks trying to bring more recent orders to the bottom.
@@ -193,6 +194,7 @@ async def list_gridpool_orders(
         delivery_from: Start timestamp (inclusive) to filter delivery start times or None.
         delivery_to: End timestamp (exclusive) to filter delivery start times or None.
         gid: Gridpool ID.
+        tag: Tag to filter by.
         sign_secret: The cryptographic secret to use for HMAC generation.
     """
     client = Client(server_url=url, auth_key=auth_key, sign_secret=sign_secret)
@@ -204,11 +206,13 @@ async def list_gridpool_orders(
     lst = client.list_gridpool_orders(
         gid,
         delivery_time_filter=delivery_time_filter,
+        tag=tag,
     )
 
     stream = client.gridpool_orders_stream(
         gid,
         delivery_time_filter=delivery_time_filter,
+        tag=tag,
     ).new_receiver()
 
     async for order in reverse_iterator(lst):

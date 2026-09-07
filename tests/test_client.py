@@ -157,8 +157,13 @@ async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) 
 
     # Fields to filter for
     order_states = [OrderState.ACTIVE]
+    tag = "test-tag"
 
-    set_up.client.gridpool_orders_stream(set_up.gridpool_id, order_states=order_states)
+    stream = set_up.client.gridpool_orders_stream(
+        set_up.gridpool_id,
+        order_states=order_states,
+        tag=tag,
+    )
     await asyncio.sleep(0)
 
     set_up.mock_stub.ReceiveGridpoolOrdersStream.assert_called_once()
@@ -167,6 +172,8 @@ async def test_stream_gridpool_orders_with_optional_inputs(set_up: SetupParams) 
     assert args[0].filter.states == [
         order_state.to_pb() for order_state in order_states
     ]
+    assert args[0].filter.tag == tag
+    await stream.stop()
 
 
 async def test_stream_gridpool_trades(
@@ -318,11 +325,15 @@ async def test_list_gridpool_orders(
     # Fields to filter for
     side = MarketSide.BUY
     order_states = [OrderState.ACTIVE]
+    tag = "test-tag"
 
     orders = [
         order
         async for order in set_up.client.list_gridpool_orders(
-            gridpool_id=set_up.gridpool_id, side=side, order_states=order_states
+            gridpool_id=set_up.gridpool_id,
+            side=side,
+            order_states=order_states,
+            tag=tag,
         )
     ]
 
@@ -332,6 +343,7 @@ async def test_list_gridpool_orders(
         order_state.to_pb() for order_state in order_states
     ]
     assert args[0].filter.side == side.to_pb()
+    assert args[0].filter.tag == tag
     assert len(orders) == len(mock_response.order_details)
 
 

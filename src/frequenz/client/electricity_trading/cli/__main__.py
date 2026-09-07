@@ -165,6 +165,7 @@ def receive_gridpool_trades(
     help="End timestamp (exclusive) to filter delivery start times.",
 )
 @click.option("--gid", required=True, type=int)
+@click.option("--tag", default=None, type=str, help="Tag to filter by.")
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
@@ -173,6 +174,7 @@ def receive_gridpool_orders(
     delivery_from: datetime | None,
     delivery_to: datetime | None,
     gid: int,
+    tag: str | None,
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool orders."""
@@ -183,6 +185,7 @@ def receive_gridpool_orders(
             delivery_from=delivery_from,
             delivery_to=delivery_to,
             gid=gid,
+            tag=tag,
             sign_secret=sign_secret,
         )
     )
