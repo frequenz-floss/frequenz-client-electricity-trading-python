@@ -5,6 +5,7 @@
 
 import asyncio
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 import click
@@ -33,6 +34,16 @@ from frequenz.client.electricity_trading.cli.etrading import (
 )
 
 TZ = ZoneInfo("Europe/Berlin")
+
+ORDER_CREATION_HOSTS = frozenset(
+    {
+        "electricity-trading-testing.api.frequenz.com",
+        "electricity-trading.eu-1.testing.api.frequenz.com",
+        "electricity-trading-staging.api.frequenz.com",
+        "electricity-trading.eu-1.staging.api.frequenz.com",
+    }
+)
+"""Hosts that accept order creation from the CLI."""
 
 iso = datetime.fromisoformat
 
@@ -229,10 +240,13 @@ def create_order(
 ) -> None:
     """Create an order.
 
-    This is only allowed in test instances.
+    This is only allowed in testing and staging instances.
     """
-    if "test" not in url:
-        raise ValueError("Creating orders is only allowed in test instances.")
+    # Prevent accidental order creation in production instances.
+    if urlparse(url).hostname not in ORDER_CREATION_HOSTS:
+        raise ValueError(
+            "Creating orders is only allowed in testing or staging instances."
+        )
 
     asyncio.run(
         run_create_order(

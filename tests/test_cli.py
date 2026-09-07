@@ -20,6 +20,85 @@ async def _empty_async_iterator() -> AsyncIterator[object]:
         yield item
 
 
+def _create_order_args(url: str) -> list[str]:
+    """Build the required arguments for the create-order command."""
+    return [
+        "create-order",
+        "--url",
+        url,
+        "--auth_key",
+        "secret",
+        "--start",
+        "2026-10-01T00:00:00+00:00",
+        "--gid",
+        "123",
+        "--quantity",
+        "1.0",
+        "--price",
+        "50.0",
+        "--area",
+        "10YDE-VE-------2",
+    ]
+
+
+@pytest.mark.parametrize("environment", ["testing", "staging"])
+def test_create_order_allows_non_production_instances(
+    environment: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test creating orders in testing and staging instances."""
+    create_order = AsyncMock()
+    monkeypatch.setattr(cli_main, "run_create_order", create_order)
+    url = f"grpc://electricity-trading-{environment}.api.frequenz.com:443?ssl=true"
+
+    result = CliRunner().invoke(cli_main.cli, _create_order_args(url))
+
+    assert result.exit_code == 0, result.output
+    create_order.assert_awaited_once()
+
+
+def test_create_order_rejects_production_instance(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test that creating orders in production remains disabled."""
+    create_order = AsyncMock()
+    monkeypatch.setattr(cli_main, "run_create_order", create_order)
+    url = "grpc://electricity-trading.api.frequenz.com:443"
+
+    result = CliRunner().invoke(cli_main.cli, _create_order_args(url))
+
+    assert result.exit_code == 1
+    assert isinstance(result.exception, ValueError)
+    assert str(result.exception) == (
+        "Creating orders is only allowed in testing or staging instances."
+    )
+    create_order.assert_not_awaited()
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "grpc://electricity-trading.api.frequenz.com:443?environment=staging",
+        "grpc://staging@electricity-trading.api.frequenz.com:443",
+        "grpc://electricity-trading.api.frequenz.com:443#testing",
+        "grpc://electricity-trading-staging.api.frequenz.com.example.com:443",
+    ],
+)
+def test_create_order_rejects_non_production_text_in_production_url(
+    url: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test that non-production text outside the hostname is not accepted."""
+    create_order = AsyncMock()
+    monkeypatch.setattr(cli_main, "run_create_order", create_order)
+
+    result = CliRunner().invoke(cli_main.cli, _create_order_args(url))
+
+    assert result.exit_code == 1
+    assert isinstance(result.exception, ValueError)
+    create_order.assert_not_awaited()
+
+
 def test_receive_gridpool_orders_tag_filter(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test forwarding a tag filter from the CLI."""
     list_gridpool_orders = AsyncMock()
