@@ -1616,6 +1616,9 @@ class GridpoolOrderFilter:
     tag: str | None = None
     """Tag associated with the orders to be filtered."""
 
+    order_ids: tuple[int, ...] | None = None
+    """Order IDs to filter for."""
+
     def __eq__(self, other: object) -> bool:
         """
         Check if two GridpoolOrderFilter objects are equal.
@@ -1634,6 +1637,7 @@ class GridpoolOrderFilter:
             and self.delivery_time_filter == other.delivery_time_filter
             and self.delivery_area == other.delivery_area
             and self.tag == other.tag
+            and self.order_ids == other.order_ids
         )
 
     def __hash__(self) -> int:
@@ -1650,6 +1654,7 @@ class GridpoolOrderFilter:
                 self.delivery_time_filter,
                 self.delivery_area,
                 self.tag,
+                self.order_ids,
             )
         )
 
@@ -1670,6 +1675,11 @@ class GridpoolOrderFilter:
             order_states=(
                 [OrderState.from_pb(state) for state in gridpool_order_filter.states]
                 if gridpool_order_filter.states
+                else None
+            ),
+            order_ids=(
+                tuple(gridpool_order_filter.order_ids)
+                if len(gridpool_order_filter.order_ids) > 0
                 else None
             ),
             side=(
@@ -1709,6 +1719,7 @@ class GridpoolOrderFilter:
                 if self.order_states
                 else None
             ),
+            order_ids=self.order_ids if self.order_ids is not None else None,
             side=(
                 electricity_trading_pb2.MarketSide.ValueType(self.side.value)
                 if self.side

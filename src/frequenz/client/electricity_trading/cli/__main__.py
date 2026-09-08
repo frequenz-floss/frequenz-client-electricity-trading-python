@@ -5,6 +5,7 @@
 
 import asyncio
 from datetime import datetime, timedelta
+from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
 import click
@@ -33,6 +34,16 @@ from frequenz.client.electricity_trading.cli.etrading import (
 )
 
 TZ = ZoneInfo("Europe/Berlin")
+
+ORDER_CREATION_HOSTS = frozenset(
+    {
+        "electricity-trading-testing.api.frequenz.com",
+        "electricity-trading.eu-1.testing.api.frequenz.com",
+        "electricity-trading-staging.api.frequenz.com",
+        "electricity-trading.eu-1.staging.api.frequenz.com",
+    }
+)
+"""Hosts that accept order creation from the CLI."""
 
 iso = datetime.fromisoformat
 
@@ -165,6 +176,14 @@ def receive_gridpool_trades(
     help="End timestamp (exclusive) to filter delivery start times.",
 )
 @click.option("--gid", required=True, type=int)
+@click.option("--tag", default=None, type=str, help="Tag to filter by.")
+@click.option(
+    "--order-id",
+    "order_ids",
+    multiple=True,
+    type=int,
+    help="Gridpool order ID to filter by. Can be specified multiple times.",
+)
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
@@ -173,6 +192,8 @@ def receive_gridpool_orders(
     delivery_from: datetime | None,
     delivery_to: datetime | None,
     gid: int,
+    tag: str | None,
+    order_ids: tuple[int, ...],
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool orders."""
@@ -183,6 +204,8 @@ def receive_gridpool_orders(
             delivery_from=delivery_from,
             delivery_to=delivery_to,
             gid=gid,
+            tag=tag,
+            order_ids=order_ids if len(order_ids) > 0 else None,
             sign_secret=sign_secret,
         )
     )
@@ -217,10 +240,13 @@ def create_order(
 ) -> None:
     """Create an order.
 
-    This is only allowed in test instances.
+    This is only allowed in testing and staging instances.
     """
-    if "test" not in url:
-        raise ValueError("Creating orders is only allowed in test instances.")
+    # Prevent accidental order creation in production instances.
+    if urlparse(url).hostname not in ORDER_CREATION_HOSTS:
+        raise ValueError(
+            "Creating orders is only allowed in testing or staging instances."
+        )
 
     asyncio.run(
         run_create_order(

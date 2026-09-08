@@ -236,6 +236,7 @@ PUBLIC_ORDER_BOOK_FILTER_PB = electricity_trading_pb2.PublicOrderBookFilter(
 )
 GRIDPOOL_ORDER_FILTER = GridpoolOrderFilter(
     order_states=[OrderState.ACTIVE, OrderState.CANCELED],
+    order_ids=(1, 2),
     side=MarketSide.BUY,
     delivery_time_filter=DeliveryTimeFilter(
         time_interval=Interval(
@@ -251,6 +252,7 @@ GRIDPOOL_ORDER_FILTER_PB = electricity_trading_pb2.GridpoolOrderFilter(
         electricity_trading_pb2.OrderState.ORDER_STATE_ACTIVE,
         electricity_trading_pb2.OrderState.ORDER_STATE_CANCELED,
     ],
+    order_ids=[1, 2],
     side=electricity_trading_pb2.MarketSide.MARKET_SIDE_BUY,
     delivery_time_filter=electricity_trading_pb2.DeliveryTimeFilter(
         time_interval=interval_pb2.Interval(
