@@ -4,7 +4,7 @@
 """CLI tool to interact with the trading API."""
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
@@ -51,8 +51,7 @@ iso = datetime.fromisoformat
 def midnight(days: int = 0) -> str:
     """Return today's midnight."""
     return (
-        datetime.combine(datetime.now(TZ), datetime.min.time(), tzinfo=TZ)
-        + timedelta(days)
+        datetime.combine(datetime.now(TZ), time.min, tzinfo=TZ) + timedelta(days)
     ).isoformat()
 
 
