@@ -2,6 +2,7 @@
 # Copyright © 2024 Frequenz Energy-as-a-Service GmbH
 
 """System tests for Electricity Trading API."""
+
 import asyncio
 import os
 from datetime import datetime, timedelta, timezone
