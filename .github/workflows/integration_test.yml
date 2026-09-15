@@ -5,6 +5,10 @@ on:
   release:
     types: [published]
 
+permissions:
+  # Read repository contents for checkout and dependency resolution only.
+  contents: read
+
 env:
   DEFAULT_PYTHON_VERSION: '3.11'
 
