@@ -330,26 +330,34 @@ async def test_update_cancelled_order_failure(trader: _TestTrader) -> None:
     ), "Expected INVALID_ARGUMENT error"
 
 
-@pytest.mark.skip(
-    reason="Broken endpoint, see https://github.com/frequenz-floss/frequenz-client-electricity-trading-python/issues/162"
-)
 async def test_cancel_all_orders(trader: _TestTrader) -> None:
-    """Test cancelling all orders."""
-    # Create multiple orders
+    """Test cancelling all orders in a gridpool."""
+    test_orders: list[OrderDetail] = []
+    non_marketable_buy_price = Price(amount=MIN_PRICE, currency=Currency.EUR)
+    request_timeout = timedelta(seconds=15)
+
     for _ in range(10):
-        await create_test_order(trader)
+        test_orders.append(
+            await create_test_order(trader, price=non_marketable_buy_price)
+        )
 
-    # Cancel all orders and check that did indeed get cancelled
-    await trader.client.cancel_all_gridpool_orders(GRIDPOOL_ID)
+    cancelled_gridpool_id = await trader.client.cancel_all_gridpool_orders(
+        GRIDPOOL_ID, timeout=request_timeout
+    )
+    assert cancelled_gridpool_id == GRIDPOOL_ID, "Gridpool ID mismatch"
 
-    orders = [
+    order_ids = [order.order_id for order in test_orders]
+    listed_orders = [
         order
         async for order in trader.client.list_gridpool_orders(
             gridpool_id=GRIDPOOL_ID,
+            order_ids=order_ids,
+            timeout=request_timeout,
         )
     ]
 
-    for order in orders:
+    assert len(listed_orders) == len(order_ids), "Not all orders were fetched"
+    for order in listed_orders:
         assert (
             order.state_detail.state == OrderState.CANCELED
         ), f"Order {order.order_id} not canceled"
