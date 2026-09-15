@@ -500,7 +500,7 @@ async def test_cancel_non_existent_order(trader: _TestTrader) -> None:
             GRIDPOOL_ID, order_id=non_existent_order_id
         )
     assert (
-        excinfo.value.code() == grpc.StatusCode.UNAVAILABLE
+        excinfo.value.code() == grpc.StatusCode.NOT_FOUND
     ), "Cancelling non-existent order should return an error"
 
 
