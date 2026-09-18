@@ -10,10 +10,7 @@
 
 ## New Features
 
-* Added tag filtering to the `receive-gridpool-orders` command.
-* Added gridpool order ID filtering to `Client.list_gridpool_orders()`,
-  `Client.gridpool_orders_stream()`, and the `receive-gridpool-orders` command.
-* Added staging service support to the `create-order` CLI command.
+<!-- Here goes the main new features and examples or instructions on how to use them -->
 
 ## Bug Fixes
 
