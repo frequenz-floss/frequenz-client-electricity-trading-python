@@ -7,7 +7,7 @@ from typing import AsyncIterator
 from unittest.mock import AsyncMock, Mock
 
 import pytest
-from click.testing import CliRunner
+from click.testing import CliRunner, Result
 
 from frequenz.client.electricity_trading.cli import __main__ as cli_main
 from frequenz.client.electricity_trading.cli import etrading
@@ -223,3 +223,84 @@ async def test_list_gridpool_orders_applies_order_ids_to_list_and_stream(
     assert stream_call.args == (123,)
     assert list_call.kwargs == stream_call.kwargs
     assert list_call.kwargs["order_ids"] == (41, 42)
+
+
+def _invoke_cancel_all_orders(
+    monkeypatch: pytest.MonkeyPatch, args: list[str], env: dict[str, str | None]
+) -> tuple[AsyncMock, Result]:
+    """Invoke `cancel-all-orders` with `args` and `env`."""
+    cancel_order = AsyncMock()
+    monkeypatch.setattr(cli_main, "run_cancel_order", cancel_order)
+    result = CliRunner().invoke(
+        cli_main.cli,
+        ["cancel-all-orders", "--url", "grpc://example.com", "--gid", "123", *args],
+        env=env,
+    )
+    return cancel_order, result
+
+
+_FALLBACK_ENV: dict[str, str | None] = {
+    "FREQUENZ_API_KEY": "fallback-key",
+    "FREQUENZ_API_SECRET": "fallback-secret",
+}
+
+
+def test_credentials_fall_back_to_frequenz_env_vars(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """`FREQUENZ_API_*` are used when no credentials are given."""
+    cancel_order, result = _invoke_cancel_all_orders(monkeypatch, [], _FALLBACK_ENV)
+
+    assert result.exit_code == 0, result.output
+    assert cancel_order.call_args.kwargs["auth_key"] == "fallback-key"
+    assert cancel_order.call_args.kwargs["sign_secret"] == "fallback-secret"
+
+
+def test_flags_take_precedence(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`--auth_key` and `--sign_secret` win over `FREQUENZ_API_*`."""
+    cancel_order, result = _invoke_cancel_all_orders(
+        monkeypatch,
+        ["--auth_key", "own-key", "--sign_secret", "own-secret"],
+        _FALLBACK_ENV,
+    )
+
+    assert result.exit_code == 0, result.output
+    assert cancel_order.call_args.kwargs["auth_key"] == "own-key"
+    assert cancel_order.call_args.kwargs["sign_secret"] == "own-secret"
+
+
+def test_credentials_are_not_mixed_across_sources(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A `--auth_key` is never paired with a `FREQUENZ_API_*` secret."""
+    cancel_order, result = _invoke_cancel_all_orders(
+        monkeypatch, ["--auth_key", "own-key"], _FALLBACK_ENV
+    )
+
+    assert result.exit_code == 0, result.output
+    assert cancel_order.call_args.kwargs["auth_key"] == "own-key"
+    assert cancel_order.call_args.kwargs["sign_secret"] is None
+
+
+def test_secret_without_key_does_not_fall_back(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A `--sign_secret` alone is an error, not a mixed pair."""
+    cancel_order, result = _invoke_cancel_all_orders(
+        monkeypatch, ["--sign_secret", "own-secret"], _FALLBACK_ENV
+    )
+
+    assert result.exit_code != 0
+    assert "auth key" in result.output
+    cancel_order.assert_not_awaited()
+
+
+def test_missing_credentials_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    """No key from any source is an error."""
+    cancel_order, result = _invoke_cancel_all_orders(
+        monkeypatch, [], {"FREQUENZ_API_KEY": None, "FREQUENZ_API_SECRET": None}
+    )
+
+    assert result.exit_code != 0
+    assert "auth key" in result.output
+    cancel_order.assert_not_awaited()

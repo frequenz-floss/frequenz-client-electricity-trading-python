@@ -4,6 +4,7 @@
 """CLI tool to interact with the trading API."""
 
 import asyncio
+import os
 from datetime import datetime, time, timedelta
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
@@ -47,6 +48,40 @@ ORDER_CREATION_HOSTS = frozenset(
 
 iso = datetime.fromisoformat
 
+AUTH_KEY_HELP = (
+    "API auth key. If neither key nor secret is given, both are read from "
+    "FREQUENZ_API_KEY and FREQUENZ_API_SECRET."
+)
+
+
+def _resolve_credentials(
+    auth_key: str | None, sign_secret: str | None
+) -> tuple[str, str | None]:
+    """Return the auth key and sign secret, both from the same source.
+
+    Args:
+        auth_key: The auth key given on the command line.
+        sign_secret: The sign secret given on the command line.
+
+    Returns:
+        The auth key and sign secret to use.
+
+    Raises:
+        click.UsageError: If no auth key is available.
+    """
+    # Take the fallback as a pair so a key and secret from different sources
+    # are never combined.
+    if not auth_key and not sign_secret:
+        auth_key = os.environ.get("FREQUENZ_API_KEY")
+        sign_secret = os.environ.get("FREQUENZ_API_SECRET")
+
+    if not auth_key:
+        raise click.UsageError(
+            "You must provide an API auth key using --auth_key or the "
+            "FREQUENZ_API_KEY environment variable."
+        )
+    return auth_key, sign_secret
+
 
 def midnight(days: int = 0) -> str:
     """Return today's midnight."""
@@ -62,14 +97,14 @@ def cli() -> None:
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--delivery-start", default=None, type=iso)
 @click.option("--execution-from", default=None, type=iso)
 @click.option("--execution-to", default=None, type=iso)
 @click.option("--sign_secret", default=None, type=str)
 def receive_public_trades(  # pylint: disable=too-many-arguments
     url: str,
-    auth_key: str,
+    auth_key: str | None,
     *,
     execution_from: datetime,
     execution_to: datetime,
@@ -77,6 +112,7 @@ def receive_public_trades(  # pylint: disable=too-many-arguments
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream public trades."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_receive_public_trades(
             url=url,
@@ -91,14 +127,14 @@ def receive_public_trades(  # pylint: disable=too-many-arguments
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--delivery-start", default=None, type=iso)
 @click.option("--execution-from", default=None, type=iso)
 @click.option("--execution-to", default=None, type=iso)
 @click.option("--sign_secret", default=None, type=str)
 def receive_public_orders(  # pylint: disable=too-many-arguments
     url: str,
-    auth_key: str,
+    auth_key: str | None,
     *,
     execution_from: datetime,
     execution_to: datetime,
@@ -106,6 +142,7 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream public orders."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_receive_public_orders(
             url=url,
@@ -121,7 +158,7 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
 # pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--gid", required=True, type=int)
 @click.option(
     "--delivery-from",
@@ -138,7 +175,7 @@ def receive_public_orders(  # pylint: disable=too-many-arguments
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_trades(
     url: str,
-    auth_key: str,
+    auth_key: str | None,
     gid: int,
     *,
     delivery_from: datetime | None,
@@ -146,6 +183,7 @@ def receive_gridpool_trades(
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool trades."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_list_gridpool_trades(
             url=url,
@@ -161,7 +199,7 @@ def receive_gridpool_trades(
 # pylint: disable=too-many-arguments
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option(
     "--delivery-from",
     default=None,
@@ -186,7 +224,7 @@ def receive_gridpool_trades(
 @click.option("--sign_secret", default=None, type=str)
 def receive_gridpool_orders(
     url: str,
-    auth_key: str,
+    auth_key: str | None,
     *,
     delivery_from: datetime | None,
     delivery_to: datetime | None,
@@ -196,6 +234,7 @@ def receive_gridpool_orders(
     sign_secret: str | None = None,
 ) -> None:
     """List and/or stream gridpool orders."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_list_gridpool_orders(
             url=url,
@@ -212,7 +251,7 @@ def receive_gridpool_orders(
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--start", required=True, type=iso)
 @click.option("--gid", required=True, type=int)
 @click.option("--quantity", required=True, type=str)
@@ -225,7 +264,7 @@ def receive_gridpool_orders(
 def create_order(
     # pylint: disable=too-many-arguments
     url: str,
-    auth_key: str,
+    auth_key: str | None,
     *,
     start: datetime,
     gid: int,
@@ -241,6 +280,7 @@ def create_order(
 
     This is only allowed in testing and staging instances.
     """
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     # Prevent accidental order creation in production instances.
     if urlparse(url).hostname not in ORDER_CREATION_HOSTS:
         raise ValueError(
@@ -266,14 +306,15 @@ def create_order(
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--gid", required=True, type=int)
 @click.option("--order", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def cancel_order(
-    url: str, auth_key: str, gid: int, order: int, sign_secret: str | None = None
+    url: str, auth_key: str | None, gid: int, order: int, sign_secret: str | None = None
 ) -> None:
     """Cancel an order."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_cancel_order(
             url=url,
@@ -287,13 +328,14 @@ def cancel_order(
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--gid", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def cancel_all_orders(
-    url: str, auth_key: str, gid: int, sign_secret: str | None = None
+    url: str, auth_key: str | None, gid: int, sign_secret: str | None = None
 ) -> None:
     """Cancel all orders for a gridpool ID."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_cancel_order(
             url=url,
@@ -307,14 +349,15 @@ def cancel_all_orders(
 
 @cli.command()
 @click.option("--url", required=True, type=str)
-@click.option("--auth_key", required=True, type=str)
+@click.option("--auth_key", default=None, type=str, help=AUTH_KEY_HELP)
 @click.option("--gid", required=True, type=int)
 @click.option("--order", required=True, type=int)
 @click.option("--sign_secret", default=None, type=str)
 def get_gridpool_order(
-    url: str, auth_key: str, gid: int, order: int, sign_secret: str | None = None
+    url: str, auth_key: str | None, gid: int, order: int, sign_secret: str | None = None
 ) -> None:
     """Get a single order for a gridpool ID."""
+    auth_key, sign_secret = _resolve_credentials(auth_key, sign_secret)
     asyncio.run(
         run_get_gridpool_order(
             url=url,
