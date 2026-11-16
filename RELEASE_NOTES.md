@@ -4,6 +4,8 @@
 
 <!-- Here goes a general summary of what this release is about -->
 
+This release allows using `frequenz-channels` v2.x.x, besides v1.x.x.
+
 ## Upgrading
 
 <!-- Here goes notes on how to upgrade from previous versions, including deprecations and what they should be replaced with -->
